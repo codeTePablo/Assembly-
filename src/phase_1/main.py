@@ -172,7 +172,8 @@ while True:
                             sincoma = n.replace(",", " ")
                             analyzer2(sincoma)
                         else:
-                            print(f"{i}- {n}: simbolo")
+                            sincoma = n.replace(",", " ")
+                            analyzer2(sincoma)
                     else:
                         pass
 
