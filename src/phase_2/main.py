@@ -95,7 +95,7 @@ def define_code_segment(codeSegment):
     print(codeSegment)
 
 
-# Despues de analizar el data segment, stack segment, code segment se crea la tabla
+# Despues de analizar el data segment, stack segment se crea la tabla
 def create_table(lists):
     """ 
     Crea la tabla con 4 columnas 
