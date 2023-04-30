@@ -49,11 +49,8 @@ def fill_data_segment(lines):
     for line in lines:
         dataSegment = []
         if line.startswith("data segment") == True:
-            # line = lines[lines.index(line) + 1]
             line = line_step(lines, line)
             while line.endswith("ends") == False:
-                # dataSegment.append(line)
-                # line = lines[lines.index(line) + 1]
                 line = add_list(dataSegment, lines, line)
             lists = analyze_data_segment(dataSegment)
             return lists
@@ -94,8 +91,7 @@ def analyze_data_segment(dataSegment):
                 str = ""
                 string = []
                 while word.endswith('"' or "'") == False:
-                    string.append(word)
-                    word = words[words.index(word) + 1]
+                    word = add_list(string, words, word)
                 string.append(word)
                 for word in string:
                     str = str + word + " "
@@ -105,8 +101,7 @@ def analyze_data_segment(dataSegment):
                 str = ""
                 string = []
                 while word.endswith(")") == False:
-                    string.append(word)
-                    word = words[words.index(word) + 1]
+                    word = add_list(string, words, word)
                 string.append(word)
                 for word in string:
                     str = str + word + " "
@@ -117,8 +112,7 @@ def analyze_data_segment(dataSegment):
                 str = ""
                 string = []
                 while word.endswith(")") == False:
-                    string.append(word)
-                    word = words[words.index(word) + 1]
+                    word = add_list(string, words, word)
                 string.append(word)
                 for word in string:
                     str = str + word + " "
@@ -217,8 +211,7 @@ def stack_segment(lines):
         if line.startswith("stack segment") == True:
             line = lines[lines.index(line) + 1]
             while line.endswith("ends") == False:
-                stackSegment.append(line)
-                line = lines[lines.index(line) + 1]
+                line = add_list(stackSegment, lines, line)
             result = analyze_stack_segment(stackSegment)
             return result
 
@@ -229,14 +222,13 @@ def define_code_segment(codeSegment):
     codeSegment = []
     for line in lines:
         if line.startswith("code segment") == True:
-            line = lines[lines.index(line) + 1]
+            line = line_step(lines, line)
             while line.endswith("ends") == False:
                 if line == "\n" == True:
                     print("Error en la linea: " + line + " Falta de argumentos")
                     pass
                 else:
-                    codeSegment.append(line)
-                    line = lines[lines.index(line) + 1]
+                    line = add_list(codeSegment, lines, line)
     print(codeSegment)
 
 

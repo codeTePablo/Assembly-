@@ -8,3 +8,10 @@ def add_list(my_list, lines, line):
 def line_step(lines, line):
     new_line = lines[lines.index(line) + 1]
     return new_line
+
+def append_to_list():
+    pass
+
+
+# analyze
+
