@@ -12,6 +12,19 @@ def openFile():
     return file.read()
 
 
+def analyzeCorchete(ls):
+    for elem in ls:
+        elem = elem.replace("[", "").replace("]", "")
+        if elem in pseudoinstruction:
+            print(f"{i}- {elem}: pseudoinstruction")
+        elif elem in registros:
+            print(f"{i}- {elem}: registro de segmenrto")
+        elif elem in instrucciones:
+            print(f"{i}- {elem}: instrucción")
+        elif elem in numbers:
+            print(f"{i}- {elem}: constante numerica decimal")
+
+
 lines = openFile()
 print(lines)
 lines = lines.split("\n")
@@ -87,16 +100,7 @@ while True:
                             n = words[words.index(n) + 1]
                             ls.append(n)
 
-                        for elem in ls:
-                            if elem in pseudoinstruction:
-                                print(f"{i}- {str(ls)}: pseudo-instrucción de memoria")
-                            elif elem in instrucciones:
-                                print(f"{i}- {str(ls)}: instrucción de memoria")
-                            elif elem in registros:
-                                print(f"{i}- {str(ls)}: registro")
-                            elif elem in numbers:
-                                print(f"{i}- {str(ls)}: coonstante numerica")
-                        print(f"{i}- {str(ls)}: instrucción de memoria")
+                        analyzeCorchete(ls)
 
                         for item in words:
                             for item_1 in ls:
