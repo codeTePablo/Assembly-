@@ -97,7 +97,6 @@ while True:
                             elif elem in numbers:
                                 print(f"{i}- {str(ls)}: coonstante numerica")
                         print(f"{i}- {str(ls)}: instrucción de memoria")
-                        # inside_memory(ls)
 
                         for item in words:
                             for item_1 in ls:
