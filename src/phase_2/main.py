@@ -37,7 +37,7 @@ def search_etiquetas(lines: list) -> list:
 def fill_data_segment(lines):
     """
     Args:
-        lines (str): Código del archivo abierto
+        lines (str): Identifica cuando es que empieza el segmento de datos
     Return:
         list: Lista de listas con los datos del segmento de datos
     """
