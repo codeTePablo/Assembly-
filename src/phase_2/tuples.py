@@ -261,3 +261,4 @@ pseudoinstruction = (
 space = (" ", "  ", "")
 
 data_segment_words = ("EQU", "equ")
+data_segment_words_2 = ("dup", "DUP")

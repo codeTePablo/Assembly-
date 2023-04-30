@@ -52,34 +52,24 @@ def data_segment(dataSegment):
             elif word.startswith("-"):
                 ls.append(word)
             elif word.startswith('"' or "'"):
-                str = ""
+                new_str = ""
                 string = []
                 while word.endswith('"' or "'") == False:
                     word = add_list(string, words, word)
                 string.append(word)
                 for word in string:
-                    str = str + word + " "
-                ls.append(str)
+                    new_str = new_str + word + " "
+                ls.append(new_str)
                 break
-            elif word.startswith("DUP"):
-                str = ""
+            elif word.startswith(data_segment_words_2):
+                new_str = ""
                 string = []
                 while word.endswith(")") == False:
                     word = add_list(string, words, word)
                 string.append(word)
                 for word in string:
-                    str = str + word + " "
-                ls.append(str)
-                break
-            elif word.startswith("dup"):
-                str = ""
-                string = []
-                while word.endswith(")") == False:
-                    word = add_list(string, words, word)
-                string.append(word)
-                for word in string:
-                    str = str + word + " "
-                ls.append(str)
+                    new_str = new_str + word + " "
+                ls.append(new_str)
                 break
             elif word.startswith(abecedario):
                 ls.append(word)

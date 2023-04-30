@@ -64,7 +64,7 @@ def analyze_data_segment(dataSegment: list) -> list:
 
 
 def analyze_stack_segment(stackSegment):
-   return stack_Segment(stackSegment)
+    return stack_Segment(stackSegment)
 
 
 def stack_segment(lines):
