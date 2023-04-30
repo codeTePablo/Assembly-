@@ -251,6 +251,7 @@ pseudoinstruction = (
     "stack segment",
     "byte ptr",
     "word ptr",
+    "WORD PTR",
     "db",
     "dw",
     ".data segment",
