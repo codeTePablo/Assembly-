@@ -13,7 +13,6 @@ data segment
     prueba equ 100
     var dw DUP (100)
     dw 100 dup (0)
-   
 ends
 
 stack segment

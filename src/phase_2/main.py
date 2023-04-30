@@ -16,7 +16,7 @@ def open_file():
     return file.read()
 
 
-def search_etiquetas(lines):
+def search_etiquetas(lines: list) -> list:
     """ Busca las etiquetas en el código y las guarda en una lista 
     args:
         lines (str): Código del archivo abierto
@@ -27,11 +27,7 @@ def search_etiquetas(lines):
     listadeEtiquetas = []
     for line in lines:
         if line.endswith(":") == True:
-            etiqueta = []
-            etiqueta.append(line)
-            etiqueta.append("Etiqueta")
-            etiqueta.append("null")  # la etiqueta no tiene tamaño
-            etiqueta.append("null")  # la etiqueta no tiene valor
+            etiqueta = tags(line)
             listadeEtiquetas.append(etiqueta)
     # print("lista de etiquetas: " + str(listadeEtiquetas))
     return listadeEtiquetas
@@ -56,122 +52,14 @@ def fill_data_segment(lines):
             return lists
 
 
-def analyze_data_segment(dataSegment):
+def analyze_data_segment(dataSegment: list) -> list:
     """
     Analiza el segmento de datos y crea una lista de listas con los datos
     args:
         dataSegment (list): Lista de listas con los datos del segmento de datos
     """
-    lists = []
-
-    for line in dataSegment:
-        # print(line + "--> Desde analizador de Data Segment")
-        words = line.split(" ")
-
-        ls = []
-        # posiblemente crear una tupla con los tipos de datos y evitar tantos if
-        for word in words:
-            if word == (""):
-                pass
-            elif word.startswith("EQU"):
-                ls.append("Constante")
-                ls.append("dw")
-            elif word.startswith("equ"):
-                ls.append("Constante")
-                ls.append("dw")
-
-            elif word.startswith(pseudoinstruction):
-                ls.append("Variable")
-                ls.append(word)
-            elif word.startswith(numbers):
-                ls.append(word)
-            elif word.startswith("-"):
-                ls.append(word)
-            elif word.startswith('"' or "'"):
-                str = ""
-                string = []
-                while word.endswith('"' or "'") == False:
-                    word = add_list(string, words, word)
-                string.append(word)
-                for word in string:
-                    str = str + word + " "
-                ls.append(str)
-                break
-            elif word.startswith("DUP"):
-                str = ""
-                string = []
-                while word.endswith(")") == False:
-                    word = add_list(string, words, word)
-                string.append(word)
-                for word in string:
-                    str = str + word + " "
-                ls.append(str)
-                break
-
-            elif word.startswith("dup"):
-                str = ""
-                string = []
-                while word.endswith(")") == False:
-                    word = add_list(string, words, word)
-                string.append(word)
-                for word in string:
-                    str = str + word + " "
-                ls.append(str)
-                break
-            elif word.startswith(abecedario):
-                ls.append(word)
-
-        for word in ls:
-            if word == (space):
-                ls.remove(word)
-
-        if len(ls) < 4:
-            print("Error en la linea: " + line + " Falta de argumentos")
-        if len(ls) > 4:
-            print("Error en la linea: " + line + " Exceso de argumentos argumentos")
-        if len(ls) == 4:
-            lists.append(ls)
-
-        for word in ls:
-            if word.startswith("-"):
-                if ls[2] == ("db"):
-                    valor = int(ls[3])
-                    if valor < -129:
-                        print(
-                            "Error en la linea: "
-                            + line
-                            + " El valor no puede ser menor a -129"
-                        )
-                        lists.remove(ls)
-                elif ls[2] == ("dw"):
-                    valor = int(ls[3])
-                    if valor < -32769:
-                        print(
-                            "Error en la linea: "
-                            + line
-                            + " El valor no puede ser menor a -32769"
-                        )
-                        lists.remove(ls)
-            elif word.startswith(numbers):
-                if ls[2] == ("db"):
-                    valor = int(ls[3])
-                    if valor > 255:
-                        print(
-                            "Error en la linea: "
-                            + line
-                            + " El valor no puede ser mayor a 255"
-                        )
-                        lists.remove(ls)
-                elif ls[2] == ("dw"):
-                    valor = int(ls[3])
-                    if valor > 65535:
-                        print(
-                            "Error en la linea: "
-                            + line
-                            + " El valor no puede ser mayor a 65535"
-                        )
-                        lists.remove(ls)
-    lists = create_table(lists)
+    lists = create_table(data_segment(dataSegment))
+    # print(lists[0]) #imprime el primer elemento de la lista de listas
     return lists
 
 
