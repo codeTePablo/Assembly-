@@ -244,4 +244,6 @@ bool = stackSegment(lines)
 # Analisis de code segment
 defineCodesegmen(lines)
 
-# print(lists[1][3])
+print(lists[1][3])
+
+print(lists)
