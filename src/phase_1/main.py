@@ -21,6 +21,7 @@ ins = []
 
 while True:
     for i, line in enumerate(lines, start=1):
+        line = line.split(";")[0].strip()
         if line.startswith(pseudoinstruction) == True:
             print(f"{i}- {line}: pseudoinstruction")
         elif line == "":
@@ -62,7 +63,11 @@ while True:
                         lsn.append(n)
                         if n.endswith("h"):
                             print(f"{i}- {n}: constante numerica hexadecimal")
+                        if n.endswith("H"):
+                            print(f"{i}- {n}: constante numerica hexadecimal")
                         elif n.endswith("B"):
+                            print(f"{i}- {n}: constante numerica binaria")
+                        elif n.endswith("b"):
                             print(f"{i}- {n}: constante numerica binaria")
                         elif n.endswith(abecedario):
                             print(f"{i}- {n}: caracter no valido")
@@ -81,6 +86,16 @@ while True:
                         while not n.endswith("]"):
                             n = words[words.index(n) + 1]
                             ls.append(n)
+
+                        for elem in ls:
+                            if elem in pseudoinstruction:
+                                print(f"{i}- {str(ls)}: pseudo-instrucción de memoria")
+                            elif elem in instrucciones:
+                                print(f"{i}- {str(ls)}: instrucción de memoria")
+                            elif elem in registros:
+                                print(f"{i}- {str(ls)}: registro")
+                            elif elem in numbers:
+                                print(f"{i}- {str(ls)}: coonstante numerica")
                         print(f"{i}- {str(ls)}: instrucción de memoria")
 
                         for item in words:

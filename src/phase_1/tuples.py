@@ -256,6 +256,9 @@ pseudoinstruction = (
     ".data segment",
     ".code segment",
     ".stack segment",
+    "ends",
+    "EQU",
+    "equ",
 )
 
 space = (" ", "  ")
