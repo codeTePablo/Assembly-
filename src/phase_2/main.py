@@ -1,10 +1,14 @@
 from tkinter import *
 from tkinter import filedialog
 from tuples import *
+from functions import *
 from prettytable import PrettyTable
 
+# Restructuración de código  
 
-def openFile():
+# Open file 
+def open_file():
+    """ Abre el archivo y lo lee """
     filepath = filedialog.askopenfilename(
         filetypes=[("ASM", "*.asm*"), ("Text Files", "*.txt")]
     )
@@ -12,21 +16,13 @@ def openFile():
     return file.read()
 
 
-def fillDataSegment(lines):
-    lines = lines.split("\n")
-
-    for line in lines:
-        dataSegment = []
-        if line.startswith("data segment") == True:
-            line = lines[lines.index(line) + 1]
-            while line.endswith("ends") == False:
-                dataSegment.append(line)
-                line = lines[lines.index(line) + 1]
-            lists = analyzeDatasegment(dataSegment)
-            return lists
-
-
-def searchEtiquetas(lines):
+def search_etiquetas(lines):
+    """ Busca las etiquetas en el código y las guarda en una lista 
+    args:
+        lines (str): Código del archivo abierto
+    return:
+        list: Lista de listas con las etiquetas
+    """
     lines = lines.split("\n")
     listadeEtiquetas = []
     for line in lines:
@@ -34,14 +30,41 @@ def searchEtiquetas(lines):
             etiqueta = []
             etiqueta.append(line)
             etiqueta.append("Etiqueta")
-            etiqueta.append("null")
-            etiqueta.append("null")
+            etiqueta.append("null")  # la etiqueta no tiene tamaño
+            etiqueta.append("null")  # la etiqueta no tiene valor
             listadeEtiquetas.append(etiqueta)
-
+    # print("lista de etiquetas: " + str(listadeEtiquetas))
     return listadeEtiquetas
 
 
-def analyzeDatasegment(dataSegment):
+def fill_data_segment(lines):
+    """
+    Args:
+        lines (str): Código del archivo abierto
+    Return:
+        list: Lista de listas con los datos del segmento de datos
+    """
+    lines = lines.split("\n")
+
+    for line in lines:
+        dataSegment = []
+        if line.startswith("data segment") == True:
+            # line = lines[lines.index(line) + 1]
+            line = line_step(lines, line)
+            while line.endswith("ends") == False:
+                # dataSegment.append(line)
+                # line = lines[lines.index(line) + 1]
+                line = add_list(dataSegment, lines, line)
+            lists = analyze_data_segment(dataSegment)
+            return lists
+
+
+def analyze_data_segment(dataSegment):
+    """
+    Analiza el segmento de datos y crea una lista de listas con los datos
+    args:
+        dataSegment (list): Lista de listas con los datos del segmento de datos
+    """
     lists = []
 
     for line in dataSegment:
@@ -49,7 +72,7 @@ def analyzeDatasegment(dataSegment):
         words = line.split(" ")
 
         ls = []
-
+        # posiblemente crear una tupla con los tipos de datos y evitar tantos if
         for word in words:
             if word == (""):
                 pass
@@ -59,10 +82,10 @@ def analyzeDatasegment(dataSegment):
             elif word.startswith("equ"):
                 ls.append("Constante")
                 ls.append("dw")
+
             elif word.startswith(pseudoinstruction):
                 ls.append("Variable")
                 ls.append(word)
-
             elif word.startswith(numbers):
                 ls.append(word)
             elif word.startswith("-"):
@@ -89,6 +112,7 @@ def analyzeDatasegment(dataSegment):
                     str = str + word + " "
                 ls.append(str)
                 break
+
             elif word.startswith("dup"):
                 str = ""
                 string = []
@@ -153,28 +177,11 @@ def analyzeDatasegment(dataSegment):
                             + " El valor no puede ser mayor a 65535"
                         )
                         lists.remove(ls)
-    lists = createTable(lists)
+    lists = create_table(lists)
     return lists
 
 
-def createTable(lists):
-    table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor"])
-
-    etiquetas = searchEtiquetas(lines)
-
-    for etiqueta in etiquetas:
-        lists.append(etiqueta)
-
-    # print(lists)
-
-    for list in lists:
-        table.add_row(list)
-
-    print(table)
-    return lists
-
-
-def analyzeStackSegment(stackSegment):
+def analyze_stack_segment(stackSegment):
     ls = []
     words = "".join(stackSegment)
     words = words.split(" ")
@@ -203,7 +210,7 @@ def analyzeStackSegment(stackSegment):
             return True
 
 
-def stackSegment(lines):
+def stack_segment(lines):
     lines = lines.split("\n")
     for line in lines:
         stackSegment = []
@@ -212,11 +219,11 @@ def stackSegment(lines):
             while line.endswith("ends") == False:
                 stackSegment.append(line)
                 line = lines[lines.index(line) + 1]
-            result = analyzeStackSegment(stackSegment)
+            result = analyze_stack_segment(stackSegment)
             return result
 
 
-def defineCodesegmen(codeSegment):
+def define_code_segment(codeSegment):
     lines = codeSegment.split("\n")
 
     codeSegment = []
@@ -233,17 +240,41 @@ def defineCodesegmen(codeSegment):
     print(codeSegment)
 
 
-lines = openFile()
+# Despues de analizar el data segment, stack segment, code segment se crea la tabla
+def create_table(lists):
+    """ 
+    Crea la tabla con 4 columnas 
+    - simbolos
+    - tipo
+    - tamaño
+    - valor 
+    """
+    table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor"])
 
-# Lista de variables y simbolos
-lists = fillDataSegment(lines)
+    etiquetas = search_etiquetas(lines)
 
-# Analisis de stack segment
-bool = stackSegment(lines)
+    for etiqueta in etiquetas:
+        lists.append(etiqueta)
 
-# Analisis de code segment
-defineCodesegmen(lines)
+    for list in lists:
+        table.add_row(list)
 
-print(lists[1][3])
+    print(table)
+    return lists
 
-print(lists)
+
+if __name__ == "__main__":
+    lines = open_file()
+
+    # Lista de variables y simbolos
+    lists = fill_data_segment(lines)
+
+    # Analisis de stack segment
+    bool = stack_segment(lines)
+
+    # Analisis de code segment
+    define_code_segment(lines)
+
+    # print(lists[1][3])
+
+    # print(lists)
