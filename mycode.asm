@@ -27,10 +27,13 @@ start:
     mov ax, data
     mov ds, ax
     mov es, ax
+    
     inicio:
     fin:
     etiq1:
     etiq2:
+
+    
 
     lea dx, pkey
     mov ah, 9

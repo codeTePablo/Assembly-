@@ -62,17 +62,19 @@ def fill_data_segment(lines):
                     )
                 else:
                     line = add_list(dataSegment, lines, line)
-            return analyze_data_segment(dataSegment)
+            cleandataSegment = list(filter(str.strip, dataSegment))
+
+            return analyze_data_segment(cleandataSegment)
 
 
-def analyze_data_segment(dataSegment: list) -> list:
+def analyze_data_segment(cleandataSegment: list) -> list:
     """
     Analiza el segmento de datos y crea una lista de listas con los datos
     args:
         dataSegment (list): Lista de listas con los datos del segmento de datos
     """
     # print(lists[0]) #imprime el primer elemento de la lista de listas
-    return create_table(data_segment(dataSegment))
+    return create_table(data_segment(cleandataSegment))
 
 
 def analyze_stack_segment(stackSegment):
@@ -98,18 +100,17 @@ def stack_segment(lines):
 
 def define_code_segment(codeSegment):
     lines = codeSegment.split("\n")
-
-    codeSegment = []
+    # print(type(lines))
+    in_code_segment = False
+    code_segment = []
     for line in lines:
-        if line.startswith("code segment") == True:
-            line = line_step(lines, line)
-            while line.endswith("ends") == False:
-                if line == "\n" == True:
-                    print("Error en la linea: " + line + " Falta de argumentos")
-                    pass
-                else:
-                    line = add_list(codeSegment, lines, line)
-    print(codeSegment)
+        if "code segment" in line:
+            lines = True
+        elif "ends" in line:
+            lines = False
+        elif lines and line.strip() != "":
+            code_segment.append(line.strip())
+    return code_segment
 
 
 # Despues de analizar el data segment, stack segment se crea la tabla
@@ -145,8 +146,9 @@ if __name__ == "__main__":
     boleano = stack_segment(lines)
 
     # Analisis de code segment
-    define_code_segment(lines)
+    codesegment = define_code_segment(lines)
 
-    # print(lists[1][3])
-
-    # print(lists)
+    #
+    print(lists)
+    print(boleano)
+    print(codesegment)

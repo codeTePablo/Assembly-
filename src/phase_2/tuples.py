@@ -258,7 +258,7 @@ pseudoinstruction = (
     ".stack segment",
 )
 
-space = (" ", "  ", "")
+space = (" ", "  ", "", "\n")
 
 data_segment_words = ("EQU", "equ")
 data_segment_words_2 = ("dup", "DUP")

@@ -1,16 +1,20 @@
-from tuples import * 
+from tuples import *
+
 
 def add_list(my_list, lines, line):
     my_list.append(line)
     new_line = lines[lines.index(line) + 1]
     return new_line
 
+
 def line_step(lines, line):
     new_line = lines[lines.index(line) + 1]
     return new_line
 
+
 def append_to_list():
     pass
+
 
 def tags(line):
     etiqueta = []
@@ -20,24 +24,28 @@ def tags(line):
     etiqueta.append("null")  # la etiqueta no tiene valor
     return etiqueta
 
+
 # analyze
+
 
 def type_table_constant(my_list):
     my_list.append("Constante")
     my_list.append("dw")
     return my_list
 
+
 def type_table_variable(my_list, word):
     my_list.append("Variable")
     my_list.append(word)
     return my_list
+
 
 def data_segment(dataSegment):
     lists = []
 
     for line in dataSegment:
         words = line.split(" ")
-        
+
         ls = []
         for word in words:
             if word == (space):
@@ -77,10 +85,16 @@ def data_segment(dataSegment):
             if word == (space):
                 ls.remove(word)
 
+        if len(ls) == 0:
+            pass
         if len(ls) < 4:
-            print("Error en la linea: " + line + " Falta de argumentos")
+            print("Error en data segment la linea: " + line + " Falta de argumentos")
         if len(ls) > 4:
-            print("Error en la linea: " + line + " Exceso de argumentos argumentos")
+            print(
+                "Error en data segment la linea: "
+                + line
+                + " Exceso de argumentos argumentos"
+            )
         if len(ls) == 4:
             lists.append(ls)
 
@@ -125,30 +139,25 @@ def data_segment(dataSegment):
                         lists.remove(ls)
     return lists
 
+
 def stack_Segment(stackSegment):
     ls = []
     words = "".join(stackSegment)
     words = words.split(" ")
+    words = list(filter(None, words))
 
-    for word in words:
-        if word == (""):
-            pass
-        else:
-            ls.append(word)
+    line = " ".join(words)
 
-    if ls[0].startswith("db"):
-        valor = int(ls[1])
-        if valor > 255:
-            print("Error en la linea: " + ls[0] + " El valor no puede ser mayor a 255")
-            return False
+    if line.startswith("db"):
+        if int(words[1]) <= 255:
+            return "OK"
         else:
-            return True
-    elif ls[0].startswith("dw"):
-        valor = int(ls[1])
-        if valor > 65535:
-            print(
-                "Error en la linea: " + ls[0] + " El valor no puede ser mayor a 65535"
-            )
-            return False
+            return "Error en stack segment se supera el valor de los 8 bits"
+    elif line.startswith("dw"):
+        if int(words[1]) <= 65535:
+            return "OK"
         else:
-            return True
+            return "Error en stack segment se supera el valor de los 8 bits"
+
+    else:
+        print("Error en la linea: " + line + " linea no valida")
