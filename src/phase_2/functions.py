@@ -23,6 +23,16 @@ def tags(line):
 
 # analyze
 
+def type_table_constant(my_list):
+    my_list.append("Constante")
+    my_list.append("dw")
+    return my_list
+
+def type_table_variable(my_list, word):
+    my_list.append("Variable")
+    my_list.append(word)
+    return my_list
+
 def data_segment(dataSegment):
     lists = []
 
@@ -31,18 +41,12 @@ def data_segment(dataSegment):
         
         ls = []
         for word in words:
-            if word == (""):
+            if word == (space):
                 pass
-            elif word.startswith("EQU"):
-                ls.append("Constante")
-                ls.append("dw")
-            elif word.startswith("equ"):
-                ls.append("Constante")
-                ls.append("dw")
-
+            elif word.startswith(data_segment_words):
+                type_table_constant(ls)
             elif word.startswith(pseudoinstruction):
-                ls.append("Variable")
-                ls.append(word)
+                type_table_variable(ls, word)
             elif word.startswith(numbers):
                 ls.append(word)
             elif word.startswith("-"):
