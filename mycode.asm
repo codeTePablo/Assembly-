@@ -10,6 +10,9 @@ data segment
     estenodeberia db 256
     prueb EQU 100
 
+    6587 var 2
+    db orp 87
+    
     prueba equ 100
     var dw DUP (100)
     dw 100 dup (0)

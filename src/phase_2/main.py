@@ -4,11 +4,12 @@ from tuples import *
 from functions import *
 from prettytable import PrettyTable
 
-# Restructuración de código  
+# Restructuración de código
 
-# Open file 
+
+# Open file
 def open_file():
-    """ Abre el archivo y lo lee """
+    """Abre el archivo y lo lee"""
     filepath = filedialog.askopenfilename(
         filetypes=[("ASM", "*.asm*"), ("Text Files", "*.txt")]
     )
@@ -17,7 +18,7 @@ def open_file():
 
 
 def search_etiquetas(lines: list) -> list:
-    """ Busca las etiquetas en el código y las guarda en una lista 
+    """Busca las etiquetas en el código y las guarda en una lista
     args:
         lines (str): Código del archivo abierto
     return:
@@ -44,12 +45,24 @@ def fill_data_segment(lines):
 
     for line in lines:
         dataSegment = []
-        if line.startswith("data segment") == True:
+        if line.startswith("data segment"):
             line = line_step(lines, line)
             while line.endswith("ends") == False:
-                line = add_list(dataSegment, lines, line)
-            lists = analyze_data_segment(dataSegment)
-            return lists
+                if line.startswith(numbers):
+                    print(
+                        "Error en la linea: "
+                        + line
+                        + " No se puede declarar con un numero al inicio"
+                    )
+                elif line.startswith(pseudoinstruction):
+                    print(
+                        "Error en la linea: "
+                        + line
+                        + " No se puede declarar con una pseudoinstruccion al inicio"
+                    )
+                else:
+                    line = add_list(dataSegment, lines, line)
+            return analyze_data_segment(dataSegment)
 
 
 def analyze_data_segment(dataSegment: list) -> list:
@@ -58,12 +71,16 @@ def analyze_data_segment(dataSegment: list) -> list:
     args:
         dataSegment (list): Lista de listas con los datos del segmento de datos
     """
-    lists = create_table(data_segment(dataSegment))
     # print(lists[0]) #imprime el primer elemento de la lista de listas
-    return lists
+    return create_table(data_segment(dataSegment))
 
 
 def analyze_stack_segment(stackSegment):
+    """
+    Analiza el segmento de pila y crea una lista de listas con los datos
+    args:
+        stackSegment (list): Lista de listas con los datos del segmento de pila
+    """
     return stack_Segment(stackSegment)
 
 
@@ -97,12 +114,12 @@ def define_code_segment(codeSegment):
 
 # Despues de analizar el data segment, stack segment se crea la tabla
 def create_table(lists):
-    """ 
-    Crea la tabla con 4 columnas 
+    """
+    Crea la tabla con 4 columnas
     - simbolos
     - tipo
     - tamaño
-    - valor 
+    - valor
     """
     table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor"])
 
@@ -125,7 +142,7 @@ if __name__ == "__main__":
     lists = fill_data_segment(lines)
 
     # Analisis de stack segment regresa un false o true en caso de que el stack segment este bien o mal
-    boleano= (stack_segment(lines))
+    boleano = stack_segment(lines)
 
     # Analisis de code segment
     define_code_segment(lines)
