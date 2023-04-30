@@ -64,32 +64,7 @@ def analyze_data_segment(dataSegment: list) -> list:
 
 
 def analyze_stack_segment(stackSegment):
-    ls = []
-    words = "".join(stackSegment)
-    words = words.split(" ")
-
-    for word in words:
-        if word == (""):
-            pass
-        else:
-            ls.append(word)
-
-    if ls[0].startswith("db"):
-        valor = int(ls[1])
-        if valor > 255:
-            print("Error en la linea: " + ls[0] + " El valor no puede ser mayor a 255")
-            return False
-        else:
-            return True
-    elif ls[0].startswith("dw"):
-        valor = int(ls[1])
-        if valor > 65535:
-            print(
-                "Error en la linea: " + ls[0] + " El valor no puede ser mayor a 65535"
-            )
-            return False
-        else:
-            return True
+   return stack_Segment(stackSegment)
 
 
 def stack_segment(lines):
@@ -149,8 +124,8 @@ if __name__ == "__main__":
     # Lista de variables y simbolos
     lists = fill_data_segment(lines)
 
-    # Analisis de stack segment
-    bool = stack_segment(lines)
+    # Analisis de stack segment regresa un false o true en caso de que el stack segment este bien o mal
+    boleano= (stack_segment(lines))
 
     # Analisis de code segment
     define_code_segment(lines)

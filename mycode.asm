@@ -16,7 +16,7 @@ data segment
 ends
 
 stack segment
-    dw   65535  dup(0)
+    dw   65536  dup(0)
 ends
 
 code segment

@@ -67,7 +67,6 @@ def data_segment(dataSegment):
                     str = str + word + " "
                 ls.append(str)
                 break
-
             elif word.startswith("dup"):
                 str = ""
                 string = []
@@ -132,3 +131,31 @@ def data_segment(dataSegment):
                         )
                         lists.remove(ls)
     return lists
+
+def stack_Segment(stackSegment):
+    ls = []
+    words = "".join(stackSegment)
+    words = words.split(" ")
+
+    for word in words:
+        if word == (""):
+            pass
+        else:
+            ls.append(word)
+
+    if ls[0].startswith("db"):
+        valor = int(ls[1])
+        if valor > 255:
+            print("Error en la linea: " + ls[0] + " El valor no puede ser mayor a 255")
+            return False
+        else:
+            return True
+    elif ls[0].startswith("dw"):
+        valor = int(ls[1])
+        if valor > 65535:
+            print(
+                "Error en la linea: " + ls[0] + " El valor no puede ser mayor a 65535"
+            )
+            return False
+        else:
+            return True
