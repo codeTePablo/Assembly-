@@ -30,6 +30,7 @@ instrucciones = {
         (REG, memory),
         (memory, REG),
         (REG, REG),
+        # el inmediate aun no se agrega a la funcion
         (memory, immediate),
         (REG, immediate),
     ],

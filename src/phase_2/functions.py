@@ -207,5 +207,6 @@ def stack_Segment(stackSegment):
 
 if __name__ == "__main__":
     # line = ["DEC", "AX", "[BX+DI]"]
-    line = ["IDIV", "BX", "[SI]"]
+    line = ["ADC", "BX", "[SI]"]
+    # line = ["ADC", "[SI+immediate]", "AX"]
     check_order_istructions(line)
