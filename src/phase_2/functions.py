@@ -1,4 +1,5 @@
 from tuples import *
+from dicts import *
 
 
 def add_list(my_list, lines, line):
@@ -24,10 +25,41 @@ def tags(line):
     etiqueta.append("null")  # la etiqueta no tiene valor
     return etiqueta
 
+
 def binary_numbers(binario):
     # binario = "10101010B"
     decimal = int(binario[:-1], 2)
     print(f"{decimal} es decimal")
+
+
+def check_order_istructions(line):
+    """verificamos que las instrucciones esten en orden
+    args:
+        instructios: es un diccionario con las instrucciones
+        line: es la linea que se esta analizando
+    e.g
+    DEC = [REG, memory]
+    """
+    instruction = line[0]
+    # # print(line[0])
+    valores = line[1:]
+    # print(valores)
+
+    if instruction in instrucciones:
+        reg, memory = instrucciones[instruction][0]
+        if all(valor in reg for valor in valores if valor not in memory) and all(
+            valor in memory for valor in valores if valor not in reg
+        ):
+            print(
+                f"la instruccion: {instruction} con registro: {line[1]} y memoria: {line[2]} son correctos"
+            )
+        elif all(valor in memory for valor in valores if valor not in reg):
+            print("Los valores de memoria son correctos")
+        else:
+            print("Error: los valores no están en el orden correcto")
+    else:
+        print("Error: instrucción desconocida")
+
 
 # analyze
 
@@ -124,8 +156,8 @@ def data_segment(dataSegment):
                         lists.remove(ls)
             elif word.startswith(numbers):
                 if ls[2] == ("db"):
-                    # 
-                    valor = (ls[3])
+                    #
+                    valor = ls[3]
                     print(valor)
                     # valor = int(ls)
                     valor_1 = binary_numbers(valor)
@@ -171,3 +203,9 @@ def stack_Segment(stackSegment):
 
     else:
         print("Error en la linea: " + line + " linea no valida")
+
+
+if __name__ == "__main__":
+    # line = ["DEC", "AX", "[BX+DI]"]
+    line = ["IDIV", "BX", "[SI]"]
+    check_order_istructions(line)

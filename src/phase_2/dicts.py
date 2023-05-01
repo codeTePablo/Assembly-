@@ -1,0 +1,61 @@
+# diccionoarios para el analizador lexico y sintactico
+
+# listas
+REG = ["AX", "BX", "CX", "DX", "AH", "AL", "BH", "BL", "CH", "CL", "DH", "DL"]
+SREG = ["CS", "DS", "SS", "ES"]
+memory = [
+    "[BX+SI]",
+    "[BX+DI]",
+    "[BP+SI]",
+    "[BP+DI]",
+    "[SI]",
+    "[DI]",
+    "[BP]",
+    "[BX]",
+    "[SI+immediate]",
+    "[DI+immediate]",
+    "[BP+immediate]",
+    "[BX+immediate]",
+]
+immediate = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+label = [""]
+
+# diccionario
+instrucciones = {
+    "MOV": [(REG, memory)],
+    "DEC": [(REG, memory)],
+    "IDIV": [(REG, memory)],
+    "IMUL": [(REG, memory)],
+    "ADC": [
+        (REG, memory),
+        (memory, REG),
+        (REG, REG),
+        (memory, immediate),
+        (REG, immediate),
+    ],
+    "CMP": [
+        (REG, memory),
+        (memory, REG),
+        (REG, REG),
+        (memory, immediate),
+        (REG, immediate),
+    ],
+    "LES": [(REG, memory)],
+    "LDS": [(REG, memory)],
+    "JA": [(label)],
+    "JC": [(label)],
+    "JGE": [(label)],
+    "JNB": [(label)],
+    "JNG": [(label)],
+    "JNO": [(label)],
+}
+
+
+diccionario_none = {
+    "AAA": None,
+    "AAD": None,
+    "HLT": None,
+    "INTO": None,
+    "SCASW": None,
+    "STC": None,
+}
