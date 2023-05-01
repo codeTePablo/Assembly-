@@ -56,25 +56,24 @@ def fill_data_segment(lines):
                     )
                 elif line.startswith(pseudoinstruction):
                     print(
-                        "Error en la linea: "
-                        + line
-                        + " No se puede declarar con una pseudoinstruccion al inicio"
+                        f"Error en la linea: {line} No se puede declarar con una pseudoinstruccion al inicio"
                     )
+                    break
                 else:
                     line = add_list(dataSegment, lines, line)
-            cleandataSegment = list(filter(str.strip, dataSegment))
+            clean_data_segment = list(filter(str.strip, dataSegment))
 
-            return analyze_data_segment(cleandataSegment)
+            return analyze_data_segment(clean_data_segment)
 
 
-def analyze_data_segment(cleandataSegment: list) -> list:
+def analyze_data_segment(clean_data_segment: list) -> list:
     """
     Analiza el segmento de datos y crea una lista de listas con los datos
     args:
         dataSegment (list): Lista de listas con los datos del segmento de datos
     """
     # print(lists[0]) #imprime el primer elemento de la lista de listas
-    return create_table(data_segment(cleandataSegment))
+    return create_table(data_segment(clean_data_segment))
 
 
 def analyze_stack_segment(stackSegment):

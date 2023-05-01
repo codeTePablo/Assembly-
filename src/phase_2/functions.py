@@ -24,6 +24,10 @@ def tags(line):
     etiqueta.append("null")  # la etiqueta no tiene valor
     return etiqueta
 
+def binary_numbers(binario):
+    # binario = "10101010B"
+    decimal = int(binario[:-1], 2)
+    print(f"{decimal} es decimal")
 
 # analyze
 
@@ -120,14 +124,20 @@ def data_segment(dataSegment):
                         lists.remove(ls)
             elif word.startswith(numbers):
                 if ls[2] == ("db"):
-                    valor = int(ls[3])
+                    # 
+                    valor = (ls[3])
+                    print(valor)
+                    # valor = int(ls)
+                    valor_1 = binary_numbers(valor)
+                    print(valor_1)
                     if valor > 255:
                         print(
-                            "Error en la linea: "
-                            + line
-                            + " El valor no puede ser mayor a 255"
+                            f"Error en la linea: {line} El valor no puede ser mayor a 255"
                         )
                         lists.remove(ls)
+                    else:
+                        pass
+                        # print("OK")
                 elif ls[2] == ("dw"):
                     valor = int(ls[3])
                     if valor > 65535:
