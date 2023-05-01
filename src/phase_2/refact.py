@@ -74,20 +74,20 @@ def checkLinewithoutOperands(line):
 
 
 def analizeCodeSegment(dataSegment):
-    for line in dataSegment:
+    for n, line in enumerate(dataSegment, start=1):
         if line.startswith(instrucciones_sin_operando):
             line = cleanLine(line)
             checkLinewithoutOperands(line)
         elif line.startswith(instrucciones):
-            print(f"{line} es una instruccion con operando")
+            print(f"{n}- {line} es una instruccion con operando")
         elif line.startswith(OtrasInstrucciones):
-            print(f"{line} es una que empieza con instrucciones que no nos toca")
+            print(f"{n}- {line} es una que empieza con instrucciones que no nos toca")
         elif line.startswith(numbers):
-            print(f"{line} parametros incorrectos")
+            print(f"{n}- {line} parametros incorrectos")
         elif line.endswith(":"):
-            print(f"{line} es una etiqueta")
+            print(f"{n}- {line} es una etiqueta")
         else:
-            print(f"{line} es un error")
+            print(f"{n}- {line} es un error")
 
 
 raw_file = open_file()
@@ -95,7 +95,7 @@ print(raw_file)
 
 
 clean_file = clear_File(raw_file)
-
+# print(clean_file) # Lista de lineas limpias separadas por comas dentro de una lista 
 
 dataSegment, indexOfends = searchDataSegment(clean_file)
 
@@ -104,4 +104,4 @@ stackSegment, indexOfends = searchStacksSegments(clean_file)
 
 del clean_file[0 : indexOfends + 1]
 codeSegmet, indexOfends = searchCodeSegment(clean_file)
-analizeCodeSegment(codeSegmet)
+lista_limpia_code_segment = analizeCodeSegment(codeSegmet)
