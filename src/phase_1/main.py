@@ -12,6 +12,50 @@ def openFile():
     return file.read()
 
 
+def analyzer2(linea):
+    words = linea.split(" ")
+    for word in words:
+        if word in pseudoinstruction:
+            print(f"{i}- {word}: pseudoinstruction")
+        elif word in registros:
+            print(f"{i}- {word}: registro")
+        elif word in instrucciones:
+            print(f"{i}- {word}: instrucción")
+        elif word in registros:
+            print(f"{i}- {word}: registro")
+        elif word.startswith(abecedario):
+            if len(word) > 10:
+                print(f"{i}- {word}: caracter no valido")
+            else:
+                print(f"{i}- {word}: simbolo")
+        elif word.startswith(numbers):
+            print(f"{i}- {word}: constante numerica ")
+        else:
+            analyzeCorchete2(word)
+
+
+def analyzeCorchete2(word):
+    word = (
+        word.replace("[", "")
+        .replace("]", "")
+        .replace("+", " ")
+        .replace("-", " ")
+        .replace("*", " ")
+        .replace("/", " ")
+    )
+    word = word.split(" ")
+
+    for elem in word:
+        if elem in pseudoinstruction:
+            print(f"{i}- {elem}: pseudoinstruction")
+        elif elem in registros:
+            print(f"{i}- {elem}: registro de segmenrto")
+        elif elem in instrucciones:
+            print(f"{i}- {elem}: instrucción")
+        elif elem.isdigit():
+            print(f"{i}- {elem}: constante numerica")
+
+
 def analyzeCorchete(ls):
     for elem in ls:
         elem = elem.replace("[", "").replace("]", "")
@@ -125,9 +169,11 @@ while True:
 
                     elif n.startswith(abecedario):
                         if len(n) > 10:
-                            print(f"{i}- {n}: caracter no valido")
+                            sincoma = n.replace(",", " ")
+                            analyzer2(sincoma)
                         else:
-                            print(f"{i}- {n}: simbolo")
+                            sincoma = n.replace(",", " ")
+                            analyzer2(sincoma)
                     else:
                         pass
 

@@ -263,3 +263,5 @@ pseudoinstruction = (
 )
 
 space = (" ", "  ")
+
+operadores = ("+", "-", "*", "/")
