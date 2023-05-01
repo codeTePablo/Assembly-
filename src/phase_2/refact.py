@@ -90,30 +90,18 @@ def analizeCodeSegment(dataSegment):
             print(f"{line} es un error")
 
 
-# Se almacena el archivo crudo en una variable
 raw_file = open_file()
-raw_file.capitalize
 print(raw_file)
 
 
-# El archivo crudo se limpia y se almacena en la variable clean_file
 clean_file = clear_File(raw_file)
 
-# Se identifica el segmento de datos
+
 dataSegment, indexOfends = searchDataSegment(clean_file)
 
 del clean_file[0 : indexOfends + 1]
-# Se identifica el segmento de stacks
 stackSegment, indexOfends = searchStacksSegments(clean_file)
 
 del clean_file[0 : indexOfends + 1]
-# Se identifica el segmento de código
 codeSegmet, indexOfends = searchCodeSegment(clean_file)
 analizeCodeSegment(codeSegmet)
-
-# print("Segmento de datos")
-# print(dataSegment)
-# print("Segmento de stack")
-# print(stackSegment)
-# print("Segmento de código")
-# print(codeSegmet)
