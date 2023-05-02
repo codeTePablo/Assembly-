@@ -267,7 +267,7 @@ registros = (
     "ip",
 )
 
-instrucciones = (
+instruccionesTuplas = (
     "IDIV",
     "IMUL",
     "POP",

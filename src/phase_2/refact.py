@@ -34,51 +34,66 @@ def cleanLine(line):
 
 
 def searchDataSegment(clean_file):
-    indexofDataSegment = clean_file.index("data segment")
-    indexofDataSegmentEnds = clean_file.index("ends")
-    seccionData = clean_file[indexofDataSegment + 1 : indexofDataSegmentEnds]
-
-    return seccionData, indexofDataSegmentEnds
+    try:
+        indexofDataSegment = clean_file.index("data segment")
+        indexofDataSegmentEnds = clean_file.index("ends")
+        seccionData = clean_file[indexofDataSegment + 1 : indexofDataSegmentEnds]
+        return seccionData, indexofDataSegmentEnds
+    except:
+        print("Error fatal No se encontro la seccion de data segment")
+        exit()
 
 
 def searchStacksSegments(clean_file):
-    indexofStacksSegment = clean_file.index("stack segment")
-    indexofStacksSegmentEnds = clean_file.index("ends")
-    seccionStacks = clean_file[indexofStacksSegment + 1 : indexofStacksSegmentEnds]
+    try:
+        indexofStacksSegment = clean_file.index("stack segment")
+        indexofStacksSegmentEnds = clean_file.index("ends")
+        seccionStacks = clean_file[indexofStacksSegment + 1 : indexofStacksSegmentEnds]
 
-    return seccionStacks, indexofStacksSegmentEnds
+        return seccionStacks, indexofStacksSegmentEnds
+    except:
+        print("Error fatal No se encontro la seccion de stack segment")
+        exit()
 
 
 def searchCodeSegment(clean_file):
-    inexofCodeSegment = clean_file.index("code segment")
-    inexofCodeSegmentEnds = clean_file.index("ends")
-    seccionCode = clean_file[inexofCodeSegment + 1 : inexofCodeSegmentEnds]
+    try:
+        inexofCodeSegment = clean_file.index("code segment")
+        inexofCodeSegmentEnds = clean_file.index("ends")
+        seccionCode = clean_file[inexofCodeSegment + 1 : inexofCodeSegmentEnds]
 
-    return seccionCode, inexofCodeSegmentEnds
+        return seccionCode, inexofCodeSegmentEnds, inexofCodeSegment
+    except:
+        print("Error fatal No se encontro la seccion de code segment")
+        exit()
 
 
 def analizeDataSegment(dataSegment):
-    pass
+    print("1- data segment :linea correcta")
+    for n, line in enumerate(dataSegment, start=2):
+        print(f"{n}- {line} :linea correcta")
+    return n
 
 
-def checkLinewithoutOperands(line):
+def checkLinewithoutOperands(line, n):
     line = line.replace(",", " ")
     line = line.split(" ")
     if len(line) > 1:
         word = " ".join(line)
-        print(f"{word} :error : parametros incorrectos")
+        print(f"{n}- {word} :error : parametros incorrectos")
     else:
         word = " ".join(line)
-        print(f"{(word)} :linea correcta")
+        print(f"{n}- {(word)} :linea correcta")
     pass
 
 
-def analizeCodeSegment(dataSegment):
-    for n, line in enumerate(dataSegment, start=1):
+def analizeCodeSegment(dataSegment, n):
+    print(f"{n+1}- code segment :linea correcta")
+    for n, line in enumerate(dataSegment, start=n):
         if line.startswith(instrucciones_sin_operando):
             line = cleanLine(line)
-            checkLinewithoutOperands(line)
-        elif line.startswith(instrucciones):
+            checkLinewithoutOperands(line, n)
+        elif line.startswith(instruccionesTuplas):
             print(f"{n}- {line} es una instruccion con operando")
         elif line.startswith(OtrasInstrucciones):
             print(f"{n}- {line} es una que empieza con instrucciones que no nos toca")
@@ -95,7 +110,7 @@ print(raw_file)
 
 
 clean_file = clear_File(raw_file)
-# print(clean_file) # Lista de lineas limpias separadas por comas dentro de una lista 
+# print(clean_file) # Lista de lineas limpias separadas por comas dentro de una lista
 
 dataSegment, indexOfends = searchDataSegment(clean_file)
 
@@ -103,5 +118,8 @@ del clean_file[0 : indexOfends + 1]
 stackSegment, indexOfends = searchStacksSegments(clean_file)
 
 del clean_file[0 : indexOfends + 1]
-codeSegmet, indexOfends = searchCodeSegment(clean_file)
-lista_limpia_code_segment = analizeCodeSegment(codeSegmet)
+codeSegmet, indexOfends, indexOfstart = searchCodeSegment(clean_file)
+
+
+n = analizeDataSegment(dataSegment)
+n = analizeCodeSegment(codeSegmet, n)
