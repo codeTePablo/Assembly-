@@ -53,6 +53,7 @@ def checkError(line, n):
 
 
 def AnalyzerDataSegment(sentences):
+    # print(sentences)
     # recorre las sentencias que es una lista de lineas del datasegement y busca el patron dado
     variables = []
     for n, cadena in enumerate(sentences, start=1):
@@ -88,7 +89,7 @@ def AnalyzerDataSegment(sentences):
     # table.add_row(list)
 
     # Falta por verificar que el valor de la variable sea correcto para cada tamaño de variable
-
+    # print(variables)
     return variables, n
 
 

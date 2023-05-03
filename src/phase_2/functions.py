@@ -33,8 +33,15 @@ def binary_numbers(binario):
     print(f"{decimal} es decimal")
 
 
+def new_list_for_memory(line):
+    new_list = [[x[0]] for x in line]
+    # print(f"la nueva lista: {new_list}")
+    return new_list
+
+
 def create_list_for_instructions(line):
     # codigo = "ADC AX, BX"
+    # lista = ["ADC", "AX", "BX"]
     lista = line.split(" ")
     for i in range(len(lista)):
         lista[i] = lista[i].replace(",", "")
@@ -42,9 +49,10 @@ def create_list_for_instructions(line):
     return lista
 
 
-def check_order_istructions(line):
+def check_order_istructions(line, lista_memoria):
     print(line)
-    exit()
+    print(lista_memoria)
+    # exit()
     """verificamos que las instrucciones esten en orden
     args:
         instructios: es un diccionario con las instrucciones
@@ -57,31 +65,30 @@ def check_order_istructions(line):
     instruction = line[0]
     valores = line[1:]
     print(len(valores))
-    if len(valores) >= 1:
-        if instruction in instrucciones:
-            reg = instrucciones[instruction][0]
-            mem = instrucciones[instruction][1]
-            if all(valor in reg for valor in valores if valor not in mem) or all(
-                valor in mem for valor in valores if valor not in mem
+    if len(valores) == 1:
+        if instruction in instrucciones_a_checar.instrucciones:
+            reg, memory = instrucciones_a_checar.instrucciones[instruction][0]
+            if all(valor in reg for valor in valores if valor not in memory) and all(
+                valor in memory for valor in valores if valor not in reg
             ):
                 print(f"la instruccion: {instruction} son correctos")
+            elif all(valor in memory for valor in valores if valor not in reg):
+                print("Los valores de memoria son correctos")
             else:
-                print("Error: 1 los valores no están en el orden correcto")
+                print("Error: los valores no están en el orden correcto")
         else:
-            pass
-            # print("Error: instrucción desconocida")
-        if len(valores) >= 2:
-            if instruction in instrucciones:
-                reg, memory = instrucciones[instruction][0]
-                if all(
-                    valor in reg for valor in valores if valor not in memory
-                ) and all(valor in memory for valor in valores if valor not in reg):
-                    print(f"la instruccion: {instruction} son correctos")
-                else:
-                    print("Error: 2 los valores no están en el orden correcto")
-            else:
-                pass
-                # print("Error: instrucción desconocida")
+            print("Error: instrucción desconocida")
+
+    # elif len(valores) >= 1:
+    #     if instruction in instrucciones:
+    #         reg = instrucciones[instruction][0]
+    #         mem = instrucciones[instruction][1]
+    #         if all(valor in reg for valor in valores) or all(
+    #             valor in mem for valor in valores
+    #         ):
+    #             print(f"la instruccion: {instruction} son correctos")
+    #         else:
+    #             print("Error: los valores no están en el orden correcto")
 
 
 # analyze
@@ -239,9 +246,13 @@ def CheckingEtiqueta(etiqueta):
 
 if __name__ == "__main__":
     # line = ["DEC", "[BX+SI]"]  # OK
-    # line = ["DEC", "hola"] # error
+    # line = ["DEC", "hola"]  # error
     # line = ["ADC", "BX"] # OK
     # line = ["ADC", "BX", "[SI]"]  # error
     # line = ["LES", "AX", "[BX]"]  # fuera de rango
-    line = ["ADC", "[SI+immediate]", "AX"]
-    check_order_istructions(line)
+    line = [["ADC", "[SI+immediate]", "AX"], ["ADC", "BX", "[SI]"]]
+
+    # check_order_istructions(line)
+    check_order_istructions(
+        line,
+    )
