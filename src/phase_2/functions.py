@@ -41,25 +41,30 @@ def check_order_istructions(line):
     e.g
     DEC = [REG, memory]
     """
+    print(line)
     instruction = line[0]
-    # # print(line[0])
     valores = line[1:]
-    # print(valores)
-
-    if instruction in instrucciones:
-        reg, memory = instrucciones[instruction][0]
-        if all(valor in reg for valor in valores if valor not in memory) and all(
-            valor in memory for valor in valores if valor not in reg
-        ):
-            print(
-                f"la instruccion: {instruction} con registro: {line[1]} y memoria: {line[2]} son correctos"
-            )
-        elif all(valor in memory for valor in valores if valor not in reg):
-            print("Los valores de memoria son correctos")
+    if len(valores) >= 2:
+        if instruction in instrucciones:
+            reg, memory = instrucciones[instruction][0]
+            if all(valor in reg for valor in valores if valor not in memory) and all(
+                valor in memory for valor in valores if valor not in reg
+            ):
+                print(f"la instruccion: {instruction} son correctos")
+            else:
+                print("Error: los valores no están en el orden correcto")
         else:
-            print("Error: los valores no están en el orden correcto")
-    else:
-        print("Error: instrucción desconocida")
+            print("Error: instrucción desconocida")
+    elif len(valores) >= 1:
+        if instruction in instrucciones:
+            reg = instrucciones[instruction][0]
+            mem = instrucciones[instruction][1]
+            if all(valor in reg for valor in valores) or all(
+                valor in mem for valor in valores
+            ):
+                print(f"la instruccion: {instruction} son correctos")
+            else:
+                print("Error: los valores no están en el orden correcto")
 
 
 # analyze
@@ -216,7 +221,8 @@ def CheckingEtiqueta(etiqueta):
 
 
 if __name__ == "__main__":
-    # line = ["DEC", "AX", "[BX+DI]"]
-    line = ["ADC", "BX", "[SI]"]
+    # line = ["DEC", "[BX+SI]"]
+    line = ["DEC", "hola"]
+    # line = ["ADC", "BX", "[SI]"]
     # line = ["ADC", "[SI+immediate]", "AX"]
     check_order_istructions(line)

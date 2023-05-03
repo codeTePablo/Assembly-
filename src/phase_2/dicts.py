@@ -1,7 +1,34 @@
 # diccionoarios para el analizador lexico y sintactico
 
 # listas
-REG = ["AX", "BX", "CX", "DX", "AH", "AL", "BH", "BL", "CH", "CL", "DH", "DL"]
+REG = [
+    "AX",
+    "BX",
+    "CX",
+    "DX",
+    "SI",
+    "DI",
+    "BP",
+    "SP",
+    "CS",
+    "DS",
+    "SS",
+    "ES",
+    "IP",
+    "ax",
+    "bx",
+    "cx",
+    "dx",
+    "si",
+    "di",
+    "bp",
+    "sp",
+    "cs",
+    "ds",
+    "ss",
+    "es",
+    "ip",
+]
 SREG = ["CS", "DS", "SS", "ES"]
 memory = [
     "[BX+SI]",
@@ -22,6 +49,7 @@ label = [""]
 
 # diccionario
 instrucciones = {
+    "MOV": [(REG, memory)],
     "DEC": [(REG, memory)],
     "IDIV": [(REG, memory)],
     "IMUL": [(REG, memory)],
