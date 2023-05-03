@@ -80,21 +80,15 @@ def checkLinewithoutOperands(line, n):
     pass
 
 
-def analizeCodeSegment(dataSegment, n):
+def analizeCodeSegment(dataSegment, n, tuplaVariables):
     print(f"{n+1}- code segment :linea correcta")
     for n, line in enumerate(dataSegment, start=n + 2):
         if line.startswith(instrucciones_sin_operando):
-            line = cleanLine(
-                line
-            )  # Se limpia la linea de esapcios antes y despues de la linea y se quitan las comas
+            line = cleanLine(line)
             checkLinewithoutOperands(line, n)  # Se analiza la linea
-        elif line.startswith(instruccionesTuplas):
+        elif line.startswith(instrucciones_con_operando):
             print(f"{n}- {line} es una instruccion con operando")
-            # nueva_lista_de_memoria
-            tupla_de_memoria = tuple(nueva_lista_de_memoria)
-            check_order_istructions(
-                create_list_for_instructions(line), tupla_de_memoria
-            )
+            check_order_istructions(line, tuplaVariables)
         elif line.startswith(OtrasInstrucciones):
             print(f"{n}- {line} es una que empieza con instrucciones que no nos toca")
         elif line.startswith(numbers):
@@ -120,8 +114,9 @@ clean_file = clear_File(raw_file)
 dataSegment, indexOfends = searchDataSegment(clean_file)
 
 del clean_file[0 : indexOfends + 1]
+
 stackSegment, indexOfends = searchStacksSegments(clean_file)
-AnalyzeStackSegment(stackSegment)
+
 
 del clean_file[0 : indexOfends + 1]
 codeSegmet, indexOfends, indexOfstart = searchCodeSegment(clean_file)
@@ -130,5 +125,8 @@ codeSegmet, indexOfends, indexOfstart = searchCodeSegment(clean_file)
 variables, n = AnalyzerDataSegment(dataSegment)
 # print(variables) <---- con esa "variables" debemos crear un diccionario o algo para el nombre de variable y su tipo para buscarlas cuando se ejecute una instrucción con una variable
 # Esta funcion analiza el stack segment y devuelve una lista de listas con las variables y sus tipos y el numero de linea
+
 nueva_lista_de_memoria = new_list_for_memory(variables)
-analizeCodeSegment(codeSegmet, n)
+tuplaVariables = tuple(nueva_lista_de_memoria)
+
+analizeCodeSegment(codeSegmet, n, tuplaVariables)

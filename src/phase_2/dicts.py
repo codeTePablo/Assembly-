@@ -35,8 +35,9 @@ SREG = ["CS", "DS", "SS", "ES"]
 immediate = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 label = [""]
 
+
 # diccionario
-def instrucciones_a_checar(memory):
+def loadDictis(memory):
     instrucciones = {
         "DEC": [(REG, memory)],
         "IDIV": [(REG, memory)],
@@ -65,6 +66,7 @@ def instrucciones_a_checar(memory):
         "JNG": [(label)],
         "JNO": [(label)],
     }
+    return instrucciones
 
 
 diccionario_none = {

@@ -264,7 +264,7 @@ registros = (
     "ip",
 )
 
-instruccionesTuplas = (
+instrucciones_con_operando = (
     "DEC",
     "IDIV",
     "IMUL",

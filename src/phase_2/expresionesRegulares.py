@@ -72,7 +72,25 @@ def AnalyzerDataSegment(sentences):
             if (
                 checkError(cadena, n) == True
             ):  # si la linea no tiene errores de sintaxis se agrega a la lista de variables
-                variables.append(cadena)
+                cadena = cadena.split(" ")
+                wordComplete = []
+                for word in cadena:
+                    wordComplete.append(word)
+
+                if (len(wordComplete)) <= 3:
+                    if wordComplete[1] in dbs:
+                        print("instruccion con 3 parametros")
+                        print(wordComplete)
+                        wordComplete.append(wordComplete[2])
+                        if wordComplete == dbs:
+                            wordComplete[1] = "variable"
+
+                        elif wordComplete in equ:
+                            wordComplete[1] = "constante"
+
+                elif (len(wordComplete)) >= 4:
+                    print("instruccion con 4 parametros")
+                    print(wordComplete)
             else:
                 pass
 
@@ -85,12 +103,24 @@ def AnalyzerDataSegment(sentences):
 
     table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor"])
 
-    # for list in variables:
-    # table.add_row(list)
+    for list in variables:
+        table.add_row(list)
 
     # Falta por verificar que el valor de la variable sea correcto para cada tamaño de variable
-    # print(variables)
+    print("Hola")
+    for variable in variables:
+        print(variable)
+
     return variables, n
+
+
+def CheckingEtiqueta(etiqueta):
+    patron = r"^(?P<etiqueta>[a-zA-Z_]\w*\s*):$"
+    coincidencias = re.search((patron), etiqueta)
+    if coincidencias:
+        return True
+    else:
+        return False
 
 
 def AnalyzeStackSegment(stack):

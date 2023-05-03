@@ -49,10 +49,7 @@ def create_list_for_instructions(line):
     return lista
 
 
-def check_order_istructions(line, lista_memoria):
-    print(line)
-    print(lista_memoria)
-    # exit()
+def check_order_istructions(line, tuplaVariables):
     """verificamos que las instrucciones esten en orden
     args:
         instructios: es un diccionario con las instrucciones
@@ -61,6 +58,16 @@ def check_order_istructions(line, lista_memoria):
     ADC = [REG, memory]
     IDIV = [REG]
     """
+    # print(line)
+    # print(tuplaVariables)
+    words_inLine = line.split(" ")
+    insruccion = words_inLine[0]
+
+    print(loadDictis(tuplaVariables))
+
+    print(insruccion)
+
+    exit()
     # print(line)
     instruction = line[0]
     valores = line[1:]
@@ -94,122 +101,10 @@ def check_order_istructions(line, lista_memoria):
 # analyze
 
 
-def type_table_constant(my_list):
-    my_list.append("Constante")
-    my_list.append("dw")
-    return my_list
-
-
 def type_table_variable(my_list, word):
     my_list.append("Variable")
     my_list.append(word)
     return my_list
-
-
-def data_segment(dataSegment):
-    lists = []
-
-    for line in dataSegment:
-        words = line.split(" ")
-
-        ls = []
-        for word in words:
-            if word == (space):
-                pass
-            elif word.startswith(data_segment_words):
-                type_table_constant(ls)
-            elif word.startswith(pseudoinstruction):
-                type_table_variable(ls, word)
-            elif word.startswith(numbers):
-                ls.append(word)
-            elif word.startswith("-"):
-                ls.append(word)
-            elif word.startswith('"' or "'"):
-                new_str = ""
-                string = []
-                while word.endswith('"' or "'") == False:
-                    word = add_list(string, words, word)
-                string.append(word)
-                for word in string:
-                    new_str = new_str + word + " "
-                ls.append(new_str)
-                break
-            elif word.startswith(data_segment_words_2):
-                new_str = ""
-                string = []
-                while word.endswith(")") == False:
-                    word = add_list(string, words, word)
-                string.append(word)
-                for word in string:
-                    new_str = new_str + word + " "
-                ls.append(new_str)
-                break
-            elif word.startswith(abecedario):
-                ls.append(word)
-
-        for word in ls:
-            if word == (space):
-                ls.remove(word)
-
-        if len(ls) == 0:
-            pass
-        if len(ls) < 4:
-            print("Error en data segment la linea: " + line + " Falta de argumentos")
-        if len(ls) > 4:
-            print(
-                "Error en data segment la linea: "
-                + line
-                + " Exceso de argumentos argumentos"
-            )
-        if len(ls) == 4:
-            lists.append(ls)
-
-        for word in ls:
-            if word.startswith("-"):
-                if ls[2] == ("db"):
-                    valor = int(ls[3])
-                    if valor < -129:
-                        print(
-                            "Error en la linea: "
-                            + line
-                            + " El valor no puede ser menor a -129"
-                        )
-                        lists.remove(ls)
-                elif ls[2] == ("dw"):
-                    valor = int(ls[3])
-                    if valor < -32769:
-                        print(
-                            "Error en la linea: "
-                            + line
-                            + " El valor no puede ser menor a -32769"
-                        )
-                        lists.remove(ls)
-            elif word.startswith(numbers):
-                if ls[2] == ("db"):
-                    #
-                    valor = ls[3]
-                    print(valor)
-                    # valor = int(ls)
-                    valor_1 = binary_numbers(valor)
-                    print(valor_1)
-                    if valor > 255:
-                        print(
-                            f"Error en la linea: {line} El valor no puede ser mayor a 255"
-                        )
-                        lists.remove(ls)
-                    else:
-                        pass
-                        # print("OK")
-                elif ls[2] == ("dw"):
-                    valor = int(ls[3])
-                    if valor > 65535:
-                        print(
-                            "Error en la linea: "
-                            + line
-                            + " El valor no puede ser mayor a 65535"
-                        )
-                        lists.remove(ls)
-    return lists
 
 
 def stack_Segment(stackSegment):
@@ -233,15 +128,6 @@ def stack_Segment(stackSegment):
 
     else:
         print("Error en la linea: " + line + " linea no valida")
-
-
-def CheckingEtiqueta(etiqueta):
-    patron = r"^(?P<etiqueta>[a-zA-Z_]\w*\s*):$"
-    coincidencias = re.search((patron), etiqueta)
-    if coincidencias:
-        return True
-    else:
-        return False
 
 
 if __name__ == "__main__":
