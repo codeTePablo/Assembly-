@@ -22,7 +22,6 @@ label = [""]
 
 # diccionario
 instrucciones = {
-    "MOV": [(REG, memory)],
     "DEC": [(REG, memory)],
     "IDIV": [(REG, memory)],
     "IMUL": [(REG, memory)],
