@@ -90,7 +90,6 @@ def analizeCodeSegment(dataSegment, n):
             checkLinewithoutOperands(line, n)  # Se analiza la linea
         elif line.startswith(instruccionesTuplas):
             check_order_istructions(line)
-
         elif line.startswith(OtrasInstrucciones):
             print(f"{n}- {line} es una que empieza con instrucciones que no nos toca")
         elif line.startswith(numbers):
