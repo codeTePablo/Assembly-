@@ -3,7 +3,6 @@ from tkinter import filedialog
 from tuples import *
 from functions import *
 from expresionesRegulares import *
-from prettytable import PrettyTable
 
 # Restructuración de código
 
