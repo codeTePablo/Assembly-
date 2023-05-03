@@ -39,7 +39,6 @@ símbolo = (
     "POP",
     "MUL",
     "NEG",
-    "DEC",
     "NOT",
     "IMUL",
     "IDIV",
