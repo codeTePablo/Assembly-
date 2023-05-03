@@ -31,7 +31,6 @@ OtrasInstrucciones = (
     "INT",
     "MUL",
     "NEG",
-    "DEC",
     "NOT",
     "IMUL",
     "IDIV",
@@ -46,7 +45,6 @@ OtrasInstrucciones = (
     "IMUL",
     "MUL",
     "NEG",
-    "DEC",
     "DIV",
     "RCL",
     "ADD",
@@ -57,7 +55,6 @@ OtrasInstrucciones = (
     "SUB",
     "LEA",
     "TEST",
-    "LES",
     "XCHG",
     "MOV",
     "XOR",
@@ -268,6 +265,7 @@ registros = (
 )
 
 instruccionesTuplas = (
+    "DEC",
     "IDIV",
     "IMUL",
     "POP",

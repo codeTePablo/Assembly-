@@ -95,6 +95,7 @@ def analizeCodeSegment(dataSegment, n):
             checkLinewithoutOperands(line, n)
         elif line.startswith(instruccionesTuplas):
             print(f"{n}- {line} es una instruccion con operando")
+            check_order_istructions(create_list_for_instructions(line))
         elif line.startswith(OtrasInstrucciones):
             print(f"{n}- {line} es una que empieza con instrucciones que no nos toca")
         elif line.startswith(numbers):
@@ -123,3 +124,12 @@ codeSegmet, indexOfends, indexOfstart = searchCodeSegment(clean_file)
 
 n = analizeDataSegment(dataSegment)
 n = analizeCodeSegment(codeSegmet, n)
+
+# print(clean_file)
+# print(test)
+# for data in clean_file:
+#     # separar por espacios y quitar comas y hacer un split
+#     data_clean = data.split(" ")
+#     print(data_clean)
+#     new_data = check_order_istructions(data_clean)
+# print(new_data)

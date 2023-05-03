@@ -33,7 +33,14 @@ start:
     etiq1:
     etiq2:
 
-    
+    DEC AX 
+    IDIV BX
+    IMUL CX
+    ADC AX, BX
+    CMP CX, DX
+    LES AX, [BX]
+    LES [BX]
+    LDS AX, [SI]
 
     lea dx, pkey
     mov ah, 9
