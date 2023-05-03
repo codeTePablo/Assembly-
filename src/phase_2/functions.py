@@ -43,8 +43,6 @@ def create_list_for_instructions(line):
 
 
 def check_order_istructions(line):
-    print(line)
-    exit()
     """verificamos que las instrucciones esten en orden
     args:
         instructios: es un diccionario con las instrucciones
@@ -57,7 +55,7 @@ def check_order_istructions(line):
     instruction = line[0]
     valores = line[1:]
     print(len(valores))
-    if len(valores) >= 1:
+    if len(valores) == 1:
         if instruction in instrucciones:
             reg = instrucciones[instruction][0]
             mem = instrucciones[instruction][1]

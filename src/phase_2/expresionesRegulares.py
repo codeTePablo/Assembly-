@@ -88,7 +88,7 @@ def AnalyzerDataSegment(sentences):
     # table.add_row(list)
 
     # Falta por verificar que el valor de la variable sea correcto para cada tamaño de variable
-
+    print(variables)
     return variables, n
 
 
