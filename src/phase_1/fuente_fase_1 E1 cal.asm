@@ -1,7 +1,7 @@
 data segment
     var11111111111 db 10
     var1 db 10101010B             
-    var2 db "Hola"  ;HOla
+    var2 db "Hola"  
     var3 db 0ADAH                                    
     var4 dw 0F800H                        
     var5 db 50 dup(' ')      
@@ -10,7 +10,7 @@ data segment
     var8 dw 0101B dup(034H)
     var9 db 0FF00H dup(120) 
     var10 db 30 dup(0000B)
-    var11 dw 3000 dup(022BBCCH) 
+    var11 dw 3000 dup(022) 
     const1 equ 800000                    
     const2 equ 900                       
 ends                                     

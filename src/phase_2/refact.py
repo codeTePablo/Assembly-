@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import filedialog
 from tuples import *
 from functions import *
+from expresionesRegulares import *
 from prettytable import PrettyTable
 
 # Restructuración de código
@@ -68,13 +69,6 @@ def searchCodeSegment(clean_file):
         exit()
 
 
-def analizeDataSegment(dataSegment):
-    print("1- data segment :linea correcta")
-    for n, line in enumerate(dataSegment, start=2):
-        print(f"{n}- {line} :linea correcta")
-    return n
-
-
 def checkLinewithoutOperands(line, n):
     line = line.replace(",", " ")
     line = line.split(" ")
@@ -87,12 +81,14 @@ def checkLinewithoutOperands(line, n):
     pass
 
 
-def analizeCodeSegment(dataSegment, n):
-    print(f"{n+1}- code segment :linea correcta")
-    for n, line in enumerate(dataSegment, start=n):
+def analizeCodeSegment(dataSegment):
+    print(f"{1}- code segment :linea correcta")
+    for n, line in enumerate(dataSegment, start=1):
         if line.startswith(instrucciones_sin_operando):
-            line = cleanLine(line)
-            checkLinewithoutOperands(line, n)
+            line = cleanLine(
+                line
+            )  # Se limpia la linea de esapcios antes y despues de la linea y se quitan las comas
+            checkLinewithoutOperands(line, n)  # Se analiza la linea
         elif line.startswith(instruccionesTuplas):
             print(f"{n}- {line} es una instruccion con operando")
             check_order_istructions(create_list_for_instructions(line))
@@ -101,7 +97,11 @@ def analizeCodeSegment(dataSegment, n):
         elif line.startswith(numbers):
             print(f"{n}- {line} parametros incorrectos")
         elif line.endswith(":"):
-            print(f"{n}- {line} es una etiqueta")
+            # Se busca una linea que termine con dos puntos y se analiza si esta correcta o no
+            if (CheckingEtiqueta(line)) == True:
+                print(f"{n}- {line} es una etiqueta")
+            elif (CheckingEtiqueta(line)) == False:
+                print(f"{n}- {line} parametros incorrectos")
         else:
             print(f"{n}- {line} es un error")
 
@@ -111,19 +111,21 @@ print(raw_file)
 
 
 clean_file = clear_File(raw_file)
+
 # print(clean_file) # Lista de lineas limpias separadas por comas dentro de una lista
 
 dataSegment, indexOfends = searchDataSegment(clean_file)
 
 del clean_file[0 : indexOfends + 1]
 stackSegment, indexOfends = searchStacksSegments(clean_file)
+AnalyzeStackSegment(stackSegment)
 
 del clean_file[0 : indexOfends + 1]
 codeSegmet, indexOfends, indexOfstart = searchCodeSegment(clean_file)
 
 
-n = analizeDataSegment(dataSegment)
-n = analizeCodeSegment(codeSegmet, n)
+# n = analizeDataSegment(dataSegment)
+# n = analizeCodeSegment(codeSegmet, n)
 
 # print(clean_file)
 # print(test)

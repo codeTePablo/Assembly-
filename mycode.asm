@@ -19,7 +19,7 @@ data segment
 ends
 
 stack segment
-    dw   65536  dup(0)
+    dw   65535  dup(0)
 ends
 
 code segment
@@ -28,10 +28,11 @@ start:
     mov ds, ax
     mov es, ax
     
-    inicio:
+    inic io:
     fin:
     etiq1:
-    etiq2:
+    etiq 2:
+    9878etique:
 
     DEC AX 
     IDIV BX
