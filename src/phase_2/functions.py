@@ -34,6 +34,8 @@ def binary_numbers(binario):
 
 
 def check_order_istructions(line):
+    print(line)
+    exit()
     """verificamos que las instrucciones esten en orden
     args:
         instructios: es un diccionario con las instrucciones

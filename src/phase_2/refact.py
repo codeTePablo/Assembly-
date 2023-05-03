@@ -80,16 +80,17 @@ def checkLinewithoutOperands(line, n):
     pass
 
 
-def analizeCodeSegment(dataSegment):
-    print(f"{1}- code segment :linea correcta")
-    for n, line in enumerate(dataSegment, start=1):
+def analizeCodeSegment(dataSegment, n):
+    print(f"{n+1}- code segment :linea correcta")
+    for n, line in enumerate(dataSegment, start=n + 2):
         if line.startswith(instrucciones_sin_operando):
             line = cleanLine(
                 line
             )  # Se limpia la linea de esapcios antes y despues de la linea y se quitan las comas
             checkLinewithoutOperands(line, n)  # Se analiza la linea
         elif line.startswith(instruccionesTuplas):
-            print(f"{n}- {line} es una instruccion con operando")
+            check_order_istructions(line)
+
         elif line.startswith(OtrasInstrucciones):
             print(f"{n}- {line} es una que empieza con instrucciones que no nos toca")
         elif line.startswith(numbers):
@@ -121,6 +122,8 @@ AnalyzeStackSegment(stackSegment)
 del clean_file[0 : indexOfends + 1]
 codeSegmet, indexOfends, indexOfstart = searchCodeSegment(clean_file)
 
-
-AnalyzerDataSegment(dataSegment)
-analizeCodeSegment(codeSegmet)
+# Esta funcion analiza el data segment y devuelve una lista de listas con las variables y sus tipos y el numero de linea
+variables, n = AnalyzerDataSegment(dataSegment)
+# print(variables) <---- con esa "variables" debemos crear un diccionario o algo para el nombre de variable y su tipo para buscarlas cuando se ejecute una instrucción con una variable
+# Esta funcion analiza el stack segment y devuelve una lista de listas con las variables y sus tipos y el numero de linea
+analizeCodeSegment(codeSegmet, n)
