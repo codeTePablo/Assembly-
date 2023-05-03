@@ -3,7 +3,6 @@ from tkinter import filedialog
 from tuples import *
 from functions import *
 from expresionesRegulares import *
-from prettytable import PrettyTable
 
 # Restructuración de código
 
@@ -81,9 +80,9 @@ def checkLinewithoutOperands(line, n):
     pass
 
 
-def analizeCodeSegment(dataSegment):
-    print(f"{1}- code segment :linea correcta")
-    for n, line in enumerate(dataSegment, start=1):
+def analizeCodeSegment(dataSegment, n):
+    print(f"{n+1}- code segment :linea correcta")
+    for n, line in enumerate(dataSegment, start=n + 2):
         if line.startswith(instrucciones_sin_operando):
             line = cleanLine(
                 line
@@ -123,15 +122,8 @@ AnalyzeStackSegment(stackSegment)
 del clean_file[0 : indexOfends + 1]
 codeSegmet, indexOfends, indexOfstart = searchCodeSegment(clean_file)
 
-
-# n = analizeDataSegment(dataSegment)
-# n = analizeCodeSegment(codeSegmet, n)
-
-# print(clean_file)
-# print(test)
-# for data in clean_file:
-#     # separar por espacios y quitar comas y hacer un split
-#     data_clean = data.split(" ")
-#     print(data_clean)
-#     new_data = check_order_istructions(data_clean)
-# print(new_data)
+# Esta funcion analiza el data segment y devuelve una lista de listas con las variables y sus tipos y el numero de linea
+variables, n = AnalyzerDataSegment(dataSegment)
+# print(variables) <---- con esa "variables" debemos crear un diccionario o algo para el nombre de variable y su tipo para buscarlas cuando se ejecute una instrucción con una variable
+# Esta funcion analiza el stack segment y devuelve una lista de listas con las variables y sus tipos y el numero de linea
+analizeCodeSegment(codeSegmet, n)
