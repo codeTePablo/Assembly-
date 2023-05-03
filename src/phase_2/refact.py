@@ -85,8 +85,10 @@ def analizeCodeSegment(dataSegment):
     print(f"{1}- code segment :linea correcta")
     for n, line in enumerate(dataSegment, start=1):
         if line.startswith(instrucciones_sin_operando):
-            line = cleanLine(line)
-            checkLinewithoutOperands(line, n)
+            line = cleanLine(
+                line
+            )  # Se limpia la linea de esapcios antes y despues de la linea y se quitan las comas
+            checkLinewithoutOperands(line, n)  # Se analiza la linea
         elif line.startswith(instruccionesTuplas):
             print(f"{n}- {line} es una instruccion con operando")
         elif line.startswith(OtrasInstrucciones):
@@ -94,6 +96,7 @@ def analizeCodeSegment(dataSegment):
         elif line.startswith(numbers):
             print(f"{n}- {line} parametros incorrectos")
         elif line.endswith(":"):
+            # Se busca una linea que termine con dos puntos y se analiza si esta correcta o no
             if (CheckingEtiqueta(line)) == True:
                 print(f"{n}- {line} es una etiqueta")
             elif (CheckingEtiqueta(line)) == False:

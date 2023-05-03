@@ -3,7 +3,6 @@ from tuples import *
 from prettytable import PrettyTable
 
 
-# = r'^(?P<nombre>[a-zA-Z_]\w*)\s+(?P<tipo>db|dw|EQU|equ|DB|DW)\s+(?P<valor>(?:"(?:\\"|[^"])*"|\'(?:\\\'|[^\'])*\')|-?\d+(?P<dup>\s*(DUP|dup)\s*\(\s*\d+\s*\))?)$'
 # expresion_regular = r'^(?P<nombre>[a-zA-Z_]\w*)\s+(?P<tipo>db|dw|EQU|equ)\s+(?P<valor>(?:"(?:\\"|[^"])*"|\'(?:\\\'|[^\'])*\'|\b\d+[A-F]{0,1}H\b|\b\d+[Bb]{1}\b|-\b\d+[A-F]{0,1}H\b|-\b\d+[Bb]{1}\b|\b\d+|\b\d+[.]\d+))(\s+dup\s*\(\s*(?P<dup_valor>(?:"(?:\\"|[^"])*"|\'(?:\\\'|[^\'])*\'|\b\d+[A-F]{0,1}H\b|\b\d+[Bb]{1}\b|-\b\d+[A-F]{0,1}H\b|-\b\d+[Bb]{1}\b|\b\d+|\b\d+[.]\d+))\s*\))?\s*$'
 
 # expresion_regular = r'^(?P<nombre>[a-zA-Z_]\w*)\s+(?P<tipo>db|dw|EQU|equ)\s+(?P<valor>(?:"(?:\\"|[^"])*"|\'(?:\\\'|[^\'])*\'|\b\d+[A-F]{0,1}H\b|\b\d+[Bb]{1}\b|-\b\d+[A-F]{0,1}H\b|-\b\d+[Bb]{1}\b|\b\d+|\b\d+[.]\d+))(\s+dup\s*\(\s*(?P<dup_valor>(?:"(?:\\"|[^"])*"|\'(?:\\\'|[^\'])*\'|\b\d+[A-F]{0,1}H\b|\b\d+[Bb]{1}\b|-\b\d+[A-F]{0,1}H\b|-\b\d+[Bb]{1}\b|\b\d+|\b\d+[.]\d+))\s*\))?\s*$'
@@ -11,6 +10,7 @@ expresion_regular = r'^(?P<nombre>[a-zA-Z_]\w*)\s+(?P<tipo>db|dw|EQU|equ)\s+(?P<
 
 
 def AnalyzerDataSegment(sentences):
+    # recorre las sentencias que es una lista de lineas del datasegement y busca el patron dado
     variables = []
     for cadena in sentences:
         # buscar el patrón en la cadena
@@ -41,10 +41,5 @@ def AnalyzerDataSegment(sentences):
 
 
 def AnalyzeStackSegment(stack):
-    patron = r"^dw\s+(\d{1,5})\s+(dup|DUP)\s?\(\s*(-?\d{1,5}|[0-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-3]\d|6553[0-5])\s*\)$"
-    coincidencia_patron = re.search((patron), stack)
-    if coincidencia_patron:
-        print("Tamaño de la pila: " + coincidencia_patron.group(1))
-        print("Valor de la pila: " + coincidencia_patron.group(3))
-    else:
-        print("Error en la linea: " + stack + " linea no valida")
+    # en este trozo se analñizara la sintaxis correcta de la pila
+    pass
