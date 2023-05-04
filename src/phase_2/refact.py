@@ -3,6 +3,7 @@ from tkinter import filedialog
 from tuples import *
 from functions import *
 from expresionesRegulares import *
+from codeSegementlines import *
 
 # Restructuración de código
 
@@ -86,11 +87,22 @@ def analizeCodeSegment(dataSegment, n, tuplaVariables):
         if line.startswith(instrucciones_sin_operando):
             line = cleanLine(line)
             checkLinewithoutOperands(line, n)  # Se analiza la linea
-        elif line.startswith(instrucciones_con_operando):
-            print(f"{n}- {line} es una instruccion con operando")
-            check_order_istructions(line, tuplaVariables)
+        elif line.startswith(instrucciones_con_operandos):
+            if analyzeOperandsCodeSegments(line, tuplaVariables) == True:
+                print(f"{n}- {line} :linea correcta")
+            else:
+                print(f"{n}- {line} :error : parametros incorrectos")
+        elif line.startswith(instrucciones_con_un_operando):
+            if analyzeoneOperandCodeSegments(line, tuplaVariables) == True:
+                print(f"{n}- {line} :linea correcta")
+            else:
+                print(f"{n}- {line} :error : parametros incorrectos")
+        elif line.startswith(instrucciondeSaltos):
+            print(f"{n} - {line} : instruccion de salto")
         elif line.startswith(OtrasInstrucciones):
-            print(f"{n}- {line} es una que empieza con instrucciones que no nos toca")
+            print(
+                f"{n}- {line} ----------es una que empieza con instrucciones que no nos toca"
+            )
         elif line.startswith(numbers):
             print(f"{n}- {line} parametros incorrectos")
         elif line.endswith(":"):

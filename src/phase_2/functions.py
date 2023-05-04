@@ -60,12 +60,6 @@ def check_order_istructions(line, tuplaVariables):
     """
     # print(line)
     # print(tuplaVariables)
-    words_inLine = line.split(" ")
-    insruccion = words_inLine[0]
-
-    print(loadDictis(tuplaVariables))
-
-    print(insruccion)
 
     exit()
     # print(line)
