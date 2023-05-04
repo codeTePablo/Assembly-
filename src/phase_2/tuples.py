@@ -264,28 +264,67 @@ registros = (
     "ip",
 )
 
-instrucciones_con_operando = (
-    "DEC",
-    "IDIV",
-    "IMUL",
-    "POP",
+
+registros16bits = (
+    "AX",
+    "BX",
+    "CX",
+    "DX",
+    "ax",
+    "bx",
+    "cx",
+    "dx",
+)
+
+registros8bits = (
+    "AL",
+    "AH",
+    "BL",
+    "BH",
+    "CL",
+    "CH",
+    "DL",
+    "DH",
+    "al",
+    "ah",
+    "bl",
+    "bh",
+    "cl",
+    "ch",
+    "dl",
+    "dh",
+)
+
+instrucciones_con_operandos = (
     "ADC",
     "CMP",
     "LES",
     "LDS",
+    "adc",
+    "cmp",
+    "les",
+    "lds",
+)
+
+
+instrucciones_con_un_operando = (
+    "DEC",
+    "IDIV",
+    "IMUL",
+    "POP",
+    "dec",
+    "idiv",
+    "imul",
+    "pop",
+)
+
+instrucciondeSaltos = (
     "JA",
     "JC",
     "JGE",
     "JNB",
     "JNG",
     "JNO",
-    "idiv",
-    "imul",
-    "pop",
-    "adc",
-    "cmp",
-    "les",
-    "lds",
     "ja",
     "jc",
     "jge",

@@ -35,11 +35,11 @@ def checkError(line, n):
                 if words[1] in (dbs):
                     if re.match(expresionHexadecimal, (words[2])):
                         if len(words) == 3:
-                            print(f"{n} - {line} :  correcto")
+                            print(f"{n} - {line} :   correcto")
                             return True
                         elif len(words) <= 4:
                             if words[3] == "dup" or "DUP":
-                                print(f"{n} - {line} :  correcto")
+                                print(f"{n} - {line} :   correcto")
                                 return True
                             else:
                                 print(f"{n} - {line} : error parametros incorrectos")
@@ -50,6 +50,13 @@ def checkError(line, n):
             else:
                 print(f"{n} - {line} : nombre incorrecto en la variable ")
                 return False
+
+
+def exceddDB(valor):
+    if (valor.isdigit()) <= 255 or valor >= -128:
+        return True
+    else:
+        return False
 
 
 def AnalyzerDataSegment(sentences):
@@ -67,30 +74,34 @@ def AnalyzerDataSegment(sentences):
             ls.append(coincidencia_patron.group(2))
             ls.append(coincidencia_patron.group(3))
             variables.append(ls)
-            print(f"{n} - {cadena} :   correcta")
+            print(f"{n} - {cadena} :   correcto")
         else:
-            if (
-                checkError(cadena, n) == True
-            ):  # si la linea no tiene errores de sintaxis se agrega a la lista de variables
-                cadena = cadena.split(" ")
-                wordComplete = []
-                for word in cadena:
-                    wordComplete.append(word)
-
-                if (len(wordComplete)) <= 3:
-                    if wordComplete[1] in dbs:
-                        print("instruccion con 3 parametros")
-                        print(wordComplete)
-                        wordComplete.append(wordComplete[2])
-                        if wordComplete == dbs:
-                            wordComplete[1] = "variable"
-
-                        elif wordComplete in equ:
-                            wordComplete[1] = "constante"
-
-                elif (len(wordComplete)) >= 4:
-                    print("instruccion con 4 parametros")
-                    print(wordComplete)
+            if checkError(cadena, n) == True:
+                words = cadena.split(" ")
+                tamaño = len(words)
+                if tamaño == 3:
+                    words.append(words[2])
+                    if words[1] in dbs:
+                        words[1] = "variable"
+                        words[2] = "db"
+                        variables.append(words)
+                    elif words[1] in equ:
+                        words[1] = "constante"
+                        words[2] = "equ"
+                        variables.append(words)
+                elif tamaño >= 4:
+                    if words[1] == "db" or "DB":
+                        words[1] = "variable"
+                        words[2] = "db"
+                        variables.append(words)
+                    elif words[1] == "dw" or "DW":
+                        words[1] = "variable"
+                        words[2] = "dw"
+                        variables.append(words)
+                    elif words[1] in equ:
+                        words[1] = "constante"
+                        words[2] = "equ"
+                        variables.append(words)
             else:
                 pass
 
@@ -101,16 +112,25 @@ def AnalyzerDataSegment(sentences):
         elif variable[2] in equ:
             variable[1] = "constante"
 
+    for variable in variables:
+        if variable[2] == "db":
+            valor = variable[3]
+            exceddDB(valor)
+        if variable[2] == "dw":
+            valor = variable[3]
+            # exceddDw(valor)
+        if variable[2] == "equ":
+            valor = variable[3]
+            # exceddDw(valor)
+
     table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor"])
 
     for list in variables:
         table.add_row(list)
 
-    # Falta por verificar que el valor de la variable sea correcto para cada tamaño de variable
-    print("Hola")
-    for variable in variables:
-        print(variable)
+    # print(table)
 
+    # Falta por verificar que el valor de la variable sea correcto para cada tamaño de variable
     return variables, n
 
 
