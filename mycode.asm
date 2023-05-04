@@ -34,10 +34,10 @@ start:
     etiq 2:
     9878etique:
 
-    DEC AX 
-    IDIV BX
-    IMUL CX
-    ADC AX, BX
+    DEC var1 
+    IDIV var2
+    IMUL estesi
+    ADC pkey, var1
     CMP CX, DX
     LES AX, [BX]
     LES [BX]
