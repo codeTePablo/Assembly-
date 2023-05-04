@@ -59,6 +59,71 @@ def exceddDB(valor):
         return False
 
 
+def convertir_bits(tupla):
+    """Esta funcion se encarga de convertir los valores de las variables a 8 y 16 bits si hay valores bianrios o hexadecimales"""
+    resultado = []
+    for elemento in tupla:
+        if elemento.endswith("B"):
+            decimal = int(elemento[:-1], 2)
+            resultado.append(decimal)
+        elif elemento.endswith("H"):
+            decimal = int(elemento[:-1], 16)
+            resultado.append(decimal)
+        else:
+            resultado.append(elemento)
+    # print(resultado)
+    return tuple(resultado)
+
+
+def check_value(ocho_bits, dieciseis_bits):
+    """Esta funcion se encarga de verificar si los valores de las variables no exceden el rango de 8 y 16 bits"""
+    new_ocho_bits = tuple(ocho_bits)
+    new_dieciseis_bits = tuple(dieciseis_bits)
+    print("ocho_bits", new_ocho_bits)
+    print("dieciseis_bits", new_dieciseis_bits)
+    new_8_bits = convertir_bits(new_ocho_bits)
+    new_16_bits = convertir_bits(dieciseis_bits)
+    tupla_enteros_8 = tuple(int(x) for x in new_8_bits)
+    tupla_enteros_16 = tuple(int(x) for x in new_16_bits)
+    print(tupla_enteros_8)
+    print(tupla_enteros_16)
+
+    # for x in tupla_enteros:
+    #     if x >= 65535:
+    #         print(f"{x} error")
+    #         return False
+
+
+def sin_strings(lista):
+    """Esta funcion se encarga de verificar si la lista tiene strings y los elimina"""
+    # lista = ["10101010B", "Hola", "0F800H", "50"]
+    nueva_lista = []
+
+    for valor in lista:
+        if isinstance(valor, str):
+            if valor.endswith("B"):
+                try:
+                    nueva_lista.append(valor)
+                except ValueError:
+                    pass
+            elif valor.endswith("H"):
+                try:
+                    nueva_lista.append(valor)
+                except ValueError:
+                    pass
+            else:
+                try:
+                    int(valor)
+                    nueva_lista.append(valor)
+                except ValueError:
+                    pass
+        else:
+            # pass
+            nueva_lista.append(valor)
+    # print(nueva_lista)
+    return nueva_lista
+
+
 def AnalyzerDataSegment(sentences):
     # print(sentences)
     # recorre las sentencias que es una lista de lineas del datasegement y busca el patron dado
@@ -106,6 +171,9 @@ def AnalyzerDataSegment(sentences):
                 pass
 
     # Esta parte es para agregar el tipo y el tamaño de la variable
+    new_list_valor_8bits = []  # lista para guardar los valores de las variables
+    new_list_valor_16bits = []  # lista para guardar los valores de las variables
+
     for variable in variables:
         if variable[2] in dbs:
             variable[1] = "variable"
@@ -115,20 +183,27 @@ def AnalyzerDataSegment(sentences):
     for variable in variables:
         if variable[2] == "db":
             valor = variable[3]
-            exceddDB(valor)
+            # exceddDB(valor)
+            new_list_valor_8bits.append(valor)
         if variable[2] == "dw":
             valor = variable[3]
+            # if
+            new_list_valor_16bits.append(valor)
             # exceddDw(valor)
         if variable[2] == "equ":
             valor = variable[3]
             # exceddDw(valor)
+    # eliminar los strings de las listas
+    sin_strings_8bits = sin_strings(new_list_valor_8bits)
+    # verificar los valores de las variables
+    check_value(sin_strings_8bits, new_list_valor_16bits)
 
     table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor"])
 
     for list in variables:
         table.add_row(list)
-
-    # print(table)
+    # print(variables)
+    print(table)
 
     # Falta por verificar que el valor de la variable sea correcto para cada tamaño de variable
     return variables, n
@@ -146,3 +221,7 @@ def CheckingEtiqueta(etiqueta):
 def AnalyzeStackSegment(stack):
     # en este trozo se analñizara la sintaxis correcta de la pila
     pass
+
+
+if __name__ == "__main__":
+    sin_strings()
