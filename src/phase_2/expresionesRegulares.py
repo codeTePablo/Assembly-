@@ -75,25 +75,6 @@ def convertir_bits(tupla):
     return tuple(resultado)
 
 
-def check_value(ocho_bits, dieciseis_bits):
-    """Esta funcion se encarga de verificar si los valores de las variables no exceden el rango de 8 y 16 bits"""
-    new_ocho_bits = tuple(ocho_bits)
-    new_dieciseis_bits = tuple(dieciseis_bits)
-    print("ocho_bits", new_ocho_bits)
-    print("dieciseis_bits", new_dieciseis_bits)
-    new_8_bits = convertir_bits(new_ocho_bits)
-    new_16_bits = convertir_bits(dieciseis_bits)
-    tupla_enteros_8 = tuple(int(x) for x in new_8_bits)
-    tupla_enteros_16 = tuple(int(x) for x in new_16_bits)
-    print(tupla_enteros_8)
-    print(tupla_enteros_16)
-
-    # for x in tupla_enteros:
-    #     if x >= 65535:
-    #         print(f"{x} error")
-    #         return False
-
-
 def sin_strings(lista):
     """Esta funcion se encarga de verificar si la lista tiene strings y los elimina"""
     # lista = ["10101010B", "Hola", "0F800H", "50"]
@@ -174,29 +155,77 @@ def AnalyzerDataSegment(sentences):
     new_list_valor_8bits = []  # lista para guardar los valores de las variables
     new_list_valor_16bits = []  # lista para guardar los valores de las variables
 
-    for variable in variables:
-        if variable[2] in dbs:
-            variable[1] = "variable"
-        elif variable[2] in equ:
-            variable[1] = "constante"
+    # for variable in variables:
+    #     if variable[2] in dbs:
+    #         variable[1] = "variable"
+    #     elif variable[2] in equ:
+    #         variable[1] = "constante"
+
+    # for variable in variables:
+    #     if variable[2] == "db":
+    #         valor = variable[3]
+    #         # exceddDB(valor)
+    #         new_list_valor_8bits.append(valor)
+    #         # tuplas
+    #     if variable[2] == "dw":
+    #         valor = variable[3]
+    #         # if
+    #         new_list_valor_16bits.append(valor)
+    #         # exceddDw(valor)
+    #     if variable[2] == "equ":
+    #         valor = variable[3]
+    # exceddDw(valor)
 
     for variable in variables:
         if variable[2] == "db":
             valor = variable[3]
-            # exceddDB(valor)
-            new_list_valor_8bits.append(valor)
+            try:
+                if valor[-1] == "B":
+                    # Convertir valor binario a decimal
+                    decimal_valor = int(valor[:-1], 2)
+                elif valor[-1] == "H":
+                    # Convertir valor hexadecimal a decimal
+                    decimal_valor = int(valor[:-1], 16)
+                else:
+                    # Convertir valor decimal a entero
+                    decimal_valor = int(valor)
+
+                if decimal_valor > 255:
+                    print(
+                        f"Error en {variable} - el valor de db no puede sobrepasar de 255"
+                    )
+                else:
+                    new_list_valor_8bits.append(decimal_valor)
+            except ValueError:
+                # print(f"palabra")
+                pass
+
         if variable[2] == "dw":
             valor = variable[3]
-            # if
-            new_list_valor_16bits.append(valor)
-            # exceddDw(valor)
-        if variable[2] == "equ":
-            valor = variable[3]
-            # exceddDw(valor)
+            try:
+                if valor[-1] == "B":
+                    # Convertir valor binario a decimal
+                    decimal_valor = int(valor[:-1], 2)
+                elif valor[-1] == "H":
+                    # Convertir valor hexadecimal a decimal
+                    decimal_valor = int(valor[:-1], 16)
+                else:
+                    # Convertir valor decimal a entero
+                    decimal_valor = int(valor)
+
+                if decimal_valor > 65535:
+                    print(
+                        f"Error en {variable} - el valor de dw no puede sobrepasar de 65535"
+                    )
+                else:
+                    new_list_valor_16bits.append(decimal_valor)
+            except ValueError:
+                # print(f"palabra")
+                pass
+
     # eliminar los strings de las listas
-    sin_strings_8bits = sin_strings(new_list_valor_8bits)
-    # verificar los valores de las variables
-    check_value(sin_strings_8bits, new_list_valor_16bits)
+    print(new_list_valor_8bits)
+    print(new_list_valor_16bits)
 
     table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor"])
 
