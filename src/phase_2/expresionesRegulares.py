@@ -52,13 +52,6 @@ def checkError(line, n):
                 return False
 
 
-def exceddDB(valor):
-    if (valor.isdigit()) <= 255 or valor >= -128:
-        return True
-    else:
-        return False
-
-
 def convertir_bits(tupla):
     """Esta funcion se encarga de convertir los valores de las variables a 8 y 16 bits si hay valores bianrios o hexadecimales"""
     resultado = []
