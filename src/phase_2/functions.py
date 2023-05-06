@@ -1,5 +1,6 @@
 from tuples import *
 from dicts import *
+from anlisisVariables import *
 from prettytable import PrettyTable
 
 
@@ -72,7 +73,24 @@ def analyzeStackSegment(stackSegment, n):
     n = 1 + n
     print(f"{n} - stack segment - linea correcta")
     for n, line in enumerate(stackSegment, start=n + 1):
-        print(f"{n} - {line} :linea correcta")
+        line = line.split(" ")
+        if len(line) == 3:
+            decimal = convertir_a_decimal(line[1])
+            if decimal <= 65535 and decimal >= -32768:
+                patron = r"dup\((.+?)\)"  # el patrón busca la palabra "dup" seguida de paréntesis y uno o más dígitos dentro
+                resultado = re.search(patron, line[2])
+                if resultado:
+                    numero = convertir_a_decimal(resultado.group(1))
+                    if numero <= 65535 and numero >= -32768:
+                        print(f"{n} - {' '.join(line)} - linea correcta")
+                    else:
+                        print(f"Error: el valor {line} excede el rango de 16 bits")
+                else:
+                    print(f"Error: la sintaxis de la linea {line} es incorrecta")
+            else:
+                print(f"Error: el valor {line} excede el rango de 16 bits")
+        else:
+            print(f"Error: la sintaxis de la linea {line} es incorrecta")
     n = n + 1
     print(f"{n} - ends :linea correcta")
     return n

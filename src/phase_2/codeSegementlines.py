@@ -2,7 +2,6 @@ from tuples import (
     registros16bits,
     registros8bits,
 )
-from anlisisVariables import convertir_a_decimal
 
 
 def cleanLine(line):

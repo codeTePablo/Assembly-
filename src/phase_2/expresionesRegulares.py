@@ -1,6 +1,5 @@
 import re
 from tuples import *
-from prettytable import PrettyTable
 
 
 def CheckingEtiqueta(etiqueta):

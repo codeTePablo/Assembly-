@@ -2,7 +2,6 @@ import re
 
 variablesCorrectas = []
 
-
 tuplasdw = ["dw", "DW", "EQU", "equ"]
 tuplasdb = ["db", "DB"]
 variables16bits = []
@@ -59,14 +58,12 @@ def checkType(lineClean, n):
                 decimal = int(hexadecimal, 16)
                 if decimal <= 255 and decimal >= -128:
                     variables8bits.append(lineClean)
-                    string = " ".join(lineClean)
-                    print(f"{n} - {string} : linea Correcta")
+                    print(f"{n} - {' '.join(lineClean)} : linea Correcta")
                     return lineClean
 
                 else:
-                    string = " ".join(lineClean)
                     print(
-                        f"{n} - {string} : linea Incorrecta, el valor hexadecimal excede el rango de 8 bits"
+                        f"{n} - {' '.join(lineClean)} : linea Incorrecta, el valor hexadecimal excede el rango de 8 bits"
                     )
                     return ""
             elif lineClean[2].endswith("b") or lineClean[2].endswith("B"):
@@ -74,14 +71,12 @@ def checkType(lineClean, n):
                 decimal = int(binario, 2)
                 if decimal <= 255 and decimal >= -128:
                     variables8bits.append(lineClean)
-                    string = " ".join(lineClean)
-                    print(f"{n} - {string} : linea Correcta")
+                    print(f"{n} - {' '.join(lineClean)} : linea Correcta")
                     return lineClean
 
                 else:
-                    string = " ".join(lineClean)
                     print(
-                        f"{n} - {string} : linea Incorrecta, el valor binario excede el rango de 8 bits"
+                        f"{n} - {' '.join(lineClean)} : linea Incorrecta, el valor binario excede el rango de 8 bits"
                     )
                     return ""
 
@@ -89,21 +84,18 @@ def checkType(lineClean, n):
                 decimal = int(lineClean[2])
                 if decimal <= 255 and decimal >= -128:
                     variables8bits.append(lineClean)
-                    string = " ".join(lineClean)
-                    print(f"{n} - {string} : linea Correcta")
+                    print(f"{n} - {' '.join(lineClean)} : linea Correcta")
                     return lineClean
 
                 else:
-                    string = " ".join(lineClean)
                     print(
-                        f"{n} - {string} : linea Incorrecta, el valor decimal excede el rango de 8 bits"
+                        f"{n} - {' '.join(lineClean)} : linea Incorrecta, el valor decimal excede el rango de 8 bits"
                     )
                     return ""
             # Si el valor es un caracter
             else:
                 variables8bits.append(lineClean)
-                string = " ".join(lineClean)
-                print(f"{n} - {string} : linea correcta")
+                print(f"{n} - {' '.join(lineClean)} : linea correcta")
                 return lineClean
 
         # Si el segundo parametro es dw
@@ -113,13 +105,11 @@ def checkType(lineClean, n):
                 decimal = int(hexadecimal, 16)
                 if decimal <= 65535 and decimal >= -32769:
                     variables16bits.append(lineClean)
-                    string = " ".join(lineClean)
-                    print(f"{n} - {string} : linea Correcta")
+                    print(f"{n} - {' '.join(lineClean)} : linea Correcta")
                     return lineClean
                 else:
-                    string = " ".join(lineClean)
                     print(
-                        f"{n} - {string} : linea Incorrecta, el valor hexadecimal excede el rango de 16 bits"
+                        f"{n} - {' '.join(lineClean)} : linea Incorrecta, el valor hexadecimal excede el rango de 16 bits"
                     )
                     return ""
             elif lineClean[2].endswith("b") or lineClean[2].endswith("B"):
@@ -127,32 +117,28 @@ def checkType(lineClean, n):
                 decimal = int(binario, 2)
                 if decimal <= 65535 and decimal >= -32769:
                     variables16bits.append(lineClean)
-                    string = " ".join(lineClean)
-                    print(f"{n} - {string} : linea Correcta")
+
+                    print(f"{n} - {' '.join(lineClean)} : linea Correcta")
                     return lineClean
                 else:
-                    string = " ".join(lineClean)
                     print(
-                        f"{n} - {string} : linea Incorrecta, el valor binario excede el rango de 16 bits"
+                        f"{n} - {' '.join(lineClean)} : linea Incorrecta, el valor binario excede el rango de 16 bits"
                     )
                     return ""
             elif lineClean[2].isdigit():
                 decimal = int(lineClean[2])
                 if decimal <= 65535 and decimal >= -32769:
                     variables16bits.append(lineClean)
-                    string = " ".join(lineClean)
-                    print(f"{n} - {string} : linea Correcta")
+                    print(f"{n} - {' '.join(lineClean)} : linea Correcta")
                     return lineClean
                 else:
-                    string = " ".join(lineClean)
                     print(
-                        f"{n} - {string} : linea Incorrecta, el valor decimal excede el rango de 16 bits"
+                        f"{n} - {' '.join(lineClean)} : linea Incorrecta, el valor decimal excede el rango de 16 bits"
                     )
                     return ""
             else:
                 variables16bits.append(lineClean)
-                string = " ".join(lineClean)
-                print(f"{n} - {string} : linea correcta")
+                print(f"{n} - {' '.join(lineClean)} : linea correcta")
                 return lineClean
 
     # Si la linea tiene 4 parametros
@@ -165,14 +151,12 @@ def checkType(lineClean, n):
                 if resultado:  # si se encontró un resultado
                     numero = resultado.group(1)
                     if numero.startswith("'") or numero.startswith('"'):
-                        string = " ".join(lineClean)
-                        print(f"{n} - {string} : linea correcta")
+                        print(f"{n} - {' '.join(lineClean)} : linea correcta")
                         return lineClean
                     else:
                         decimal = convertir_a_decimal(numero)
                         if decimal <= 255 and decimal >= -128:
-                            string = " ".join(lineClean)
-                            print(f"{n} - {string} : linea correcta")
+                            print(f"{n} - {' '.join(lineClean)} : linea correcta")
                             return lineClean
 
             else:
@@ -185,14 +169,12 @@ def checkType(lineClean, n):
                 if resultado:  # si se encontró un resultado
                     numero = resultado.group(1)
                     if numero.startswith("'") or numero.startswith('"'):
-                        string = " ".join(lineClean)
-                        print(f"{n} - {string} : linea correcta")
+                        print(f"{n} - {' '.join(lineClean)} : linea correcta")
                         return lineClean
                     else:
                         decimal = convertir_a_decimal(numero)
                         if decimal <= 65535 and decimal >= -32769:
-                            string = " ".join(lineClean)
-                            print(f"{n} - {string} : linea correcta")
+                            print(f"{n} - {' '.join(lineClean)} : linea correcta")
                             return lineClean
                 else:
                     print(f"Error: el valor {lineClean} excede el rango de 16 bits")
