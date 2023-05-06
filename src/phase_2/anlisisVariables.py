@@ -200,7 +200,7 @@ def checkType(lineClean, n):
                 print(f"Error: el valor {lineClean} excede el rango de 16 bits")
 
 
-def AnalyzerDataSegment2(dataSegment):
+def AnalyzerDataSegment(dataSegment):
     print("1 - data segment : correcto")
     for n, line in enumerate(dataSegment, start=2):
         lineClean = cleanLine(line)
@@ -208,7 +208,7 @@ def AnalyzerDataSegment2(dataSegment):
 
         if len(lineClean) <= 2:
             word = "".join(line).rstrip().lstrip()
-            print(f"{n}- {word} :error :linea con parametros insuficientes")
+            print(f"{n} - {word} :error :linea con parametros insuficientes")
         else:
             if len(lineClean[0]) > 10:
                 print(
@@ -226,5 +226,6 @@ def AnalyzerDataSegment2(dataSegment):
                         variables8bits.append(line816)
                     elif line816[1] in tuplasdw:
                         variables16bits.append(line816)
+    n = n + 1
     print(f"{n} - ends : correcto")
     return variables8bits, variables16bits, n

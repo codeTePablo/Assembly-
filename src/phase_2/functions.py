@@ -66,3 +66,13 @@ def new_list_for_memory(line):
     new_list = [[x[0]] for x in line]
     # print(f"la nueva lista: {new_list}")
     return new_list
+
+
+def analyzeStackSegment(stackSegment, n):
+    n = 1 + n
+    print(f"{n} - stack segment - linea correcta")
+    for n, line in enumerate(stackSegment, start=n + 1):
+        print(f"{n} - {line} :linea correcta")
+    n = n + 1
+    print(f"{n} - ends :linea correcta")
+    return n

@@ -38,7 +38,7 @@ def checkLinewithoutOperands(line, n):
     line = line.split(" ")
     if len(line) > 1:
         word = " ".join(line)
-        print(f"{n}- {word} :error : esta instruccion no admite operandos")
+        print(f"{n} - {word} :error : esta instruccion  no admite operandos")
     else:
         word = " ".join(line)
         print(f"{n}- {(word)} :linea correcta")
@@ -46,7 +46,7 @@ def checkLinewithoutOperands(line, n):
 
 
 def analizeCodeSegment(codeSegment, tuplaVariables8bits, tuplaVariables16bits, n):
-    print(f"{n+1}- code segment :linea correcta")
+    print(f"{n+1} - code segment :linea correcta")
     for n, line in enumerate(codeSegment, start=n + 2):
         if line.startswith(instrucciones_sin_operando):
             line = cleanLine(line)
@@ -58,7 +58,7 @@ def analizeCodeSegment(codeSegment, tuplaVariables8bits, tuplaVariables16bits, n
                 )
                 == True
             ):
-                print(f"{n}- {line} :linea correcta")
+                print(f"{n} - {line} :linea correcta")
             else:
                 pass
         elif line.startswith(instruccionconDosOperandos):
@@ -68,7 +68,7 @@ def analizeCodeSegment(codeSegment, tuplaVariables8bits, tuplaVariables16bits, n
                 )
                 == True
             ):
-                print(f"{n}- {line} :linea correcta")
+                print(f"{n} - {line} :linea correcta")
             else:
                 pass
         elif line.startswith(instrucciones_con_un_operando):
@@ -90,14 +90,15 @@ def analizeCodeSegment(codeSegment, tuplaVariables8bits, tuplaVariables16bits, n
             print(f"{n}- {line} error: simbolo no definido")
         elif line.endswith(":"):
             if (CheckingEtiqueta(line)) == True:
-                print(f"{n}- {line} : es una etiqueta")
+                print(f"{n} - {line} : es una etiqueta")
                 line = line.replace(":", "")
                 labels.append([line])
 
             elif (CheckingEtiqueta(line)) == False:
-                print(f"{n}- {line} parametros incorrectos")
+                print(f"{n} - {line} parametros incorrectos")
         else:
             print(f"{n}- {line} es un error")
+    print(f"{n+1} - ends :linea correcta")
 
 
 raw_file = open_file()
@@ -120,12 +121,14 @@ for linea in clean_file:
         seccion_actual.append(linea)
 
 
-variables8bits, variables16bits, n = AnalyzerDataSegment2(data_seccion)
+variables8bits, variables16bits, n = AnalyzerDataSegment(data_seccion)
 
 variables8BitsN, variables16BitsN = CleanVariables(variables8bits, variables16bits)
 
 tuplaVariables8bits = tuple(variables8BitsN)
 tuplaVariables16bits = tuple(variables16BitsN)
+
+n = analyzeStackSegment(stack_seccion, n)
 
 analizeCodeSegment(code_seccion, tuplaVariables8bits, tuplaVariables16bits, n)
 
