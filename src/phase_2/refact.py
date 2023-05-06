@@ -1,5 +1,7 @@
 from tkinter import *
 from tkinter import filedialog
+from tkinter import messagebox
+import tkinter as tk
 from tuples import *
 from functions import *
 from expresionesRegulares import *
@@ -11,12 +13,17 @@ labels = []
 
 def open_file():
     """Abre el archivo y lo lee"""
-    filepath = filedialog.askopenfilename(
-        filetypes=[("ASM", "*.asm*"), ("Text Files", "*.txt")]
-    )
-    file = open(filepath, "r")
 
-    return file.read()
+    try:
+        filepath = filedialog.askopenfilename(
+            filetypes=[("ASM", "*.asm*"), ("Text Files", "*.txt")]
+        )
+        file = open(filepath, "r")
+        return file.read()
+    except Exception as e:
+        root = tk.Tk()
+        root.withdraw()
+        messagebox.showerror("Error", "Error al abrir el archivo: " + str(e))
 
 
 def clear_File(file):
