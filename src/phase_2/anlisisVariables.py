@@ -201,7 +201,8 @@ def checkType(lineClean, n):
 
 
 def AnalyzerDataSegment2(dataSegment):
-    for n, line in enumerate(dataSegment, start=1):
+    print("1 - data segment : correcto")
+    for n, line in enumerate(dataSegment, start=2):
         lineClean = cleanLine(line)
         lineClean = lineClean.split(" ")
 
@@ -225,5 +226,5 @@ def AnalyzerDataSegment2(dataSegment):
                         variables8bits.append(line816)
                     elif line816[1] in tuplasdw:
                         variables16bits.append(line816)
-
+    print(f"{n} - ends : correcto")
     return variables8bits, variables16bits, n

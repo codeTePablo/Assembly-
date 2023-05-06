@@ -169,63 +169,7 @@ def AnalyzerDataSegment(sentences):
     #         valor = variable[3]
     # exceddDw(valor)
 
-    for variable in variables:
-        if variable[2] == "db":
-            valor = variable[3]
-            try:
-                if valor[-1] == "B":
-                    # Convertir valor binario a decimal
-                    decimal_valor = int(valor[:-1], 2)
-                elif valor[-1] == "H":
-                    # Convertir valor hexadecimal a decimal
-                    decimal_valor = int(valor[:-1], 16)
-                else:
-                    # Convertir valor decimal a entero
-                    decimal_valor = int(valor)
-
-                if decimal_valor > 255:
-                    print(
-                        f"Error en {variable} - el valor de db no puede sobrepasar de 255"
-                    )
-                else:
-                    new_list_valor_8bits.append(decimal_valor)
-            except ValueError:
-                # print(f"palabra")
-                pass
-
-        if variable[2] == "dw":
-            valor = variable[3]
-            try:
-                if valor[-1] == "B":
-                    # Convertir valor binario a decimal
-                    decimal_valor = int(valor[:-1], 2)
-                elif valor[-1] == "H":
-                    # Convertir valor hexadecimal a decimal
-                    decimal_valor = int(valor[:-1], 16)
-                else:
-                    # Convertir valor decimal a entero
-                    decimal_valor = int(valor)
-
-                if decimal_valor > 65535:
-                    print(
-                        f"Error en {variable} - el valor de dw no puede sobrepasar de 65535"
-                    )
-                else:
-                    new_list_valor_16bits.append(decimal_valor)
-            except ValueError:
-                # print(f"palabra")
-                pass
-
     # eliminar los strings de las listas
-    print(new_list_valor_8bits)
-    print(new_list_valor_16bits)
-
-    table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor"])
-
-    for list in variables:
-        table.add_row(list)
-    # print(variables)
-    print(table)
 
     # Falta por verificar que el valor de la variable sea correcto para cada tamaño de variable
     return variables, n

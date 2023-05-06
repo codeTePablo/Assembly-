@@ -7,6 +7,7 @@ from codeSegementlines import *
 from anlisisVariables import *
 
 # Restructuración de código
+labels = []
 
 
 # Open file
@@ -98,9 +99,9 @@ def analizeCodeSegment(codeSegment, tuplaVariables8bits, tuplaVariables16bits, n
                 print(f"{n}- {line} :linea correcta")
             else:
                 pass
-        elif line.startswith(instrucciones_con_un_operando):
+        elif line.startswith(instruccionconDosOperandos):
             if (
-                analyzeoneOperandCodeSegments(
+                analyzeTwoOperandsCodeSegments(
                     line, tuplaVariables8bits, tuplaVariables16bits, n
                 )
                 == True
@@ -108,18 +109,30 @@ def analizeCodeSegment(codeSegment, tuplaVariables8bits, tuplaVariables16bits, n
                 print(f"{n}- {line} :linea correcta")
             else:
                 pass
+        elif line.startswith(instrucciones_con_un_operando):
+            if (
+                analyzeoneOperandCodeSegments(
+                    line, tuplaVariables8bits, tuplaVariables16bits, n
+                )
+                == True
+            ):
+                pass
+            else:
+                pass
         elif line.startswith(instrucciondeSaltos):
-            print(f"{n} - {line} : instruccion de salto")
+            analyceJumps(line, n, labels, tuplaVariables8bits, tuplaVariables16bits)
+
         elif line.startswith(OtrasInstrucciones):
-            print(
-                f"{n}- {line} ----------es una que empieza con instrucciones que no nos toca"
-            )
+            print(f"{n}- {line} :insturccion no asignada")
         elif line.startswith(numbers):
             print(f"{n}- {line} error: simbolo no definido")
         elif line.endswith(":"):
             # Se busca una linea que termine con dos puntos y se analiza si esta correcta o no
             if (CheckingEtiqueta(line)) == True:
-                print(f"{n}- {line} es una etiqueta")
+                print(f"{n}- {line} : es una etiqueta")
+                line = line.replace(":", "")
+                labels.append([line])
+
             elif (CheckingEtiqueta(line)) == False:
                 print(f"{n}- {line} parametros incorrectos")
         else:
@@ -133,23 +146,45 @@ print(raw_file)
 clean_file = clear_File(raw_file)
 
 # print(clean_file) # Lista de lineas limpias separadas por comas dentro de una lista
+data_seccion = []
+stack_seccion = []
+code_seccion = []
+seccion_actual = None
 
-dataSegment, indexOfends = searchDataSegment(clean_file)
+for linea in clean_file:
+    if "data segment" in linea:
+        seccion_actual = data_seccion
+    elif "stack segment" in linea:
+        seccion_actual = stack_seccion
+    elif "code segment" in linea:
+        seccion_actual = code_seccion
+    elif "ends" in linea:
+        seccion_actual = None
+    elif seccion_actual is not None:
+        seccion_actual.append(linea)
 
-del clean_file[0 : indexOfends + 1]
+# Imprimir las líneas de cada sección
 
-stackSegment, indexOfends = searchStacksSegments(clean_file)
-
-
-del clean_file[0 : indexOfends + 1]
-codeSegmet, indexOfends, indexOfstart = searchCodeSegment(clean_file)
 
 # Esta funcion analiza el data segment y devuelve una lista de listas con las variables y sus tipos y el numero de linea
-variables8bits, variables16bits, n = AnalyzerDataSegment2(dataSegment)
+variables8bits, variables16bits, n = AnalyzerDataSegment2(data_seccion)
 
 
-memoria8bits = new_list_for_memory(variables8bits)
-memoria16bits = new_list_for_memory(variables16bits)
+variables8BitsN = []
+variables16BitsN = []
+
+for elemento in variables8bits:
+    if elemento not in variables8BitsN:
+        variables8BitsN.append(elemento)
+
+
+for elemento in variables16bits:
+    if elemento not in variables16BitsN:
+        variables16BitsN.append(elemento)
+
+
+memoria8bits = new_list_for_memory(variables8BitsN)
+memoria16bits = new_list_for_memory(variables16BitsN)
 
 valores_modificados8bits = []
 valores_modificados16bits = []
@@ -159,14 +194,12 @@ for elemento in memoria8bits:
     valor = valor.replace("[", "").replace("]", "")
     valor = valor.replace("'", "")
     valor = valor.upper()
-
     valores_modificados8bits.append(valor)
+
 
 for elemento in memoria16bits:
     valor = elemento[0]
-
     valor = valor.replace("[", "").replace("]", "")
-
     valor = valor.replace("'", "")
     valor = valor.upper()
     valores_modificados16bits.append(valor)
@@ -176,4 +209,37 @@ tuplaVariables8bits = tuple(valores_modificados8bits)
 tuplaVariables16bits = tuple(valores_modificados16bits)
 
 
-analizeCodeSegment(codeSegmet, tuplaVariables8bits, tuplaVariables16bits, n)
+analizeCodeSegment(code_seccion, tuplaVariables8bits, tuplaVariables16bits, n)
+
+
+tableVariables = []
+
+
+tableVariables = variables8BitsN + variables16BitsN
+
+
+for sublista in tableVariables:
+    if len(sublista) == 4:
+        valor = " ".join(sublista[-2:])
+        sublista[-2:] = [valor]
+
+for sublista in tableVariables:
+    if sublista[1] in dbs:
+        sublista.insert(1, "variable")
+    elif sublista[1] == "equ":
+        sublista.insert(1, "constante")
+
+
+for label in labels:
+    label.append("etiqueta")
+    label.append("Null")
+    label.append("Null")
+
+tableVariables = tableVariables + labels
+table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor"])
+
+for list in tableVariables:
+    table.add_row(list)
+
+
+print(table)
