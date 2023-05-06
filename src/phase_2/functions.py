@@ -1,36 +1,66 @@
 from tuples import *
 from dicts import *
-import re
+from anlisisVariables import *
+from prettytable import PrettyTable
 
 
-def add_list(my_list, lines, line):
-    my_list.append(line)
-    new_line = lines[lines.index(line) + 1]
-    return new_line
+def CleanVariables(variables8bits, variables16bits):
+    variables8Bits = []
+    variables16Bits = []
+    for elemento in variables8bits:
+        if elemento not in variables8Bits:
+            variables8Bits.append(elemento)
+    for elemento in variables16bits:
+        if elemento not in variables16Bits:
+            variables16Bits.append(elemento)
+
+    memoria8bits = new_list_for_memory(variables8Bits)
+    memoria16bits = new_list_for_memory(variables16bits)
+
+    valores_modificados8bits = []
+    valores_modificados16bits = []
+
+    for elemento in memoria8bits:
+        valor = elemento[0]
+        valor = valor.replace("[", "").replace("]", "")
+        valor = valor.replace("'", "")
+        valor = valor.upper()
+        valores_modificados8bits.append(valor)
+
+    for elemento in memoria16bits:
+        valor = elemento[0]
+        valor = valor.replace("[", "").replace("]", "")
+        valor = valor.replace("'", "")
+        valor = valor.upper()
+        valores_modificados16bits.append(valor)
+
+    return variables8Bits, variables16Bits
 
 
-def line_step(lines, line):
-    new_line = lines[lines.index(line) + 1]
-    return new_line
+def CreateTableVariables(tableVariables, labels):
+    for sublista in tableVariables:
+        if len(sublista) == 4:
+            valor = " ".join(sublista[-2:])
+            sublista[-2:] = [valor]
 
+    for sublista in tableVariables:
+        if sublista[1] in dbs:
+            sublista.insert(1, "variable")
+        elif sublista[1] == "equ":
+            sublista.insert(1, "constante")
 
-def append_to_list():
-    pass
+    for label in labels:
+        label.append("etiqueta")
+        label.append("Null")
+        label.append("Null")
 
+    tableVariables = tableVariables + labels
+    table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor"])
 
-def tags(line):
-    etiqueta = []
-    etiqueta.append(line)
-    etiqueta.append("Etiqueta")
-    etiqueta.append("null")  # la etiqueta no tiene tamaño
-    etiqueta.append("null")  # la etiqueta no tiene valor
-    return etiqueta
+    for list in tableVariables:
+        table.add_row(list)
 
-
-def binary_numbers(binario):
-    # binario = "10101010B"
-    decimal = int(binario[:-1], 2)
-    print(f"{decimal} es decimal")
+    print(table)
 
 
 def new_list_for_memory(line):
@@ -39,100 +69,28 @@ def new_list_for_memory(line):
     return new_list
 
 
-def create_list_for_instructions(line):
-    # codigo = "ADC AX, BX"
-    # lista = ["ADC", "AX", "BX"]
-    lista = line.split(" ")
-    for i in range(len(lista)):
-        lista[i] = lista[i].replace(",", "")
-    # print(lista)
-    return lista
-
-
-def check_order_istructions(line, tuplaVariables):
-    """verificamos que las instrucciones esten en orden
-    args:
-        instructios: es un diccionario con las instrucciones
-        line: es la linea que se esta analizando
-    e.g
-    ADC = [REG, memory]
-    IDIV = [REG]
-    """
-    # print(line)
-    # print(tuplaVariables)
-
-    exit()
-    # print(line)
-    instruction = line[0]
-    valores = line[1:]
-    print(len(valores))
-    if len(valores) == 1:
-        if instruction in instrucciones_a_checar.instrucciones:
-            reg, memory = instrucciones_a_checar.instrucciones[instruction][0]
-            if all(valor in reg for valor in valores if valor not in memory) and all(
-                valor in memory for valor in valores if valor not in reg
-            ):
-                print(f"la instruccion: {instruction} son correctos")
-            elif all(valor in memory for valor in valores if valor not in reg):
-                print("Los valores de memoria son correctos")
+def analyzeStackSegment(stackSegment, n):
+    n = 1 + n
+    print(f"{n} - stack segment - linea correcta")
+    for n, line in enumerate(stackSegment, start=n + 1):
+        line = line.split(" ")
+        if len(line) == 3:
+            decimal = convertir_a_decimal(line[1])
+            if decimal <= 65535 and decimal >= -32768:
+                patron = r"dup\((.+?)\)"  # el patrón busca la palabra "dup" seguida de paréntesis y uno o más dígitos dentro
+                resultado = re.search(patron, line[2])
+                if resultado:
+                    numero = convertir_a_decimal(resultado.group(1))
+                    if numero <= 65535 and numero >= -32768:
+                        print(f"{n} - {' '.join(line)} - linea correcta")
+                    else:
+                        print(f"Error: el valor {line} excede el rango de 16 bits")
+                else:
+                    print(f"Error: la sintaxis de la linea {line} es incorrecta")
             else:
-                print("Error: los valores no están en el orden correcto")
+                print(f"Error: el valor {line} excede el rango de 16 bits")
         else:
-            print("Error: instrucción desconocida")
-
-    # elif len(valores) >= 1:
-    #     if instruction in instrucciones:
-    #         reg = instrucciones[instruction][0]
-    #         mem = instrucciones[instruction][1]
-    #         if all(valor in reg for valor in valores) or all(
-    #             valor in mem for valor in valores
-    #         ):
-    #             print(f"la instruccion: {instruction} son correctos")
-    #         else:
-    #             print("Error: los valores no están en el orden correcto")
-
-
-# analyze
-
-
-def type_table_variable(my_list, word):
-    my_list.append("Variable")
-    my_list.append(word)
-    return my_list
-
-
-def stack_Segment(stackSegment):
-    ls = []
-    words = "".join(stackSegment)
-    words = words.split(" ")
-    words = list(filter(None, words))
-
-    line = " ".join(words)
-
-    if line.startswith("db"):
-        if int(words[1]) <= 255:
-            return "OK"
-        else:
-            return "Error en stack segment se supera el valor de los 8 bits"
-    elif line.startswith("dw"):
-        if int(words[1]) <= 65535:
-            return "OK"
-        else:
-            return "Error en stack segment se supera el valor de los 8 bits"
-
-    else:
-        print("Error en la linea: " + line + " linea no valida")
-
-
-if __name__ == "__main__":
-    # line = ["DEC", "[BX+SI]"]  # OK
-    # line = ["DEC", "hola"]  # error
-    # line = ["ADC", "BX"] # OK
-    # line = ["ADC", "BX", "[SI]"]  # error
-    # line = ["LES", "AX", "[BX]"]  # fuera de rango
-    line = [["ADC", "[SI+immediate]", "AX"], ["ADC", "BX", "[SI]"]]
-
-    # check_order_istructions(line)
-    check_order_istructions(
-        line,
-    )
+            print(f"Error: la sintaxis de la linea {line} es incorrecta")
+    n = n + 1
+    print(f"{n} - ends :linea correcta")
+    return n

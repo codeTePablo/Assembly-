@@ -298,15 +298,17 @@ registros8bits = (
 instrucciones_con_operandos = (
     "ADC",
     "CMP",
-    "LES",
-    "LDS",
     "adc",
     "cmp",
-    "les",
-    "lds",
 )
 
 
+instruccionconDosOperandos = (
+    "LES",
+    "LDS",
+    "les",
+    "lds",
+)
 instrucciones_con_un_operando = (
     "DEC",
     "IDIV",

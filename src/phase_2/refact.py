@@ -1,28 +1,34 @@
 from tkinter import *
 from tkinter import filedialog
+from tkinter import messagebox
+import tkinter as tk
 from tuples import *
 from functions import *
 from expresionesRegulares import *
 from codeSegementlines import *
+from anlisisVariables import *
 
-# Restructuración de código
+labels = []
 
 
-# Open file
 def open_file():
     """Abre el archivo y lo lee"""
-    filepath = filedialog.askopenfilename(
-        filetypes=[("ASM", "*.asm*"), ("Text Files", "*.txt")]
-    )
-    file = open(filepath, "r")
 
-    return file.read()
+    try:
+        filepath = filedialog.askopenfilename(
+            filetypes=[("ASM", "*.asm*"), ("Text Files", "*.txt")]
+        )
+        file = open(filepath, "r")
+        return file.read()
+    except Exception as e:
+        root = tk.Tk()
+        root.withdraw()
+        messagebox.showerror("Error", "Error al abrir el archivo: " + str(e))
 
 
 def clear_File(file):
     lines = [line.strip().split(";")[0] for line in file.split("\n")]
     lines = [line for line in lines if line]
-
     clean_lines = []
     for line in lines:
         clean_lines.append(line)
@@ -34,111 +40,106 @@ def cleanLine(line):
     return line
 
 
-def searchDataSegment(clean_file):
-    try:
-        indexofDataSegment = clean_file.index("data segment")
-        indexofDataSegmentEnds = clean_file.index("ends")
-        seccionData = clean_file[indexofDataSegment + 1 : indexofDataSegmentEnds]
-        return seccionData, indexofDataSegmentEnds
-    except:
-        print("Error fatal No se encontro la seccion de data segment")
-        exit()
-
-
-def searchStacksSegments(clean_file):
-    try:
-        indexofStacksSegment = clean_file.index("stack segment")
-        indexofStacksSegmentEnds = clean_file.index("ends")
-        seccionStacks = clean_file[indexofStacksSegment + 1 : indexofStacksSegmentEnds]
-
-        return seccionStacks, indexofStacksSegmentEnds
-    except:
-        print("Error fatal No se encontro la seccion de stack segment")
-        exit()
-
-
-def searchCodeSegment(clean_file):
-    try:
-        inexofCodeSegment = clean_file.index("code segment")
-        inexofCodeSegmentEnds = clean_file.index("ends")
-        seccionCode = clean_file[inexofCodeSegment + 1 : inexofCodeSegmentEnds]
-
-        return seccionCode, inexofCodeSegmentEnds, inexofCodeSegment
-    except:
-        print("Error fatal No se encontro la seccion de code segment")
-        exit()
-
-
 def checkLinewithoutOperands(line, n):
     line = line.replace(",", " ")
     line = line.split(" ")
     if len(line) > 1:
         word = " ".join(line)
-        print(f"{n}- {word} :error : parametros incorrectos")
+        print(f"{n} - {word} :error : esta instruccion  no admite operandos")
     else:
         word = " ".join(line)
         print(f"{n}- {(word)} :linea correcta")
     pass
 
 
-def analizeCodeSegment(dataSegment, n, tuplaVariables):
-    print(f"{n+1}- code segment :linea correcta")
-    for n, line in enumerate(dataSegment, start=n + 2):
+def analizeCodeSegment(codeSegment, tuplaVariables8bits, tuplaVariables16bits, n):
+    print(f"{n+1} - code segment :linea correcta")
+    for n, line in enumerate(codeSegment, start=n + 2):
         if line.startswith(instrucciones_sin_operando):
             line = cleanLine(line)
-            checkLinewithoutOperands(line, n)  # Se analiza la linea
+            checkLinewithoutOperands(line, n)
         elif line.startswith(instrucciones_con_operandos):
-            if analyzeOperandsCodeSegments(line, tuplaVariables) == True:
-                print(f"{n}- {line} :linea correcta")
+            if (
+                analyzeOperandsCodeSegments(
+                    line, tuplaVariables8bits, tuplaVariables16bits, n
+                )
+                == True
+            ):
+                print(f"{n} - {line} :linea correcta")
             else:
-                print(f"{n}- {line} :error : parametros incorrectos")
+                pass
+        elif line.startswith(instruccionconDosOperandos):
+            if (
+                analyzeTwoOperandsCodeSegments(
+                    line, tuplaVariables8bits, tuplaVariables16bits, n
+                )
+                == True
+            ):
+                print(f"{n} - {line} :linea correcta")
+            else:
+                pass
         elif line.startswith(instrucciones_con_un_operando):
-            if analyzeoneOperandCodeSegments(line, tuplaVariables) == True:
-                print(f"{n}- {line} :linea correcta")
+            if (
+                analyzeoneOperandCodeSegments(
+                    line, tuplaVariables8bits, tuplaVariables16bits, n
+                )
+                == True
+            ):
+                pass
             else:
-                print(f"{n}- {line} :error : parametros incorrectos")
+                pass
         elif line.startswith(instrucciondeSaltos):
-            print(f"{n} - {line} : instruccion de salto")
+            analyceJumps(line, n, labels, tuplaVariables8bits, tuplaVariables16bits)
+
         elif line.startswith(OtrasInstrucciones):
-            print(
-                f"{n}- {line} ----------es una que empieza con instrucciones que no nos toca"
-            )
+            print(f"{n}- {line} :insturccion no asignada")
         elif line.startswith(numbers):
-            print(f"{n}- {line} parametros incorrectos")
+            print(f"{n}- {line} error: simbolo no definido")
         elif line.endswith(":"):
-            # Se busca una linea que termine con dos puntos y se analiza si esta correcta o no
             if (CheckingEtiqueta(line)) == True:
-                print(f"{n}- {line} es una etiqueta")
+                print(f"{n} - {line} : es una etiqueta")
+                line = line.replace(":", "")
+                labels.append([line])
+
             elif (CheckingEtiqueta(line)) == False:
-                print(f"{n}- {line} parametros incorrectos")
+                print(f"{n} - {line} parametros incorrectos")
         else:
             print(f"{n}- {line} es un error")
+    print(f"{n+1} - ends :linea correcta")
 
 
 raw_file = open_file()
-print(raw_file)
-
-
 clean_file = clear_File(raw_file)
+data_seccion = []
+stack_seccion = []
+code_seccion = []
+seccion_actual = None
 
-# print(clean_file) # Lista de lineas limpias separadas por comas dentro de una lista
+for linea in clean_file:
+    if "data segment" in linea:
+        seccion_actual = data_seccion
+    elif "stack segment" in linea:
+        seccion_actual = stack_seccion
+    elif "code segment" in linea:
+        seccion_actual = code_seccion
+    elif "ends" in linea:
+        seccion_actual = None
+    elif seccion_actual is not None:
+        seccion_actual.append(linea)
 
-dataSegment, indexOfends = searchDataSegment(clean_file)
 
-del clean_file[0 : indexOfends + 1]
+variables8bits, variables16bits, n = AnalyzerDataSegment(data_seccion)
 
-stackSegment, indexOfends = searchStacksSegments(clean_file)
+variables8BitsN, variables16BitsN = CleanVariables(variables8bits, variables16bits)
+
+tuplaVariables8bits = tuple(variables8BitsN)
+tuplaVariables16bits = tuple(variables16BitsN)
+
+n = analyzeStackSegment(stack_seccion, n)
+
+analizeCodeSegment(code_seccion, tuplaVariables8bits, tuplaVariables16bits, n)
 
 
-del clean_file[0 : indexOfends + 1]
-codeSegmet, indexOfends, indexOfstart = searchCodeSegment(clean_file)
+tableVariables = variables8BitsN + variables16BitsN
 
-# Esta funcion analiza el data segment y devuelve una lista de listas con las variables y sus tipos y el numero de linea
-variables, n = AnalyzerDataSegment(dataSegment)
-# print(variables) <---- con esa "variables" debemos crear un diccionario o algo para el nombre de variable y su tipo para buscarlas cuando se ejecute una instrucción con una variable
-# Esta funcion analiza el stack segment y devuelve una lista de listas con las variables y sus tipos y el numero de linea
-
-nueva_lista_de_memoria = new_list_for_memory(variables)
-tuplaVariables = tuple(nueva_lista_de_memoria)
-
-analizeCodeSegment(codeSegmet, n, tuplaVariables)
+CreateTableVariables(tableVariables, labels)

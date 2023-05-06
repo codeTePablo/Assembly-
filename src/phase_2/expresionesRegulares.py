@@ -148,6 +148,27 @@ def AnalyzerDataSegment(sentences):
     new_list_valor_8bits = []  # lista para guardar los valores de las variables
     new_list_valor_16bits = []  # lista para guardar los valores de las variables
 
+    # for variable in variables:
+    #     if variable[2] in dbs:
+    #         variable[1] = "variable"
+    #     elif variable[2] in equ:
+    #         variable[1] = "constante"
+
+    # for variable in variables:
+    #     if variable[2] == "db":
+    #         valor = variable[3]
+    #         # exceddDB(valor)
+    #         new_list_valor_8bits.append(valor)
+    #         # tuplas
+    #     if variable[2] == "dw":
+    #         valor = variable[3]
+    #         # if
+    #         new_list_valor_16bits.append(valor)
+    #         # exceddDw(valor)
+    #     if variable[2] == "equ":
+    #         valor = variable[3]
+    # exceddDw(valor)
+
     for variable in variables:
         if variable[2] == "db":
             valor = variable[3]
@@ -203,7 +224,7 @@ def AnalyzerDataSegment(sentences):
 
     for list in variables:
         table.add_row(list)
-    print(variables)
+    # print(variables)
     print(table)
 
     # Falta por verificar que el valor de la variable sea correcto para cada tamaño de variable
@@ -217,12 +238,3 @@ def CheckingEtiqueta(etiqueta):
         return True
     else:
         return False
-
-
-def AnalyzeStackSegment(stack):
-    # en este trozo se analñizara la sintaxis correcta de la pila
-    pass
-
-
-if __name__ == "__main__":
-    sin_strings()
