@@ -4,6 +4,7 @@ from tuples import *
 from functions import *
 from expresionesRegulares import *
 from codeSegementlines import *
+from anlisisVariables import *
 
 # Restructuración de código
 
@@ -74,29 +75,39 @@ def checkLinewithoutOperands(line, n):
     line = line.split(" ")
     if len(line) > 1:
         word = " ".join(line)
-        print(f"{n}- {word} :error : parametros incorrectos")
+        print(f"{n}- {word} :error : esta instruccion no admite operandos")
     else:
         word = " ".join(line)
         print(f"{n}- {(word)} :linea correcta")
     pass
 
 
-def analizeCodeSegment(dataSegment, n, tuplaVariables):
+def analizeCodeSegment(codeSegment, tuplaVariables8bits, tuplaVariables16bits, n):
     print(f"{n+1}- code segment :linea correcta")
-    for n, line in enumerate(dataSegment, start=n + 2):
+    for n, line in enumerate(codeSegment, start=n + 2):
         if line.startswith(instrucciones_sin_operando):
             line = cleanLine(line)
             checkLinewithoutOperands(line, n)  # Se analiza la linea
         elif line.startswith(instrucciones_con_operandos):
-            if analyzeOperandsCodeSegments(line, tuplaVariables) == True:
+            if (
+                analyzeOperandsCodeSegments(
+                    line, tuplaVariables8bits, tuplaVariables16bits, n
+                )
+                == True
+            ):
                 print(f"{n}- {line} :linea correcta")
             else:
-                print(f"{n}- {line} :error : parametros incorrectos")
+                pass
         elif line.startswith(instrucciones_con_un_operando):
-            if analyzeoneOperandCodeSegments(line, tuplaVariables) == True:
+            if (
+                analyzeoneOperandCodeSegments(
+                    line, tuplaVariables8bits, tuplaVariables16bits, n
+                )
+                == True
+            ):
                 print(f"{n}- {line} :linea correcta")
             else:
-                print(f"{n}- {line} :error : parametros incorrectos")
+                pass
         elif line.startswith(instrucciondeSaltos):
             print(f"{n} - {line} : instruccion de salto")
         elif line.startswith(OtrasInstrucciones):
@@ -104,7 +115,7 @@ def analizeCodeSegment(dataSegment, n, tuplaVariables):
                 f"{n}- {line} ----------es una que empieza con instrucciones que no nos toca"
             )
         elif line.startswith(numbers):
-            print(f"{n}- {line} parametros incorrectos")
+            print(f"{n}- {line} error: simbolo no definido")
         elif line.endswith(":"):
             # Se busca una linea que termine con dos puntos y se analiza si esta correcta o no
             if (CheckingEtiqueta(line)) == True:
@@ -134,11 +145,35 @@ del clean_file[0 : indexOfends + 1]
 codeSegmet, indexOfends, indexOfstart = searchCodeSegment(clean_file)
 
 # Esta funcion analiza el data segment y devuelve una lista de listas con las variables y sus tipos y el numero de linea
-variables, n = AnalyzerDataSegment(dataSegment)
-# print(variables) <---- con esa "variables" debemos crear un diccionario o algo para el nombre de variable y su tipo para buscarlas cuando se ejecute una instrucción con una variable
-# Esta funcion analiza el stack segment y devuelve una lista de listas con las variables y sus tipos y el numero de linea
+variables8bits, variables16bits, n = AnalyzerDataSegment2(dataSegment)
 
-nueva_lista_de_memoria = new_list_for_memory(variables)
-tuplaVariables = tuple(nueva_lista_de_memoria)
 
-analizeCodeSegment(codeSegmet, n, tuplaVariables)
+memoria8bits = new_list_for_memory(variables8bits)
+memoria16bits = new_list_for_memory(variables16bits)
+
+valores_modificados8bits = []
+valores_modificados16bits = []
+
+for elemento in memoria8bits:
+    valor = elemento[0]
+    valor = valor.replace("[", "").replace("]", "")
+    valor = valor.replace("'", "")
+    valor = valor.upper()
+
+    valores_modificados8bits.append(valor)
+
+for elemento in memoria16bits:
+    valor = elemento[0]
+
+    valor = valor.replace("[", "").replace("]", "")
+
+    valor = valor.replace("'", "")
+    valor = valor.upper()
+    valores_modificados16bits.append(valor)
+
+
+tuplaVariables8bits = tuple(valores_modificados8bits)
+tuplaVariables16bits = tuple(valores_modificados16bits)
+
+
+analizeCodeSegment(codeSegmet, tuplaVariables8bits, tuplaVariables16bits, n)
