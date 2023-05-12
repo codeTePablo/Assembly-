@@ -1,3 +1,6 @@
+stack segment
+    dw 0256H dup(0)
+ends
 
 data segment
     var999999999999 db 10	   ;ERROR
@@ -15,12 +18,7 @@ data segment
     con1 equ 100000            ;ERROR
     con2 equ 800             
 ends
-     
-stack segment
-    dw 0256H dup(0)
-ends
-     
-     
+
 code segment
 AAA 010H
 AAD 

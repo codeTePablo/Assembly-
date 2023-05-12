@@ -216,7 +216,6 @@ def AnalyzerDataSegment(sentences):
                 # print(f"palabra")
                 pass
 
-    # eliminar los strings de las listas
     print(new_list_valor_8bits)
     print(new_list_valor_16bits)
 
