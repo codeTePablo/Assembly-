@@ -158,6 +158,11 @@ def checkType(lineClean, n):
                         if decimal <= 255 and decimal >= -128:
                             print(f"{n} - {' '.join(lineClean)} : linea correcta")
                             return lineClean
+                        else:
+                            print(
+                                f"{n} - {' '.join(lineClean)} : linea Incorrecta, el valor decimal excede el rango de 8 bits"
+                            )
+                            return ""
 
             else:
                 print(f"Error: el valor {lineClean} excede el rango de 16 bits")
@@ -176,6 +181,11 @@ def checkType(lineClean, n):
                         if decimal <= 65535 and decimal >= -32769:
                             print(f"{n} - {' '.join(lineClean)} : linea correcta")
                             return lineClean
+                        else:
+                            print(
+                                f"{n} - {' '.join(lineClean)} : linea Incorrecta, el valor {numero}  excede el rango de 16 bits"
+                            )
+                            return ""
                 else:
                     print(f"Error: el valor {lineClean} excede el rango de 16 bits")
             else:
@@ -208,6 +218,7 @@ def AnalyzerDataSegment(dataSegment):
                         variables8bits.append(line816)
                     elif line816[1] in tuplasdw:
                         variables16bits.append(line816)
+
     n = n + 1
     print(f"{n} - ends : correcto")
     return variables8bits, variables16bits, n

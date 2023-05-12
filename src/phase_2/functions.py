@@ -7,6 +7,10 @@ from prettytable import PrettyTable
 def CleanVariables(variables8bits, variables16bits):
     variables8Bits = []
     variables16Bits = []
+
+    lista_sin_duplicados8bits = list(set(map(tuple, variables8bits)))
+    lista_sin_duplicados16bits = list(set(map(tuple, variables16bits)))
+
     for elemento in variables8bits:
         if elemento not in variables8Bits:
             variables8Bits.append(elemento)
@@ -14,8 +18,8 @@ def CleanVariables(variables8bits, variables16bits):
         if elemento not in variables16Bits:
             variables16Bits.append(elemento)
 
-    memoria8bits = new_list_for_memory(variables8Bits)
-    memoria16bits = new_list_for_memory(variables16bits)
+    memoria8bits = new_list_for_memory(lista_sin_duplicados8bits)
+    memoria16bits = new_list_for_memory(lista_sin_duplicados16bits)
 
     valores_modificados8bits = []
     valores_modificados16bits = []
@@ -49,6 +53,10 @@ def CreateTableVariables(tableVariables, labels):
         elif sublista[1] == "equ":
             sublista.insert(1, "constante")
 
+    for sublista in tableVariables:
+        if sublista[2] == "equ":
+            sublista[2] = "dw"
+
     for label in labels:
         label.append("etiqueta")
         label.append("Null")
@@ -69,10 +77,17 @@ def new_list_for_memory(line):
     return new_list
 
 
+def cleanLine(line):
+    line = line.replace(",", " ").rstrip().lstrip()
+    line = line.replace("  ", "").rstrip().lstrip()
+    return line
+
+
 def analyzeStackSegment(stackSegment, n):
     n = 1 + n
     print(f"{n} - stack segment - linea correcta")
     for n, line in enumerate(stackSegment, start=n + 1):
+        line = cleanLine(line)
         line = line.split(" ")
         if len(line) == 3:
             decimal = convertir_a_decimal(line[1])
