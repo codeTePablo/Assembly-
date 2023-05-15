@@ -123,5 +123,5 @@ def analyzeStackSegment(stackSegment, n, count):
                 f"{n} -  {hex(count)}H - {line} Error: la sintaxis de la linea es incorrecta"
             )
     n = n + 1
-    print(f"{n} -  {hex(count)}H - {' '.join(line)} - ends :linea correcta")
+    print(f"{n} -  {hex(count)}H - ends :linea correcta")
     return n, count
