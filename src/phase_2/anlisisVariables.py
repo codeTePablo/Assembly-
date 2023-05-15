@@ -193,7 +193,8 @@ def checkType(lineClean, n):
 
 
 def AnalyzerDataSegment(dataSegment):
-    print("1 - data segment : correcto")
+    count = 0
+    print(f"1 - {hex(count)}- data segment : correcto")
     for n, line in enumerate(dataSegment, start=2):
         lineClean = cleanLine(line)
         lineClean = lineClean.split(" ")

@@ -83,9 +83,10 @@ def cleanLine(line):
     return line
 
 
-def analyzeStackSegment(stackSegment, n):
+def analyzeStackSegment(stackSegment, n, count):
     n = 1 + n
-    print(f"{n} - stack segment - linea correcta")
+    print(f"{n} -  {hex(count)}H - stack segment - linea correcta")
+    count = count - count
     for n, line in enumerate(stackSegment, start=n + 1):
         line = cleanLine(line)
         line = line.split(" ")
@@ -97,15 +98,30 @@ def analyzeStackSegment(stackSegment, n):
                 if resultado:
                     numero = convertir_a_decimal(resultado.group(1))
                     if numero <= 65535 and numero >= -32768:
-                        print(f"{n} - {' '.join(line)} - linea correcta")
+                        print(
+                            f"{n} -  {hex(count)}H - {' '.join(line)} - linea correcta"
+                        )
+                        # se le suma algo xd
+                        count += 1
                     else:
-                        print(f"Error: el valor {line} excede el rango de 16 bits")
+                        print(
+                            f"{n} -  {hex(count)}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
+                        )
+                        # no se le suma nada
                 else:
-                    print(f"Error: la sintaxis de la linea {line} es incorrecta")
+                    print(
+                        f"{n} -  {hex(count)}H - {' '.join(line)} Error: la sintaxis de la linea es incorrecta"
+                    )
+                    # No se le suma nada
             else:
-                print(f"Error: el valor {line} excede el rango de 16 bits")
+                print(
+                    f"{n} -  {hex(count)}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
+                )
+
         else:
-            print(f"Error: la sintaxis de la linea {line} es incorrecta")
+            print(
+                f"{n} -  {hex(count)}H - {line} Error: la sintaxis de la linea es incorrecta"
+            )
     n = n + 1
-    print(f"{n} - ends :linea correcta")
-    return n
+    print(f"{n} -  {hex(count)}H - {' '.join(line)} - ends :linea correcta")
+    return n, count

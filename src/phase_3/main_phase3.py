@@ -43,59 +43,69 @@ def cleanLine(line):
     return line
 
 
-def checkLinewithoutOperands(line, n):
+def checkLinewithoutOperands(line, n, count):
     line = line.replace(",", " ")
     line = line.split(" ")
     if len(line) > 1:
         word = " ".join(line)
-        print(f"{n} - {word} :error : esta instruccion  no admite operandos")
+        print(
+            f"{n} -  {hex(count)}H - {word} :error : esta instruccion  no admite operandos"
+        )
+        return count
     else:
         word = " ".join(line)
-        print(f"{n}- {(word)} :linea correcta")
-    pass
+        print(f"{n} -  {hex(count)}H - {(word)} :linea correcta")
+        return count + 1
 
 
 def analizeCodeSegment(
-    codeSegment, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n
+    codeSegment, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
 ):
-    print(f"{n+1} - code segment :linea correcta")
+    print(f"{n+1} -  {hex(count)}H - code segment :linea correcta")
+    count = count - count
     for n, line in enumerate(codeSegment, start=n + 2):
         if line.startswith(instrucciones_sin_operando):
             line = cleanLine(line)
-            checkLinewithoutOperands(line, n)
+            count = checkLinewithoutOperands(line, n, count)
         elif line.startswith(instrucciones_con_operandos):
-            analyzeOperandsCodeSegments(
-                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n
+            count = analyzeOperandsCodeSegments(
+                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
             )
 
         elif line.startswith(instruccionconDosOperandos):
             analyzeTwoOperandsCodeSegments(
-                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n
+                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
             )
         elif line.startswith(instrucciones_con_un_operando):
             analyzeOneOperandCodeSegments(
-                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n
+                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
             )
         elif line.startswith(instrucciondeSaltos):
             analyceJumps(
-                line, n, labels, tuplaNombreVariables8bits, tuplaNombresVariables16bits
+                line,
+                n,
+                labels,
+                tuplaNombreVariables8bits,
+                tuplaNombresVariables16bits,
+                count,
             )
 
         elif line.startswith(OtrasInstrucciones):
-            print(f"{n}- {line} :insturccion no asignada")
+            print(f"{n} -  {hex(count)}H - {line} :insturccion no asignada")
         elif line.startswith(numbers):
-            print(f"{n}- {line} error: simbolo no definido")
+            print(f"{n} -  {hex(count)}H - {line} error: simbolo no definido")
         elif line.endswith(":"):
             if (CheckingEtiqueta(line)) == True:
-                print(f"{n} - {line} : es una etiqueta")
+                print(f"{n} -  {hex(count)}H - {line} : es una etiqueta")
                 line = line.replace(":", "")
                 labels.append([line])
 
             elif (CheckingEtiqueta(line)) == False:
-                print(f"{n} - {line} parametros incorrectos")
+                print(f"{n} -  {hex(count)}H - {line} : Error :parametros incorrectos")
         else:
-            print(f"{n}- {line} es un error")
-    print(f"{n+1} - ends :linea correcta")
+            print(f"{n} -  {count(count)}H - {line} es un error")
+    print(f"{n+1} -  {hex(count)}H - ends :linea correcta")
+    return count
 
 
 while True:
@@ -120,7 +130,7 @@ while True:
     except Exception as e:
         print(e)
 
-    variables8bits, variables16bits, n = AnalyzerDataSegment(data_seccion)
+    variables8bits, variables16bits, n, count = AnalyzerDataSegment(data_seccion)
 
     variables8BitsN, variables16BitsN = CleanVariables(variables8bits, variables16bits)
 
@@ -131,10 +141,10 @@ while True:
     tuplaNombreVariables8bits = tuple(nombresVar8Bits)
     tuplaNombresVariables16bits = tuple(nombresVar16Bits)
 
-    n = analyzeStackSegment(stack_seccion, n)
+    n, count = analyzeStackSegment(stack_seccion, n, count)
 
-    analizeCodeSegment(
-        code_seccion, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n
+    count = analizeCodeSegment(
+        code_seccion, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
     )
 
     tableVariables = variables8BitsN + variables16BitsN
