@@ -49,19 +49,19 @@ def checkLinewithoutOperands(line, n, count):
     if len(line) > 1:
         word = " ".join(line)
         print(
-            f"{n} -  {hex(count)}H - {word} :error : esta instruccion  no admite operandos"
+            f"{n} -  {count:x}H - {word} :error : esta instruccion  no admite operandos"
         )
         return count
     else:
         word = " ".join(line)
-        print(f"{n} -  {hex(count)}H - {(word)} :linea correcta")
+        print(f"{n} -  {count:x}H - {(word)} :linea correcta")
         return count + 1
 
 
 def analizeCodeSegment(
     codeSegment, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
 ):
-    print(f"{n+1} -  {hex(count)}H - code segment :linea correcta")
+    print(f"{n+1} -  {count:x}H - code segment :linea correcta")
     count = count - count
     for n, line in enumerate(codeSegment, start=n + 2):
         if line.startswith(instrucciones_sin_operando):
@@ -91,20 +91,20 @@ def analizeCodeSegment(
             )
 
         elif line.startswith(OtrasInstrucciones):
-            print(f"{n} -  {hex(count)}H - {line} :insturccion no asignada")
+            print(f"{n} -  {count:x}H - {line} :insturccion no asignada")
         elif line.startswith(numbers):
-            print(f"{n} -  {hex(count)}H - {line} error: simbolo no definido")
+            print(f"{n} -  {count:x}H - {line} error: simbolo no definido")
         elif line.endswith(":"):
             if (CheckingEtiqueta(line)) == True:
-                print(f"{n} -  {hex(count)}H - {line} : es una etiqueta")
+                print(f"{n} -  {count:x}H - {line} : es una etiqueta")
                 line = line.replace(":", "")
                 labels.append([line])
 
             elif (CheckingEtiqueta(line)) == False:
-                print(f"{n} -  {hex(count)}H - {line} : Error :parametros incorrectos")
+                print(f"{n} -  {count:x}H - {line} : Error :parametros incorrectos")
         else:
             print(f"{n} -  {count(count)}H - {line} es un error")
-    print(f"{n+1} -  {hex(count)}H - ends :linea correcta")
+    print(f"{n+1} -  {count:x}H - ends :linea correcta")
     return count
 
 
@@ -148,7 +148,6 @@ while True:
     )
 
     tableVariables = variables8BitsN + variables16BitsN
-
     CreateTableVariables(tableVariables, labels)
     print("Presione ESC para salir")
     keyboard.wait("esc")

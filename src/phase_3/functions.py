@@ -43,9 +43,10 @@ def CleanVariables(variables8bits, variables16bits):
 
 def CreateTableVariables(tableVariables, labels):
     for sublista in tableVariables:
-        if len(sublista) == 4:
-            valor = " ".join(sublista[-2:])
-            sublista[-2:] = [valor]
+        if len(sublista) == 5:
+            valor = " ".join(sublista[2:4])
+            del sublista[2:4]
+            sublista.insert(2, valor)
 
     for sublista in tableVariables:
         if sublista[1] in dbs:
@@ -62,8 +63,9 @@ def CreateTableVariables(tableVariables, labels):
         label.append("Null")
         label.append("Null")
 
-    tableVariables = tableVariables + labels
-    table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor"])
+    tableVariables = tableVariables
+
+    table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor", "Direccion"])
 
     for list in tableVariables:
         table.add_row(list)
@@ -85,7 +87,7 @@ def cleanLine(line):
 
 def analyzeStackSegment(stackSegment, n, count):
     n = 1 + n
-    print(f"{n} -  {hex(count)}H - stack segment - linea correcta")
+    print(f"{n} -  {count:x}H - stack segment - linea correcta")
     count = count - count
     for n, line in enumerate(stackSegment, start=n + 1):
         line = cleanLine(line)
@@ -98,30 +100,28 @@ def analyzeStackSegment(stackSegment, n, count):
                 if resultado:
                     numero = convertir_a_decimal(resultado.group(1))
                     if numero <= 65535 and numero >= -32768:
-                        print(
-                            f"{n} -  {hex(count)}H - {' '.join(line)} - linea correcta"
-                        )
+                        print(f"{n} -  {count:x}H - {' '.join(line)} - linea correcta")
                         # se le suma algo xd
                         count += 1
                     else:
                         print(
-                            f"{n} -  {hex(count)}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
+                            f"{n} -  {count:x}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
                         )
                         # no se le suma nada
                 else:
                     print(
-                        f"{n} -  {hex(count)}H - {' '.join(line)} Error: la sintaxis de la linea es incorrecta"
+                        f"{n} -  {count:x}H - {' '.join(line)} Error: la sintaxis de la linea es incorrecta"
                     )
                     # No se le suma nada
             else:
                 print(
-                    f"{n} -  {hex(count)}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
+                    f"{n} -  {count:x}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
                 )
 
         else:
             print(
-                f"{n} -  {hex(count)}H - {line} Error: la sintaxis de la linea es incorrecta"
+                f"{n} -  {count:x}H - {line} Error: la sintaxis de la linea es incorrecta"
             )
     n = n + 1
-    print(f"{n} -  {hex(count)}H - ends :linea correcta")
+    print(f"{n} -  {count:x}H - ends :linea correcta")
     return n, count
