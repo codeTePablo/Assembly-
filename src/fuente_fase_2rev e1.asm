@@ -1,22 +1,22 @@
      
 stack segment
-    dw 0256H dup(0)
+    dw 256 dup(0)
 ends
 data segment
-    var999999999999 db 10	   ;ERROR
-    var1 DB 10101010b             
-    var2 db "Ensamblador"
-    var3 db 0ABCH              ;ERROR
-    var4 dw 0F300H          
-    var5 db 30 dup('$')      
-    var6 dw                    ;ERROR
-    var7 dw 600000             ;ERROR
-    var8 dw 1010B dup(056H)
-    var9 db 0FF00H dup(100)
-    var10 db 10 dup(0000B)
-    var11 dw 2000 dup(0AABBCCH);ERROR
-    con1 equ 100000            ;ERROR
-    con2 equ 800             
+    var1 db 0
+
+    var2 db "hola de nuevo$"
+    var3 db CX
+    var4 db 10 dup('A')
+    var5 db 1000
+    var6 db 30 dup(100)
+    var7 dw 600
+    var8 dw 100000
+    var9 dw 20 dup (700)
+    var10 dw 023456H
+    const1 equ 23
+    const2 equ 4000000
+    var11 dw 050H             
 ends
      
      

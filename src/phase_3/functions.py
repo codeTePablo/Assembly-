@@ -102,7 +102,8 @@ def analyzeStackSegment(stackSegment, n, count):
                     if numero <= 65535 and numero >= -32768:
                         print(f"{n} -  {count:x}H - {' '.join(line)} - linea correcta")
                         # se le suma algo xd
-                        count += 1
+
+                        count = decimal * 2
                     else:
                         print(
                             f"{n} -  {count:x}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
@@ -122,6 +123,7 @@ def analyzeStackSegment(stackSegment, n, count):
             print(
                 f"{n} -  {count:x}H - {line} Error: la sintaxis de la linea es incorrecta"
             )
+
     n = n + 1
     print(f"{n} -  {count:x}H - ends :linea correcta")
     return n, count

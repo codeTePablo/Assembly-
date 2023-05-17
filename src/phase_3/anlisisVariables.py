@@ -45,7 +45,26 @@ def convertir_a_decimalS(string):
 
 def cleanLine(line):
     line = line.replace(",", " ").rstrip().lstrip()
-    return line
+    line = line.replace("dup (", "dup(")
+    line = line.split(" ")
+    result = []
+    inside_quotes = False
+    current_word = ""
+
+    for word in line:
+        if word.startswith('"') and not word.endswith('"'):
+            inside_quotes = True
+            current_word = word
+        elif inside_quotes and not word.endswith('"'):
+            current_word += " " + word
+        elif inside_quotes and word.endswith('"'):
+            current_word += " " + word
+            result.append(current_word)
+            inside_quotes = False
+            current_word = ""
+        else:
+            result.append(word)
+    return result
 
 
 def checkType(lineClean, n, count):
@@ -96,7 +115,7 @@ def checkType(lineClean, n, count):
 
                 else:
                     print(
-                        f"{n} - {' '.join(lineClean)} : linea Incorrecta, el valor decimal excede el rango de 8 bits"
+                        f"{n} -  {count:x}H - {' '.join(lineClean)} : linea Incorrecta, el valor decimal excede el rango de 8 bits"
                     )
                     return "", count
             # Si el valor es un caracter
@@ -224,9 +243,9 @@ def checkType(lineClean, n, count):
     # Si la linea tiene 4 parametros
     elif len(lineClean) == 4:
         if lineClean[1] in tuplasdb:
-            decimal = convertir_a_decimal(lineClean[2])
+            decimalChido = convertir_a_decimal(lineClean[2])
 
-            if decimal <= 65535 and decimal >= -32769:
+            if decimalChido <= 65535 and decimalChido >= -32769:
                 patron = r"dup\((.+?)\)"  # el patrón busca la palabra "dup" seguida de paréntesis y uno o más dígitos dentro
                 resultado = re.search(patron, lineClean[3])
                 if resultado:  # si se encontró un resultado
@@ -236,7 +255,7 @@ def checkType(lineClean, n, count):
                             f"{n} -  {count:x}H - {' '.join(lineClean)} : linea correcta"
                         )
                         lineClean.append(hex(count))
-                        return lineClean, count + decimal
+                        return lineClean, count + decimalChido
                     else:
                         decimal = convertir_a_decimal(numero)
                         if decimal <= 255 and decimal >= -128:
@@ -244,7 +263,7 @@ def checkType(lineClean, n, count):
                                 f"{n} -  {count:x}H - {' '.join(lineClean)} : linea correcta"
                             )
                             lineClean.append(hex(count))
-                            return lineClean, count + decimal
+                            return lineClean, count + decimalChido
                         else:
                             print(
                                 f"{n} -  {count:x}H - {' '.join(lineClean)} : linea Incorrecta, el valor decimal excede el rango de 8 bits"
@@ -254,8 +273,8 @@ def checkType(lineClean, n, count):
             else:
                 print(f"Error: el valor {lineClean} excede el rango de 16 bits")
         elif lineClean[1] in tuplasdw:
-            decimal = convertir_a_decimal(lineClean[2])
-            if decimal <= 65535 and decimal >= -32769:
+            decimalChido = convertir_a_decimal(lineClean[2])
+            if decimalChido <= 65535 and decimalChido >= -32769:
                 patron = r"dup\((.+?)\)"  # el patrón busca la palabra "dup" seguida de paréntesis y uno o más dígitos dentro
                 resultado = re.search(patron, lineClean[3])
                 if resultado:  # si se encontró un resultado
@@ -275,7 +294,7 @@ def checkType(lineClean, n, count):
 
                             lineClean.append(hex(count))
 
-                            return lineClean, count + decimal * 2
+                            return lineClean, count + decimalChido * 2
                         else:
                             print(
                                 f"{n} -  {count:x}H - {' '.join(lineClean)} : linea Incorrecta, el valor {numero}  excede el rango de 16 bits"
@@ -295,7 +314,6 @@ def AnalyzerDataSegment(dataSegment):
     print(f"1 -  {count:x}H - data segment : correcto")
     for n, line in enumerate(dataSegment, start=2):
         lineClean = cleanLine(line)
-        lineClean = lineClean.split(" ")
 
         if len(lineClean) <= 2:
             word = "".join(line).rstrip().lstrip()
