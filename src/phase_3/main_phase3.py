@@ -98,7 +98,10 @@ def analizeCodeSegment(
             if (CheckingEtiqueta(line)) == True:
                 print(f"{n} -  {count:x}H - {line} : es una etiqueta")
                 line = line.replace(":", "")
-                labels.append([line])
+                hex_count = hex(count)[2:]
+                result = line + " " + hex_count
+                result = result.split(" ")
+                labels.append(result)
 
             elif (CheckingEtiqueta(line)) == False:
                 print(f"{n} -  {count:x}H - {line} : Error :parametros incorrectos")
@@ -148,6 +151,7 @@ while True:
     )
 
     tableVariables = variables8BitsN + variables16BitsN
+
     CreateTableVariables(tableVariables, labels)
     print("Presione ESC para salir")
     keyboard.wait("esc")

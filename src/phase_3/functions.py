@@ -63,7 +63,10 @@ def CreateTableVariables(tableVariables, labels):
         label.append("Null")
         label.append("Null")
 
-    tableVariables = tableVariables
+        label.append(label[1] + "H")
+        label.pop(1)
+
+    tableVariables = tableVariables + labels
 
     table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor", "Direccion"])
 
@@ -75,7 +78,6 @@ def CreateTableVariables(tableVariables, labels):
 
 def new_list_for_memory(line):
     new_list = [[x[0]] for x in line]
-    # print(f"la nueva lista: {new_list}")
     return new_list
 
 
