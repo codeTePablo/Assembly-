@@ -77,7 +77,7 @@ def analizeCodeSegment(
                 line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
             )
         elif line.startswith(instrucciones_con_un_operando):
-            analyzeOneOperandCodeSegments(
+            bool, count = analyzeOneOperandCodeSegments(
                 line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
             )
         elif line.startswith(instrucciondeSaltos):
@@ -106,7 +106,7 @@ def analizeCodeSegment(
             elif (CheckingEtiqueta(line)) == False:
                 print(f"{n} -  {count:x}H - {line} : Error :parametros incorrectos")
         else:
-            print(f"{n} -  {count(count)}H - {line} es un error")
+            print(f"{n} -  {count:x}H - {line} es un error")
     print(f"{n+1} -  {count:x}H - ends :linea correcta")
     return count
 

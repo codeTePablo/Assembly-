@@ -16,17 +16,22 @@ data segment
     var10 dw 023456H
     const1 equ 23
     const2 equ 4000000
-    var11 dw 050H             
+    var11 dw 050H 
+    VAR7 db 11           
 ends
      
      
 code segment
 AAA 010H
 ETIQUETA1: 
+AAD
+SCASW
 AAD 
 HLT DI
+dsfsdfs
 INTO 
 SCASW VAR6
+DEC VAR7
 STC
 DEC DX,SI
 IDIV VAR1

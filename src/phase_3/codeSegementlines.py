@@ -17,6 +17,13 @@ def cleanLine(line):
 def analyzeOperandsCodeSegments(
     linea, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
 ):
+    # Esta funcion analiza las lineas que tienen dos operandos del orden
+    # REG, memory
+    # memory, REG
+    # REG, REG
+    # memory, immediate
+    # REG, immediate
+
     line = cleanLine(linea)
     componentes = linea.split()
     parametros = componentes[1:]
@@ -105,6 +112,11 @@ def analyzeOperandsCodeSegments(
 def analyzeTwoOperandsCodeSegments(
     line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
 ):
+    # Esta funcion analiza las lineas que tienen dos operandos y solo puede ser
+    #  REG, MEM
+    # LES
+    # LDS
+
     line = cleanLine(line)
     componentes = line.split()
     parametros = componentes[1:]
@@ -137,7 +149,7 @@ def analyzeTwoOperandsCodeSegments(
             print(
                 f"{n} -  {count:x}H - {line}: Linea incorrecta no se puede operar 8 bits con 16 bits"
             )
-            return True
+            return True, count
 
         elif parametros[0] in tuplaNombresVariables16bits:
             print(
@@ -158,9 +170,65 @@ def analyzeTwoOperandsCodeSegments(
 etiquetasmodificadas = []
 
 
+def analyzeOneOperandCodeSegments(
+    line, tuplaNombreVariables8bits, tuplaNombreVariables16bits, n, count
+):
+    # Esta funcion administra las instrucciones que solo tienen un operando
+    tuplaNombreVariables8bits = tuple(
+        elemento.upper() if isinstance(elemento, str) else elemento
+        for elemento in tuplaNombreVariables8bits
+    )
+    tuplaNombreVariables16bits = tuple(
+        elemento.upper() if isinstance(elemento, str) else elemento
+        for elemento in tuplaNombreVariables16bits
+    )
+
+    # Instrucciones
+    # "DEC",
+    # "IDIV",
+    # "IMUL",
+    # "POP",
+    # "dec",
+    # "idiv",
+    # "imul",
+    # "pop",
+
+    line = cleanLine(line)
+    componentes = line.split()
+
+    parametros = componentes[1:]
+
+    if len(parametros) == 1:
+        if parametros[0] in registros16bits:
+            print(f"{n} -  {count:x}H - {line} Linea correcta")
+            count += 2
+            return True, count
+        elif parametros[0] in registros8bits:
+            print(f"{n} -  {count:x}H - {line} Linea correcta")
+            count += 2
+            return True, count
+        elif parametros[0] in tuplaNombreVariables8bits:
+            print(f"{n} -  {count:x}H - {line} Linea correcta")
+            count += 3
+            return True, count
+        elif parametros[0] in tuplaNombreVariables16bits:
+            print(f"{n} -  {count:x}H- {line} Linea correcta")
+            count += 4
+            return True, count
+        else:
+            print(f"{n} -  {count:x}H - {line} variable no encontrada")
+            return False, count
+    else:
+        print(
+            f"{n} -  {count:x}H - {line} Error: Instruction solo debe llevar un operando"
+        )
+        return False, count
+
+
 def analyceJumps(
     line, n, etiquetas, tuplaNombreVariables8bits, tuplaNombresVariables16bits, count
 ):
+    # Esta funcion analisa los saltos
     line = cleanLine(line)
 
     for elemento in etiquetas:
@@ -190,47 +258,8 @@ def analyceJumps(
         elif parametros[0] in tuplaEtiquetas:
             print(f"{n} -  {count:x}H - {line} Salto de linea valido")
         else:
-            print(f"{n} -  {count:x}H -  {line} Error: Etiqueta no encontrada")
+            print(f"{n} -  {count:x}H - {line} Error: Etiqueta no encontrada")
     if len(parametros) > 1:
         print(
             f"{n} -  {count:x}H - {line} Error: Esta instruccion solo debe tener un operando"
-        )
-
-
-def analyzeOneOperandCodeSegments(
-    line, tuplaNombreVariables8bits, tuplaNombreVariables16bits, n, count
-):
-    tuplaNombreVariables8bits = tuple(
-        elemento.upper() if isinstance(elemento, str) else elemento
-        for elemento in tuplaNombreVariables8bits
-    )
-    tuplaNombreVariables16bits = tuple(
-        elemento.upper() if isinstance(elemento, str) else elemento
-        for elemento in tuplaNombreVariables16bits
-    )
-
-    line = cleanLine(line)
-    componentes = line.split()
-
-    parametros = componentes[1:]
-
-    if len(parametros) == 1:
-        if parametros[0] in registros16bits:
-            print(f"{n} -  {count:x}H - {line} Linea correcta")
-            return True
-        elif parametros[0] in registros8bits:
-            print(f"{n} -  {count:x}H - {line} Linea correcta")
-            return True
-        elif parametros[0] in tuplaNombreVariables8bits:
-            print(f"{n} -  {count:x}H - {line} Linea correcta")
-            return True
-        elif parametros[0] in tuplaNombreVariables16bits:
-            print(f"{n} -  {count:x}H- {line} Linea correcta")
-            return True
-        else:
-            print(f"{n} -  {count:x}H - {line} variable no encontrada")
-            return count
-    else:
-        print(
-            f"{n} -  {count:x}H - {line} Error: Instruction solo debe llevar un operando"
         )
