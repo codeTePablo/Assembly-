@@ -29,21 +29,27 @@ def analyzeOperandsCodeSegments(
     parametro = componentes[1:]
 
     if len(parametro) == 2:
-        param1 = parametro[0].lower()
+        param1 = parametro[0]
         param2 = parametro[1]
 
         if param1 in registros16bits and param2 in tuplaNombresVariables16bits:
             print(f"{n} -   {count:x}H - {line} :Linea correcta")
-            return count + 1
+            return count + 4
         elif param1 in tuplaNombresVariables16bits and param2 in registros16bits:
             print(f"{n} -   {count:x}H - {line} :Linea correcta")
-            return count + 1
+            return count + 4
         elif param1 in registros8bits and param2 in tuplaNombreVariables8bits:
             print(f"{n} -   {count:x}H - {line} :Linea correcta")
-            return count + 1
+            return count + 3
         elif param1 in tuplaNombreVariables8bits and param2 in registros8bits:
             print(f"{n} -   {count:x}H - {line} :Linea correcta")
-            return count + 1
+            return count + 3
+        elif param1 in registros16bits and param2 in registros16bits:
+            print(f"{n} -   {count:x}H - {line} :Linea correcta")
+            return count + 2
+        elif param1 in registros8bits and param2 in registros8bits:
+            print(f"{n} -   {count:x}H - {line} :Linea correcta")
+            return count + 2
         elif param1 in registros16bits and param2 in registros8bits:
             print(
                 f"{n} -  {count:x}H - {line} Error: No se puede operar un registro de 16 bits con uno de 8 bits"
