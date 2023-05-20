@@ -2,6 +2,9 @@ from tuples import *
 from dicts import *
 from anlisisVariables import *
 from prettytable import PrettyTable
+from tkinter import filedialog
+from tkinter import messagebox
+import tkinter as tk
 
 
 def CleanVariables(variables8bits, variables16bits):
@@ -38,7 +41,10 @@ def CleanVariables(variables8bits, variables16bits):
         valor = valor.upper()
         valores_modificados16bits.append(valor)
 
-    return variables8Bits, variables16Bits
+    tuplaNombreVariables8bits = tuple(variables8bits)
+    tuplaNombresVariables16bits = tuple(variables16bits)
+
+    return tuplaNombreVariables8bits, tuplaNombresVariables16bits
 
 
 def CreateTableVariables(tableVariables, labels):
@@ -129,3 +135,50 @@ def analyzeStackSegment(stackSegment, n, count):
     n = n + 1
     print(f"{n} -  {count:x}H - ends :linea correcta")
     return n, count
+
+
+def CheckingEtiqueta(etiqueta):
+    patron = r"^(?P<etiqueta>[a-zA-Z_]\w*\s*):$"
+    coincidencias = re.search((patron), etiqueta)
+    if coincidencias:
+        return True
+    else:
+        return False
+
+
+def getSections(clean_file):
+    data_section = []
+    stack_section = []
+    code_section = []
+    section_actual = None
+    try:
+        for linea in clean_file:
+            if "data segment" in linea:
+                section_actual = data_section
+            elif "stack segment" in linea:
+                section_actual = stack_section
+            elif "code segment" in linea:
+                section_actual = code_section
+            elif "ends" in linea:
+                section_actual = None
+            elif section_actual is not None:
+                section_actual.append(linea)
+    except Exception as e:
+        print(e)
+
+    return data_section, stack_section, code_section
+
+
+def open_file():
+    """Abre el archivo y lo lee"""
+
+    try:
+        filepath = filedialog.askopenfilename(
+            filetypes=[("ASM", "*.asm*"), ("Text Files", "*.txt")]
+        )
+        file = open(filepath, "r")
+        return file.read()
+    except Exception as e:
+        root = tk.Tk()
+        root.withdraw()
+        messagebox.showerror("Error", "Error al abrir el archivo: " + str(e))

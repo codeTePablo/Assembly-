@@ -26,11 +26,11 @@ def analyzeOperandsCodeSegments(
 
     line = cleanLine(linea)
     componentes = linea.split()
-    parametros = componentes[1:]
+    parametro = componentes[1:]
 
-    if len(parametros) == 2:
-        param1 = parametros[0].lower()
-        param2 = parametros[1]
+    if len(parametro) == 2:
+        param1 = parametro[0].lower()
+        param2 = parametro[1]
 
         if param1 in registros16bits and param2 in tuplaNombresVariables16bits:
             print(f"{n} -   {count:x}H - {line} :Linea correcta")
@@ -102,11 +102,26 @@ def analyzeOperandsCodeSegments(
                     f"{n} -  {count:x}H - {linea} Error: El parametro {param2} excede los 16 bits"
                 )
         else:
-            print(f"{n} -  {count:x}H - {linea} Error: No se reconoce los parametros")
+            print(f"{n} -  {count:x}H - {linea} Error: No se reconoce los parametro")
 
     else:
         print(f"{n} -  {count:x}H - {linea} {componentes} Error: Argumentos invalidos")
     return count
+
+
+def checkLinewithoutOperands(line, n, count):
+    line = line.replace(",", " ")
+    line = line.split(" ")
+    if len(line) > 1:
+        word = " ".join(line)
+        print(
+            f"{n} -  {count:x}H - {word} :error : esta instruccion  no admite operandos"
+        )
+        return count
+    else:
+        word = " ".join(line)
+        print(f"{n} -  {count:x}H - {(word)} :linea correcta")
+        return count + 1
 
 
 def analyzeTwoOperandsCodeSegments(
@@ -119,52 +134,53 @@ def analyzeTwoOperandsCodeSegments(
 
     line = cleanLine(line)
     componentes = line.split()
-    parametros = componentes[1:]
+    parametro = componentes[1:]
 
-    if len(parametros) == 2:
+    if len(parametro) == 2:
         if (
-            parametros[0] in registros16bits
-            and parametros[1] in tuplaNombresVariables16bits
+            parametro[0] in registros16bits
+            and parametro[1] in tuplaNombresVariables16bits
         ):
             print(f"{n} -  {count:x}H - {line}: Linea correcta")
-            return True
+            count = count + 4
+            return True, count
         elif (
-            parametros[0] in registros8bits
-            and parametros[1] in tuplaNombreVariables8bits
+            parametro[0] in registros8bits and parametro[1] in tuplaNombreVariables8bits
         ):
+            print(count)
             print(f"{n} -  {count:x}H - {line}: Linea correcta")
-            return True
+            count = count + 3
+            return True, count
         elif (
-            parametros[0] in registros16bits
-            and parametros[1] in tuplaNombreVariables8bits
+            parametro[0] in registros16bits
+            and parametro[1] in tuplaNombreVariables8bits
         ):
             print(
                 f"{n} -  {count:x}H - {line}: Linea incorrecta no se puede operar 16 bits con 8 bits"
             )
-            return True
+            return True, count
         elif (
-            parametros[0] in registros8bits
-            and parametros[1] in tuplaNombresVariables16bits
+            parametro[0] in registros8bits
+            and parametro[1] in tuplaNombresVariables16bits
         ):
             print(
                 f"{n} -  {count:x}H - {line}: Linea incorrecta no se puede operar 8 bits con 16 bits"
             )
             return True, count
-
-        elif parametros[0] in tuplaNombresVariables16bits:
+        elif (
+            parametro[0] in tuplaNombreVariables8bits
+            and parametro[1] in registros16bits
+        ):
             print(
-                f"{n} -  {count:x}H - {line}: Error: no es posible usar variabele y registros en ese orden "
+                f"{n} -  {count:x}H - {line}: Linea incorrecta no se puede operar 8 bits con 16 bits"
             )
-            return count
-
-        elif parametros[0] in tuplaNombreVariables8bits:
-            print(
-                f"{n} -  {count:x}H - {line}: Error: no es posible usar variabele y registros en ese orden "
-            )
+            return True, count
         else:
-            print(f"{n} -  {count:x}H - {line} Correcto")
+            print(f"{n} -  {count:x}H - {line} Incorrecto parametros invalidos")
+            return True, count
     else:
-        print(f"{n} -  {count:x}H - {line} Error: Argumentos invalidos")
+        print(f"{n} -  {count:x}H - {line} Error: Debe tener dos argumentos")
+        return False, count
 
 
 etiquetasmodificadas = []
@@ -174,14 +190,6 @@ def analyzeOneOperandCodeSegments(
     line, tuplaNombreVariables8bits, tuplaNombreVariables16bits, n, count
 ):
     # Esta funcion administra las instrucciones que solo tienen un operando
-    tuplaNombreVariables8bits = tuple(
-        elemento.upper() if isinstance(elemento, str) else elemento
-        for elemento in tuplaNombreVariables8bits
-    )
-    tuplaNombreVariables16bits = tuple(
-        elemento.upper() if isinstance(elemento, str) else elemento
-        for elemento in tuplaNombreVariables16bits
-    )
 
     # Instrucciones
     # "DEC",
@@ -196,22 +204,22 @@ def analyzeOneOperandCodeSegments(
     line = cleanLine(line)
     componentes = line.split()
 
-    parametros = componentes[1:]
+    parametro = componentes[1:]
 
-    if len(parametros) == 1:
-        if parametros[0] in registros16bits:
+    if len(parametro) == 1:
+        if parametro[0] in registros16bits:
             print(f"{n} -  {count:x}H - {line} Linea correcta")
             count += 2
             return True, count
-        elif parametros[0] in registros8bits:
+        elif parametro[0] in registros8bits:
             print(f"{n} -  {count:x}H - {line} Linea correcta")
             count += 2
             return True, count
-        elif parametros[0] in tuplaNombreVariables8bits:
+        elif parametro[0] in tuplaNombreVariables8bits:
             print(f"{n} -  {count:x}H - {line} Linea correcta")
             count += 3
             return True, count
-        elif parametros[0] in tuplaNombreVariables16bits:
+        elif parametro[0] in tuplaNombreVariables16bits:
             print(f"{n} -  {count:x}H- {line} Linea correcta")
             count += 4
             return True, count
@@ -242,24 +250,24 @@ def analyceJumps(
     tuplaEtiquetas = tuple(etiquetasmodificadas)
 
     componentes = line.split()
-    parametros = componentes[1:]
+    parametro = componentes[1:]
 
-    if len(parametros) == 0:
+    if len(parametro) == 0:
         print(f"{n} -  {count:x}H - {line} Salto de linea valido")
-    elif len(parametros) == 1:
-        if parametros[0] in tuplaNombreVariables8bits:
+    elif len(parametro) == 1:
+        if parametro[0] in tuplaNombreVariables8bits:
             print(
                 f"{n} -  {count:x}H - {line} Error: No se puede saltar a una variable"
             )
-        elif parametros[0] in tuplaNombresVariables16bits:
+        elif parametro[0] in tuplaNombresVariables16bits:
             print(
                 f"{n} -  {count:x}H - {line} Error: No se puede saltar a una variable"
             )
-        elif parametros[0] in tuplaEtiquetas:
+        elif parametro[0] in tuplaEtiquetas:
             print(f"{n} -  {count:x}H - {line} Salto de linea valido")
         else:
             print(f"{n} -  {count:x}H - {line} Error: Etiqueta no encontrada")
-    if len(parametros) > 1:
+    if len(parametro) > 1:
         print(
             f"{n} -  {count:x}H - {line} Error: Esta instruccion solo debe tener un operando"
         )
