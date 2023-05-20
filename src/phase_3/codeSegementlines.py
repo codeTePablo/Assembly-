@@ -192,10 +192,10 @@ def analyzeOneOperandCodeSegments(
     # Esta funcion administra las instrucciones que solo tienen un operando
 
     # Instrucciones
-    # "DEC",
-    # "IDIV",
-    # "IMUL",
-    # "POP",
+    # "DEC reg/mem",
+    # "IDIV reg/mem",
+    # "IMUL reg/mem",
+    # "POP reg/mem",
     # "dec",
     # "idiv",
     # "imul",
