@@ -240,11 +240,13 @@ registros16bits = (
     "AX",
     "BX",
     "CX",
+    "DS",
     "DX",
     "ax",
     "bx",
     "cx",
     "dx",
+    "ds",
 )
 
 registros8bits = (

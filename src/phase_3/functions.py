@@ -41,9 +41,6 @@ def CleanVariables(variables8bits, variables16bits):
         valor = valor.upper()
         valores_modificados16bits.append(valor)
 
-    print(valores_modificados8bits)
-    print(valores_modificados16bits)
-
     tuplaNombreVariables8bits = tuple(valores_modificados8bits)
     tuplaNombresVariables16bits = tuple(valores_modificados16bits)
 

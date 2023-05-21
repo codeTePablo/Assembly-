@@ -25,7 +25,8 @@ def analyzeOperandsCodeSegments(
     # REG, immediate
 
     line = cleanLine(linea)
-    componentes = linea.split()
+    componentes = line.split()
+    # print(componentes)
     parametro = componentes[1:]
 
     if len(parametro) == 2:
@@ -82,13 +83,16 @@ def analyzeOperandsCodeSegments(
             inmediato = convertir_a_decimal(param2)
             if inmediato <= 255 and inmediato >= -128:
                 print(f"{n} -  {count:x}H - {line} :Linea correcta")
-                return count + 1
+                return count + 3
             else:
                 print(f"{n} - {linea} Error: El parametro {param2} excede los 8 bits")
         elif param1 in registros16bits:
-            if inmediato <= 65535 and inmediato >= -32768:
+            if inmediato > 255 and inmediato < -128:
                 print(f"{n} -  {count:x}H - {line} :Linea correcta")
-                return count + 1
+                return count + 3
+            elif inmediato <= 65535 and inmediato >= -32768:
+                print(f"{n} -  {count:x}H - {line} :Linea correcta")
+                return count + 4
             else:
                 print(f"{n} - {linea} Error: El parametro {param2} excede los 16 bits")
 
@@ -100,9 +104,12 @@ def analyzeOperandsCodeSegments(
             else:
                 print(f"{n} - {linea} Error: El parametro {param2} excede los 8 bits")
         elif param1 in tuplaNombresVariables16bits:
-            if inmediato <= 65535 and inmediato >= -32768:
+            if inmediato > 255 and inmediato < -128:
                 print(f"{n} -  {count:x}H - {line} :Linea correcta")
-                return count + 1
+                return count + 3
+            elif inmediato <= 65535 and inmediato >= -32768:
+                print(f"{n} -  {count:x}H - {line} :Linea correcta")
+                return count + 4
             else:
                 print(
                     f"{n} -  {count:x}H - {linea} Error: El parametro {param2} excede los 16 bits"
@@ -126,8 +133,24 @@ def checkLinewithoutOperands(line, n, count):
         return count
     else:
         word = " ".join(line)
-        print(f"{n} -  {count:x}H - {(word)} :linea correcta")
-        return count + 1
+        if word == "AAA":
+            print(f"{n} -  {count:x}H - {(word)} 37H ")
+            return count + 1
+        elif word == "AAD":
+            print(f"{n} -  {count:x}H - {(word)} D50AH ")
+            return count + 2
+        elif word == "HLT":
+            print(f"{n} -  {count:x}H - {(word)} F4H ")
+            return count + 1
+        elif word == "INTO":
+            print(f"{n} -  {count:x}H - {(word)} CEH ")
+            return count + 1
+        elif word == "SCASW":
+            print(f"{n} -  {count:x}H - {(word)} AFH ")
+            return count + 1
+        elif word == "STC":
+            print(f"{n} -  {count:x}H - {(word)} F9H ")
+            return count + 1
 
 
 def analyzeTwoOperandsCodeSegments(
@@ -258,9 +281,7 @@ def analyceJumps(
     componentes = line.split()
     parametro = componentes[1:]
 
-    if len(parametro) == 0:
-        print(f"{n} -  {count:x}H - {line} Salto de linea valido")
-    elif len(parametro) == 1:
+    if len(parametro) == 1:
         if parametro[0] in tuplaNombreVariables8bits:
             print(
                 f"{n} -  {count:x}H - {line} Error: No se puede saltar a una variable"
@@ -269,11 +290,33 @@ def analyceJumps(
             print(
                 f"{n} -  {count:x}H - {line} Error: No se puede saltar a una variable"
             )
-        elif parametro[0] in tuplaEtiquetas:
-            print(f"{n} -  {count:x}H - {line} Salto de linea valido")
+        elif componentes[0] == "JC":
+            for etiqueta in etiquetas:
+                if etiqueta[0] == parametro[0]:
+                    print(f"{n} -  {count:x}H - {line} 0F82 {etiqueta[1]}H")
+        elif componentes[0] == "JA":
+            for etiqueta in etiquetas:
+                if etiqueta[0] == parametro[0]:
+                    print(f"{n} -  {count:x}H - {line} 0F87 {etiqueta[1]}H")
+        elif componentes[0] == "JGE":
+            for etiqueta in etiquetas:
+                if etiqueta[0] == parametro[0]:
+                    print(f"{n} -  {count:x}H - {line} 0F8D {etiqueta[1]}H")
+        elif componentes[0] == "JNB":
+            for etiqueta in etiquetas:
+                if etiqueta[0] == parametro[0]:
+                    print(f"{n} -  {count:x}H - {line} 0F82 {etiqueta[1]}H")
+        elif componentes[0] == "JNO":
+            for etiqueta in etiquetas:
+                if etiqueta[0] == parametro[0]:
+                    print(f"{n} -  {count:x}H - {line} 0F80 {etiqueta[1]}H")
+        elif componentes[0] == "JNG":
+            for etiqueta in etiquetas:
+                if etiqueta[0] == parametro[0]:
+                    print(f"{n} -  {count:x}H - {line} 0F8E {etiqueta[1]}H")
         else:
             print(f"{n} -  {count:x}H - {line} Error: Etiqueta no encontrada")
-    if len(parametro) > 1:
+    if len(parametro) > 1 or len(parametro) == 0:
         print(
             f"{n} -  {count:x}H - {line} Error: Esta instruccion solo debe tener un operando"
         )

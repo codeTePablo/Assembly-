@@ -24,6 +24,7 @@ def cleanLine(line):
 
 while True:
     raw_file = open_file()
+    print(raw_file)
     clean_file = clear_File(raw_file)
 
     data_section, stack_section, code_section = getSections(clean_file)

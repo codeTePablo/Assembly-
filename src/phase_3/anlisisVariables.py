@@ -1,4 +1,5 @@
 import re
+from tuples import *
 
 variablesCorrectas = []
 
@@ -77,7 +78,6 @@ def checkType(lineClean, n, count):
                 hexadecimal = lineClean[2][:-1]
                 decimal = int(hexadecimal, 16)
                 if decimal <= 255 and decimal >= -128:
-                    variables8bits.append(lineClean)
                     # 1 byte
                     print(
                         f"{n} -  {count:x}H - {' '.join(lineClean)}   : linea Correcta"
@@ -150,7 +150,6 @@ def checkType(lineClean, n, count):
                 binario = lineClean[2][:-1]
                 decimal = int(binario, 2)
                 if decimal <= 65535 and decimal >= -32769:
-                    variables16bits.append(lineClean)
                     print(f"{n} -  {count:x}H - {' '.join(lineClean)} : linea Correcta")
                     lineClean.append("   ")
 
@@ -163,7 +162,6 @@ def checkType(lineClean, n, count):
             elif lineClean[2].isdigit():
                 decimal = int(lineClean[2])
                 if decimal <= 65535 and decimal >= -32769:
-                    variables16bits.append(lineClean)
                     print(
                         f"{n} -  {count:x}H - {' '.join(lineClean)} : linea Correcta "
                     )
@@ -205,7 +203,6 @@ def checkType(lineClean, n, count):
                 binario = lineClean[2][:-1]
                 decimal = int(binario, 2)
                 if decimal <= 65535 and decimal >= -32769:
-                    variables16bits.append(lineClean)
                     print(f"{n} -  {count:x}H - {' '.join(lineClean)} : linea Correcta")
                     lineClean.append(hex(count))
                     return lineClean, count + 2
@@ -217,7 +214,6 @@ def checkType(lineClean, n, count):
             elif lineClean[2].isdigit():
                 decimal = int(lineClean[2])
                 if decimal <= 65535 and decimal >= -32769:
-                    variables16bits.append(lineClean)
                     print(f"{n} -  {count:x}H - {' '.join(lineClean)} : linea Correcta")
 
                     lineClean.append(hex(count))
@@ -257,19 +253,24 @@ def checkType(lineClean, n, count):
                         lineClean.append(hex(count))
                         return lineClean, count + decimalChido
                     else:
-                        decimal = convertir_a_decimal(numero)
-                        if decimal <= 255 and decimal >= -128:
+                        try:
+                            decimal = convertir_a_decimal(numero)
+                            if decimal <= 255 and decimal >= -128:
+                                print(
+                                    f"{n} -  {count:x}H - {' '.join(lineClean)} : linea correcta"
+                                )
+                                lineClean.append(hex(count))
+                                return lineClean, count + decimalChido
+                            else:
+                                print(
+                                    f"{n} -  {count:x}H - {' '.join(lineClean)} : linea Incorrecta, el valor decimal excede el rango de 8 bits"
+                                )
+                                return "", count
+                        except:
                             print(
-                                f"{n} -  {count:x}H - {' '.join(lineClean)} : linea correcta"
-                            )
-                            lineClean.append(hex(count))
-                            return lineClean, count + decimalChido
-                        else:
-                            print(
-                                f"{n} -  {count:x}H - {' '.join(lineClean)} : linea Incorrecta, el valor decimal excede el rango de 8 bits"
+                                f"{n} -  {count:x}H - {' '.join(lineClean)} : linea Incorrecta, el valor no es un caracter valido"
                             )
                             return "", count
-
             else:
                 print(f"Error: el valor {lineClean} excede el rango de 16 bits")
         elif lineClean[1] in tuplasdw:
@@ -326,17 +327,24 @@ def AnalyzerDataSegment(dataSegment):
                     f"{n} -  {count:x}H - {' '.join(lineClean)} :error : nombre de variable excede los 10 caracteres"
                 )
             else:
-                line816, count = checkType(lineClean, n, count)
+                try:
+                    line816, count = checkType(lineClean, n, count)
 
-                if line816 == "":
-                    pass
-                elif line816 == None:
-                    pass
-                else:
-                    if line816[1] in tuplasdb:
-                        variables8bits.append(line816)
-                    elif line816[1] in tuplasdw:
-                        variables16bits.append(line816)
+                    if line816 == "":
+                        pass
+                    elif line816 == None:
+                        pass
+                    else:
+                        if line816[1] in tuplasdb:
+                            variables8bits.append(line816)
+                        elif line816[1] in tuplasdw:
+                            variables16bits.append(line816)
+                        elif line816[1] in tuplasEqu:
+                            variables16bits.append(line816)
+                except:
+                    print(
+                        f"{n} -  {count:x}H - {' '.join(lineClean)} :error : linea no valida"
+                    )
 
     print(f"{n} -  {count:x}H - ends : correcto")
     return variables8bits, variables16bits, n, count
