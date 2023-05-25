@@ -73,7 +73,7 @@ def CreateTableVariables(tableVariables, labels):
         label.append(label[1] + "H")
         label.pop(1)
 
-    tableVariables = tableVariables 
+    tableVariables = tableVariables + labels
     print("Tabla de simbolos:")
 
     table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor", "Direccion"])
@@ -97,7 +97,7 @@ def cleanLine(line):
 
 def analyzeStackSegment(stackSegment, n, count):
     n = 1 + n
-    print(f"{n} -  {count:x}H - stack segment - linea correcta")
+    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - stack segment - linea correcta")
     count = count - count
     for n, line in enumerate(stackSegment, start=n + 1):
         line = cleanLine(line)
@@ -110,32 +110,32 @@ def analyzeStackSegment(stackSegment, n, count):
                 if resultado:
                     numero = convertir_a_decimal(resultado.group(1))
                     if numero <= 65535 and numero >= -32768:
-                        print(f"{n} -  {count:x}H - {' '.join(line)} - linea correcta")
+                        print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {' '.join(line)} - linea correcta")
                         # se le suma algo xd
 
                         count = decimal * 2
                     else:
                         print(
-                            f"{n} -  {count:x}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
+                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
                         )
                         # no se le suma nada
                 else:
                     print(
-                        f"{n} -  {count:x}H - {' '.join(line)} Error: la sintaxis de la linea es incorrecta"
+                        f"{n} -  {format(count, 'x').zfill(4).upper()}H - {' '.join(line)} Error: la sintaxis de la linea es incorrecta"
                     )
                     # No se le suma nada
             else:
                 print(
-                    f"{n} -  {count:x}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
                 )
 
         else:
             print(
-                f"{n} -  {count:x}H - {line} Error: la sintaxis de la linea es incorrecta"
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: la sintaxis de la linea es incorrecta"
             )
 
     n = n + 1
-    print(f"{n} -  {count:x}H - ends :linea correcta")
+    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - ends :linea correcta")
     return n, count
 
 
