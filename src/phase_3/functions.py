@@ -6,6 +6,7 @@ from tkinter import filedialog
 from tkinter import messagebox
 import tkinter as tk
 
+tuplasEqu = ["equ", "EQU"]
 
 def CleanVariables(variables8bits, variables16bits):
     variables8Bits = []
@@ -57,11 +58,11 @@ def CreateTableVariables(tableVariables, labels):
     for sublista in tableVariables:
         if sublista[1] in dbs:
             sublista.insert(1, "variable")
-        elif sublista[1] == "equ":
+        elif sublista[1] in equ:
             sublista.insert(1, "constante")
 
     for sublista in tableVariables:
-        if sublista[2] == "equ":
+        if sublista[2] in equ:
             sublista[2] = "dw"
 
     for label in labels:
@@ -72,7 +73,8 @@ def CreateTableVariables(tableVariables, labels):
         label.append(label[1] + "H")
         label.pop(1)
 
-    tableVariables = tableVariables + labels
+    tableVariables = tableVariables 
+    print("Tabla de simbolos:")
 
     table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor", "Direccion"])
 

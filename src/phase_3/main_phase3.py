@@ -40,9 +40,7 @@ while True:
     count = analizeCodeSegment(
         code_section, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
     )
-
     tableVariables = variables8Bits + variables16Bits
-
     CreateTableVariables(tableVariables, labels)
 
     print("Presione ESC para salir")

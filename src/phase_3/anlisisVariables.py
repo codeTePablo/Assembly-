@@ -346,5 +346,6 @@ def AnalyzerDataSegment(dataSegment):
                         f"{n} -  {count:x}H - {' '.join(lineClean)} :error : linea no valida"
                     )
 
+
     print(f"{n} -  {count:x}H - ends : correcto")
     return variables8bits, variables16bits, n, count
