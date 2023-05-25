@@ -85,7 +85,9 @@ def analyzeOperandsCodeSegments(
                 print(f"{n} -  {count:x}H - {line} :Linea correcta")
                 return count + 3
             else:
-                print(f"{n} - {linea} Error: El parametro {param2} excede los 8 bits")
+                print(
+                    f"{n} -  {count:x} - {linea} Error: El parametro {param2} excede los 8 bits"
+                )
         elif param1 in registros16bits:
             if inmediato > 255 and inmediato < -128:
                 print(f"{n} -  {count:x}H - {line} :Linea correcta")
@@ -94,7 +96,9 @@ def analyzeOperandsCodeSegments(
                 print(f"{n} -  {count:x}H - {line} :Linea correcta")
                 return count + 4
             else:
-                print(f"{n} - {linea} Error: El parametro {param2} excede los 16 bits")
+                print(
+                    f"{n} -  {count:x} -{linea} Error: El parametro {param2} excede los 16 bits"
+                )
 
         elif param1 in tuplaNombreVariables8bits:
             inmediato = convertir_a_decimal(param2)
@@ -102,7 +106,9 @@ def analyzeOperandsCodeSegments(
                 print(f"{n} -  {count:x}H - {line} :Linea correcta")
                 return count + 1
             else:
-                print(f"{n} - {linea} Error: El parametro {param2} excede los 8 bits")
+                print(
+                    f"{n} -  {count:x}  - {linea} Error: El parametro {param2} excede los 8 bits"
+                )
         elif param1 in tuplaNombresVariables16bits:
             if inmediato > 255 and inmediato < -128:
                 print(f"{n} -  {count:x}H - {line} :Linea correcta")
