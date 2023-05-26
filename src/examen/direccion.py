@@ -1,11 +1,11 @@
 def salto(etiqueta_decimal, instruccion_decimal):
     if etiqueta_decimal > instruccion_decimal:
         # print("La dirección de etiqueta es mayor que la dirección de instrucción.")
-        print("abajo")
+        print("abajo (positivo)")
         # return etiqueta_decimal
     elif etiqueta_decimal < instruccion_decimal:
         # print("La dirección de instrucción es mayor que la dirección de etiqueta.")
-        print("arriba")
+        print("arriba (negativo)")
         # return instruccion_decimal
     else:
         print("La dirección de etiqueta y la dirección de instrucción son iguales.")
@@ -32,15 +32,15 @@ def comprobar_tamaño_byte(direccion_etiqueta, direccion_instruccion, codigo):
 
     # Restar el mayor menos el menor y convertir a hexadecimal
     diferencia_hex = hex(abs(etiqueta_decimal - instruccion_decimal))
-    print(diferencia_hex)
+    print(f"resta de los hexa: {diferencia_hex}")
     # Convertir la diferencia a decimal
     diferencia_decimal = int(diferencia_hex, 16)
-    print(diferencia_decimal)
+    print(f"numero decimal del hexa: {diferencia_decimal}")
 
-    salto(etiqueta_decimal, instruccion_decimal)
 
     # Comprobar si el resultado cabe en un byte
     if diferencia_decimal >= 0 and diferencia_decimal <= 128:
+        salto(etiqueta_decimal, instruccion_decimal)
         print("corto.")
         # restar 2 a la diferencia_hex
         diferencia_hex = hex(diferencia_decimal - 2)
@@ -49,7 +49,7 @@ def comprobar_tamaño_byte(direccion_etiqueta, direccion_instruccion, codigo):
         print(f"1 byte: {diferencia_hex} {codigo_convert(codigo)}")
     else:
         print("largo.")
-        print(codigo)
+        print(f"2 byte: {codigo_convert(codigo)} {direccion_etiqueta} ")
 
 
 # Obtener las direcciones en formato hexadecimal del usuario
