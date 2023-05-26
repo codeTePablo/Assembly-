@@ -235,45 +235,18 @@ abecedario = (
 )
 numbers = ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")
 
-registros = (
-    "AX",
-    "BX",
-    "CX",
-    "DX",
-    "SI",
-    "DI",
-    "BP",
-    "SP",
-    "CS",
-    "DS",
-    "SS",
-    "ES",
-    "IP",
-    "ax",
-    "bx",
-    "cx",
-    "dx",
-    "si",
-    "di",
-    "bp",
-    "sp",
-    "cs",
-    "ds",
-    "ss",
-    "es",
-    "ip",
-)
-
 
 registros16bits = (
     "AX",
     "BX",
     "CX",
+    "DS",
     "DX",
     "ax",
     "bx",
     "cx",
     "dx",
+    "ds",
 )
 
 registros8bits = (

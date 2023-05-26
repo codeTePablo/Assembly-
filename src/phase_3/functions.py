@@ -2,7 +2,11 @@ from tuples import *
 from dicts import *
 from anlisisVariables import *
 from prettytable import PrettyTable
+from tkinter import filedialog
+from tkinter import messagebox
+import tkinter as tk
 
+tuplasEqu = ["equ", "EQU"]
 
 def CleanVariables(variables8bits, variables16bits):
     variables8Bits = []
@@ -38,7 +42,10 @@ def CleanVariables(variables8bits, variables16bits):
         valor = valor.upper()
         valores_modificados16bits.append(valor)
 
-    return variables8Bits, variables16Bits
+    tuplaNombreVariables8bits = tuple(valores_modificados8bits)
+    tuplaNombresVariables16bits = tuple(valores_modificados16bits)
+
+    return tuplaNombreVariables8bits, tuplaNombresVariables16bits
 
 
 def CreateTableVariables(tableVariables, labels):
@@ -51,11 +58,11 @@ def CreateTableVariables(tableVariables, labels):
     for sublista in tableVariables:
         if sublista[1] in dbs:
             sublista.insert(1, "variable")
-        elif sublista[1] == "equ":
+        elif sublista[1] in equ:
             sublista.insert(1, "constante")
 
     for sublista in tableVariables:
-        if sublista[2] == "equ":
+        if sublista[2] in equ:
             sublista[2] = "dw"
 
     for label in labels:
@@ -67,6 +74,7 @@ def CreateTableVariables(tableVariables, labels):
         label.pop(1)
 
     tableVariables = tableVariables + labels
+    print("Tabla de simbolos:")
 
     table = PrettyTable(["Simbolo", "Tipo", "Tamaño", "Valor", "Direccion"])
 
@@ -89,7 +97,7 @@ def cleanLine(line):
 
 def analyzeStackSegment(stackSegment, n, count):
     n = 1 + n
-    print(f"{n} -  {count:x}H - stack segment - linea correcta")
+    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - stack segment - linea correcta")
     count = count - count
     for n, line in enumerate(stackSegment, start=n + 1):
         line = cleanLine(line)
@@ -102,30 +110,77 @@ def analyzeStackSegment(stackSegment, n, count):
                 if resultado:
                     numero = convertir_a_decimal(resultado.group(1))
                     if numero <= 65535 and numero >= -32768:
-                        print(f"{n} -  {count:x}H - {' '.join(line)} - linea correcta")
+                        print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {' '.join(line)} - linea correcta")
                         # se le suma algo xd
 
                         count = decimal * 2
                     else:
                         print(
-                            f"{n} -  {count:x}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
+                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
                         )
                         # no se le suma nada
                 else:
                     print(
-                        f"{n} -  {count:x}H - {' '.join(line)} Error: la sintaxis de la linea es incorrecta"
+                        f"{n} -  {format(count, 'x').zfill(4).upper()}H - {' '.join(line)} Error: la sintaxis de la linea es incorrecta"
                     )
                     # No se le suma nada
             else:
                 print(
-                    f"{n} -  {count:x}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {' '.join(line)} Error: el valor  excede el rango de 16 bits"
                 )
 
         else:
             print(
-                f"{n} -  {count:x}H - {line} Error: la sintaxis de la linea es incorrecta"
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: la sintaxis de la linea es incorrecta"
             )
 
     n = n + 1
-    print(f"{n} -  {count:x}H - ends :linea correcta")
+    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - ends :linea correcta")
     return n, count
+
+
+def CheckingEtiqueta(etiqueta):
+    patron = r"^(?P<etiqueta>[a-zA-Z_]\w*\s*):$"
+    coincidencias = re.search((patron), etiqueta)
+    if coincidencias:
+        return True
+    else:
+        return False
+
+
+def getSections(clean_file):
+    data_section = []
+    stack_section = []
+    code_section = []
+    section_actual = None
+    try:
+        for linea in clean_file:
+            if "data segment" in linea:
+                section_actual = data_section
+            elif "stack segment" in linea:
+                section_actual = stack_section
+            elif "code segment" in linea:
+                section_actual = code_section
+            elif "ends" in linea:
+                section_actual = None
+            elif section_actual is not None:
+                section_actual.append(linea)
+    except Exception as e:
+        print(e)
+
+    return data_section, stack_section, code_section
+
+
+def open_file():
+    """Abre el archivo y lo lee"""
+
+    try:
+        filepath = filedialog.askopenfilename(
+            filetypes=[("ASM", "*.asm*"), ("Text Files", "*.txt")]
+        )
+        file = open(filepath, "r")
+        return file.read()
+    except Exception as e:
+        root = tk.Tk()
+        root.withdraw()
+        messagebox.showerror("Error", "Error al abrir el archivo: " + str(e))
