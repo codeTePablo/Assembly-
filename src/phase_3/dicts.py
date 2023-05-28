@@ -86,3 +86,13 @@ instrucciones= {
     'IDIV': {'valor': 'F7', 'direccion': 'mod 111 r/m'},
     'DEC': {'valor': 'FE', 'direccion': 'mod 001 r/m'}
 }
+
+
+saltos ={
+    'JC': {'Codificacion': '0F82'},
+    'JA': {'Codificacion': '0F87'},
+    'JGE': {'Codificacion': '0F8D'},
+    'JNB': {'Codificacion': '0F82'},
+    'JNO': {'Codificacion': '0F80'},
+    'JNG': {'Codificacion': '0F8E'},
+}

@@ -149,9 +149,6 @@ def analyzeOneOperandCodeSegments(
 
 
 
-# def analyzeOperandsCodeSegments(linea, tupla Variables):
-
-
 def analyzeOperandsCodeSegments(
     linea, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
 ):
@@ -333,14 +330,15 @@ def analyzeTwoOperandsCodeSegments(
         return False, count
 
 
-etiquetasmodificadas = []
 
 
 
 def analyceJumps(
     line, n, etiquetas, tuplaNombreVariables8bits, tuplaNombresVariables16bits, count
 ):
-    # Esta funcion analisa los saltos
+    # Esta funcion analiza los saltos
+    
+    etiquetasmodificadas = []
     line = cleanLine(line)
 
     for elemento in etiquetas:
@@ -366,36 +364,14 @@ def analyceJumps(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: No se puede saltar a una variable"
             )
             return count 
-        elif componentes[0] == "JC":
-            for etiqueta in etiquetas:
-                if etiqueta[0] == parametro[0]:
-                    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} 0F82 {etiqueta[1]}H")
-                    return count + 2
-        elif componentes[0] == "JA":
-            for etiqueta in etiquetas:
-                if etiqueta[0] == parametro[0]:
-                    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} 0F87 {etiqueta[1]}H")
-                    return count + 2
-        elif componentes[0] == "JGE":
-            for etiqueta in etiquetas:
-                if etiqueta[0] == parametro[0]:
-                    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} 0F8D {etiqueta[1]}H")
-                    return count + 2
-        elif componentes[0] == "JNB":
-            for etiqueta in etiquetas:
-                if etiqueta[0] == parametro[0]:
-                    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} 0F82 {etiqueta[1]}H")
-                    return count + 2
-        elif componentes[0] == "JNO":
-            for etiqueta in etiquetas:
-                if etiqueta[0] == parametro[0]:
-                    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} 0F80 {etiqueta[1]}H")
-                    return count + 2
-        elif componentes[0] == "JNG":
-            for etiqueta in etiquetas:
-                if etiqueta[0] == parametro[0]:
-                    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} 0F8E {etiqueta[1]}H")
-                    return count + 2
+    
+        elif parametro[0] in etiquetasmodificadas:
+            if componentes[0] in saltos:
+                codigo = saltos[componentes[0]]['Codificacion']
+                for etiqueta in etiquetas:
+                    if etiqueta[0] == parametro[0]:
+                        print (f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} {codigo} {etiqueta[1]}H")
+                        return count + 2
         else:
             print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: Etiqueta no encontrada")
             return count
