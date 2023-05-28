@@ -3,6 +3,7 @@ from tuples import (
     registros8bits,
     corchetes,
 )
+from dicts import * 
 from anlisisVariables import *
 
 
@@ -89,7 +90,7 @@ def analyzeOneOperandCodeSegments(
 
     if len(parametro) == 1:
         if parametro[0] in registros16bits:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta")
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea  correcta")
             count += 2
             return True, count
         elif parametro[0] in registros8bits:
@@ -105,7 +106,13 @@ def analyzeOneOperandCodeSegments(
             count += 4
             return True, count
         elif parametro[0] in corchetes:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta")
+            instruccion = componentes[0]
+            valor = instrucciones[instruccion]['valor']
+            direccion = instrucciones[instruccion]['direccion']
+            print(valor)
+            print(direccion)
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta" ) 
+
             count += 1
             return True, count
         
