@@ -166,10 +166,17 @@ def analyzeTwoOperandsCodeSegments(
     #  REG, MEM
     # LES
     # LDS
-
+    
     line = cleanLine(line)
     componentes = line.split()
     parametro = componentes[1:]
+
+
+    if parametro[0].startswith("["):
+        joined_string = ' '.join(parametro)
+        parametro = [joined_string]
+        
+    print (parametro)
 
     if len(parametro) == 2:
         if (
@@ -240,6 +247,12 @@ def analyzeOneOperandCodeSegments(
     componentes = line.split()
 
     parametro = componentes[1:]
+
+    if parametro[0].startswith("["):
+        joined_string = ' '.join(parametro)
+        parametro = [joined_string]
+    
+    
 
     if len(parametro) == 1:
         if parametro[0] in registros16bits:

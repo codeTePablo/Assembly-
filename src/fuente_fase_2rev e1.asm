@@ -4,7 +4,6 @@ stack segment
 ends
 data segment
     var1 db 0
-
     var2 db "hola de nuevo$"
     var3 db CX
     var4 db 10 dup('A')
@@ -33,7 +32,8 @@ INTO
 SCASW VAR6
 DEC VAR7
 STC
-DEC [DX,SI]
+DEC [BX + SI]
+DEC [SI]
 IDIV VAR1
 IMUL CON1
 POP CX

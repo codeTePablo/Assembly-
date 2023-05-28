@@ -13,6 +13,7 @@ def analizeCodeSegment(
         if line.startswith(instrucciones_sin_operando):
             line = cleanLine(line)
             count = checkLinewithoutOperands(line, n, count)
+            
         elif line.startswith(instrucciones_con_un_operando):
             bool, count = analyzeOneOperandCodeSegments(
                 line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count

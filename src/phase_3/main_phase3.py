@@ -26,9 +26,7 @@ while True:
     raw_file = open_file()
     print(raw_file)
     clean_file = clear_File(raw_file)
-
     data_section, stack_section, code_section = getSections(clean_file)
-
     variables8Bits, variables16Bits, n, count = AnalyzerDataSegment(data_section)
 
     n, count = analyzeStackSegment(stack_section, n, count)
@@ -40,6 +38,7 @@ while True:
     count = analizeCodeSegment(
         code_section, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
     )
+    
     tableVariables = variables8Bits + variables16Bits
     CreateTableVariables(tableVariables, labels)
 
