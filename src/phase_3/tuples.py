@@ -346,3 +346,12 @@ data_segment_words_2 = ("dup", "DUP")
 dbs = ("db", "DB", "DW", "dw")
 
 equ = ("EQU", "equ")
+
+
+corchetes = ( "[BX + SI]", 
+        "[BX + DI]",
+        "[BP + SI]",
+        "[BP + DI]", 
+        "[SI]",
+        "[DI]",
+        "[BX]",)

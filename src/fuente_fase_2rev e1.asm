@@ -33,6 +33,15 @@ SCASW VAR6
 DEC VAR7
 STC
 DEC [BX + SI]
+DEC [BX + DI + 57]
+DEC [SI + 57]
+DEC [BP + DI + 7852]
+DEC [SI + 32760]
+
+
+DEC [SI + dasd]
+
+
 DEC [SI]
 IDIV VAR1
 IMUL CON1

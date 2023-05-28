@@ -1,14 +1,145 @@
 from tuples import (
     registros16bits,
     registros8bits,
+    corchetes,
 )
 from anlisisVariables import *
+
+
+def convertir_a_decimalS(string):
+    if string.endswith("B") or string.endswith("b"):
+        binario = string[:-1]
+        decimal = int(binario, 2)
+        return decimal
+    elif string.endswith("H") or string.endswith("h"):
+        hexadecimal = string[:-1]
+        decimal = int(hexadecimal, 16)
+        return decimal
+    else:
+        try:
+            decimal = int(string)
+            return decimal
+        except ValueError:
+            return string
 
 
 def cleanLine(line):
     line = line.replace(",", " ").rstrip().lstrip()
     line = line.replace("  ", " ")
     return line
+
+
+def checkLinewithoutOperands(line, n, count):
+    line = line.replace(",", " ")
+    line = line.split(" ")
+    if len(line) > 1:
+        word = " ".join(line)
+        print(
+            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {word} :error : esta instruccion  no admite operandos"
+        )
+        return count
+    else:
+        word = " ".join(line)
+        if word == "AAA":
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {(word)} 37H ")
+            return count + 1
+        elif word == "AAD":
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {(word)} D50AH ")
+            return count + 2
+        elif word == "HLT":
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {(word)} F4H ")
+            return count + 1
+        elif word == "INTO":
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {(word)} CEH ")
+            return count + 1
+        elif word == "SCASW":
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {(word)} AFH ")
+            return count + 1
+        elif word == "STC":
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {(word)} F9H ")
+            return count + 1
+
+
+
+def analyzeOneOperandCodeSegments(
+    line, tuplaNombreVariables8bits, tuplaNombreVariables16bits, n, count
+):
+    # Esta funcion administra las instrucciones que solo tienen un operando
+
+    # Instrucciones
+    # "DEC reg/mem",
+    # "IDIV reg/mem",
+    # "IMUL reg/mem",
+    # "POP reg/mem",
+    # "dec",
+    # "idiv",
+    # "imul",
+    # "pop",
+
+    line = cleanLine(line)
+    componentes = line.split()
+
+    parametro = componentes[1:]
+
+    if parametro[0].startswith("["):
+        joined_string = ' '.join(parametro)
+        parametro = [joined_string]
+    
+    
+
+    if len(parametro) == 1:
+        if parametro[0] in registros16bits:
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta")
+            count += 2
+            return True, count
+        elif parametro[0] in registros8bits:
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta")
+            count += 2
+            return True, count
+        elif parametro[0] in tuplaNombreVariables8bits:
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta")
+            count += 3
+            return True, count
+        elif parametro[0] in tuplaNombreVariables16bits:
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H- {line} Linea correcta")
+            count += 4
+            return True, count
+        elif parametro[0] in corchetes:
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta")
+            count += 1
+            return True, count
+        
+        else:
+                parametros = parametro[0].split()
+                if parametros[0].startswith("["):
+                    ultimoParametro = parametros[-1]
+                    ultimo_numero = ultimoParametro.replace("]", "")
+                    numero =  convertir_a_decimal(ultimo_numero)
+
+                    if  ultimo_numero.isdigit() == True:
+                        numero =  convertir_a_decimal(ultimo_numero)
+                        if -127<= numero <= 128:
+
+                            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} correcto: 8 bits ")
+                            return True, count + 1
+                        elif -32767 <= numero <= 32768:
+                            print (f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} correcto: 16 bits")
+                            return True, count + 1
+                        else:
+                            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} incorrecto: ")
+                            return False, count 
+                    else:
+                        print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} incorrecto: ")
+                        return True, count + 1
+                else:
+                    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} variable no encontrada")
+                    return False, count
+    else:
+        print(
+            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: Instruction solo debe llevar un operando"
+        )
+        return False, count
+
 
 
 # def analyzeOperandsCodeSegments(linea, tupla Variables):
@@ -26,7 +157,6 @@ def analyzeOperandsCodeSegments(
 
     line = cleanLine(linea)
     componentes = line.split()
-    # print(componentes)
     parametro = componentes[1:]
 
     if len(parametro) == 2:
@@ -128,36 +258,6 @@ def analyzeOperandsCodeSegments(
     return count
 
 
-def checkLinewithoutOperands(line, n, count):
-    line = line.replace(",", " ")
-    line = line.split(" ")
-    if len(line) > 1:
-        word = " ".join(line)
-        print(
-            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {word} :error : esta instruccion  no admite operandos"
-        )
-        return count
-    else:
-        word = " ".join(line)
-        if word == "AAA":
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {(word)} 37H ")
-            return count + 1
-        elif word == "AAD":
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {(word)} D50AH ")
-            return count + 2
-        elif word == "HLT":
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {(word)} F4H ")
-            return count + 1
-        elif word == "INTO":
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {(word)} CEH ")
-            return count + 1
-        elif word == "SCASW":
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {(word)} AFH ")
-            return count + 1
-        elif word == "STC":
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {(word)} F9H ")
-            return count + 1
-
 
 def analyzeTwoOperandsCodeSegments(
     line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
@@ -175,6 +275,7 @@ def analyzeTwoOperandsCodeSegments(
     if parametro[0].startswith("["):
         joined_string = ' '.join(parametro)
         parametro = [joined_string]
+    
         
     print (parametro)
 
@@ -228,58 +329,6 @@ def analyzeTwoOperandsCodeSegments(
 etiquetasmodificadas = []
 
 
-def analyzeOneOperandCodeSegments(
-    line, tuplaNombreVariables8bits, tuplaNombreVariables16bits, n, count
-):
-    # Esta funcion administra las instrucciones que solo tienen un operando
-
-    # Instrucciones
-    # "DEC reg/mem",
-    # "IDIV reg/mem",
-    # "IMUL reg/mem",
-    # "POP reg/mem",
-    # "dec",
-    # "idiv",
-    # "imul",
-    # "pop",
-
-    line = cleanLine(line)
-    componentes = line.split()
-
-    parametro = componentes[1:]
-
-    if parametro[0].startswith("["):
-        joined_string = ' '.join(parametro)
-        parametro = [joined_string]
-    
-    
-
-    if len(parametro) == 1:
-        if parametro[0] in registros16bits:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta")
-            count += 2
-            return True, count
-        elif parametro[0] in registros8bits:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta")
-            count += 2
-            return True, count
-        elif parametro[0] in tuplaNombreVariables8bits:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta")
-            count += 3
-            return True, count
-        elif parametro[0] in tuplaNombreVariables16bits:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H- {line} Linea correcta")
-            count += 4
-            return True, count
-        else:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} variable no encontrada")
-            return False, count
-    else:
-        print(
-            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: Instruction solo debe llevar un operando"
-        )
-        return False, count
-
 
 def analyceJumps(
     line, n, etiquetas, tuplaNombreVariables8bits, tuplaNombresVariables16bits, count
@@ -295,7 +344,6 @@ def analyceJumps(
 
         etiquetasmodificadas.append(valor)
 
-    tuplaEtiquetas = tuple(etiquetasmodificadas)
 
     componentes = line.split()
     parametro = componentes[1:]
