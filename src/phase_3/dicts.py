@@ -77,3 +77,12 @@ diccionario_none = {
     "SCASW": None,
     "STC": None,
 }
+
+
+instrucciones= {
+    'PUSH': {'valor': 'FF', 'direccion': 'mod 110 r/m'},
+    'POP': {'valor': '8F', 'direccion': 'mod 000 r/m'},
+    'MUL': {'valor': 'F6', 'direccion': 'mod 100 r/m'},
+    'IDIV': {'valor': 'F7', 'direccion': 'mod 111 r/m'},
+    'DEC': {'valor': 'FE', 'direccion': 'mod 001 r/m'}
+}
