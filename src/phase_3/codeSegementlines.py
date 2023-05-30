@@ -109,9 +109,7 @@ def analyzeOneOperandCodeSegments(
             instruccion = componentes[0]
             valor = instrucciones[instruccion]['valor']
             direccion = instrucciones[instruccion]['direccion']
-            print(valor)
-            print(direccion)
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta" ) 
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta {valor} {direccion}") 
 
             count += 1
             return True, count
@@ -268,6 +266,7 @@ def analyzeTwoOperandsCodeSegments(
 ):
     # Esta funcion analiza las lineas que tienen dos operandos y solo puede ser
     #  REG, MEM
+    
     # LES
     # LDS
     
@@ -275,13 +274,15 @@ def analyzeTwoOperandsCodeSegments(
     componentes = line.split()
     parametro = componentes[1:]
 
+    if len(parametro) >= 2:
+        if parametro[1].startswith("["):
+            joined_string = ' '.join(parametro)
+            parametro2 = [joined_string]
+            lista = (parametro2[0].split('['))
+            parametro[1] = ("["+ lista[1])
+            del parametro [2:]
 
-    if parametro[0].startswith("["):
-        joined_string = ' '.join(parametro)
-        parametro = [joined_string]
-    
         
-    print (parametro)
 
     if len(parametro) == 2:
         if (
@@ -297,6 +298,22 @@ def analyzeTwoOperandsCodeSegments(
             print(count)
             print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta")
             count = count + 3
+            return True, count
+        elif (parametro[0] in registros8bits and parametro[1] in corchetes):
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta")
+
+            return True, count
+        elif (parametro[0] in registros16bits and parametro[1] in corchetes):
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta")
+
+            return True, count
+        elif (parametro[0] in tuplaNombresVariables16bits and parametro[1] in corchetes):
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta")
+
+            return True, count
+        elif (parametro[0] in tuplaNombreVariables8bits and parametro[1] in corchetes):
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta")
+
             return True, count
         elif (
             parametro[0] in registros16bits

@@ -89,10 +89,10 @@ instrucciones= {
 
 
 saltos ={
-    'JC': {'Codificacion': '0F82'},
     'JA': {'Codificacion': '0F87'},
+    'JC': {'Codificacion': '0F82'},
     'JGE': {'Codificacion': '0F8D'},
     'JNB': {'Codificacion': '0F82'},
-    'JNO': {'Codificacion': '0F80'},
     'JNG': {'Codificacion': '0F8E'},
+    'JNO': {'Codificacion': '0F80'},
 }
