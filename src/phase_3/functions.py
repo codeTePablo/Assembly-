@@ -143,7 +143,7 @@ def CheckingEtiqueta(etiqueta, count, n, line):
     patron = r"^(?P<etiqueta>[a-zA-Z_]\w*\s*):$"
     coincidencias = re.search((patron), etiqueta)
     if coincidencias:
-        print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} : etiqeutra correcta")
+        print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} : etiqueta correcta")
         
         return True
     else:

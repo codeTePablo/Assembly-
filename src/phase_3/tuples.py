@@ -242,6 +242,8 @@ registros16bits = (
     "CX",
     "DS",
     "DX",
+    "DI",
+    "di"
     "ax",
     "bx",
     "cx",

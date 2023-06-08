@@ -77,11 +77,20 @@ def analyzeOneOperandCodeSegments(
     # "imul",
     # "pop",
 
+
+
+
     line = cleanLine(line)
     componentes = line.split()
 
     parametro = componentes[1:]
 
+    instruccion = componentes[0]
+    valor = instrucciones[instruccion]['valor']
+    direccion = instrucciones[instruccion]['direccion']
+
+    print (valor)
+    print (direccion)
     if parametro[0].startswith("["):
         joined_string = ' '.join(parametro)
         parametro = [joined_string]
@@ -118,8 +127,12 @@ def analyzeOneOperandCodeSegments(
                 parametros = parametro[0].split()
                 if parametros[0].startswith("["):
                     ultimoParametro = parametros[-1]
-                    ultimo_numero = ultimoParametro.replace("]", "")
-                    numero =  convertir_a_decimal(ultimo_numero)
+                    ultimo_numero = ultimoParametro.replace("]", "").replace("[", "").replace("+", " ")
+                    numeros = [c for c in ultimo_numero if c.isdigit()]
+                    numeros = "".join(numeros)
+                    ultimo_numero =  convertir_a_decimal(numeros)
+                    ultimo_numero = str(ultimo_numero)
+
 
                     if  ultimo_numero.isdigit() == True:
                         numero =  convertir_a_decimal(ultimo_numero)
@@ -272,6 +285,9 @@ def analyzeTwoOperandsCodeSegments(
     
     line = cleanLine(line)
     componentes = line.split()
+
+
+
     parametro = componentes[1:]
 
     if len(parametro) >= 2:
@@ -322,7 +338,7 @@ def analyzeTwoOperandsCodeSegments(
             print(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea incorrecta no se puede operar 16 bits con 8 bits"
             )
-            return True, count
+            return False, count
         elif (
             parametro[0] in registros8bits
             and parametro[1] in tuplaNombresVariables16bits

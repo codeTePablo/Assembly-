@@ -96,3 +96,12 @@ saltos ={
     'JNG': {'Codificacion': '0F8E'},
     'JNO': {'Codificacion': '0F80'},
 }
+
+instrucciones= {
+    'PUSH': {'valor': 'FF', 'direccion': 'mod 110 r/m'},
+    'POP': {'valor': '8F', 'direccion': 'mod 000 r/m'},
+    'MUL': {'valor': 'F6', 'direccion': 'mod 100 r/m'},
+    'IDIV': {'valor': 'F7', 'direccion': 'mod 111 r/m'},
+    'DEC': {'valor': '1111111w', 'direccion': 'mod 001 r/m'}
+
+}
