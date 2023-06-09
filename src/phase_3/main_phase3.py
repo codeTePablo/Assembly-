@@ -5,6 +5,7 @@ from anlisisVariables import *
 import keyboard
 from analyserCodeSegment import *
 
+
 def clear_File(file):
     lines = [line.strip().split(";")[0] for line in file.split("\n")]
     lines = [line for line in lines if line]
@@ -14,10 +15,12 @@ def clear_File(file):
         clean_lines.append(line)
     return clean_lines
 
+
 def cleanLine(line):
     line = line.replace(",", " ").rstrip().lstrip()
     line = line.replace("  ", "").rstrip().lstrip()
     return line
+
 
 while True:
     raw_file = open_file()
@@ -35,10 +38,9 @@ while True:
     count = analizeCodeSegment(
         code_section, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
     )
-    
+
     tableVariables = variables8Bits + variables16Bits
     CreateTableVariables(tableVariables, labels)
-
     print("Presione ESC para salir")
     keyboard.wait("esc")
     break

@@ -3,7 +3,7 @@ from tuples import (
     registros8bits,
     corchetes,
 )
-from dicts import * 
+from dicts import *
 from anlisisVariables import *
 
 
@@ -61,7 +61,6 @@ def checkLinewithoutOperands(line, n, count):
             return count + 1
 
 
-
 def analyzeOneOperandCodeSegments(
     line, tuplaNombreVariables8bits, tuplaNombreVariables16bits, n, count
 ):
@@ -77,87 +76,114 @@ def analyzeOneOperandCodeSegments(
     # "imul",
     # "pop",
 
-
-
-
     line = cleanLine(line)
     componentes = line.split()
-
+    print(componentes)
     parametro = componentes[1:]
 
     instruccion = componentes[0]
-    valor = instrucciones[instruccion]['valor']
-    direccion = instrucciones[instruccion]['direccion']
+    valor = instrucciones[instruccion]["valor"]
+    direccion = instrucciones[instruccion]["direccion"]
 
-    print (valor)
-    print (direccion)
+    nueva_line = [" ".join(componentes[:2]), "".join(componentes[2:]).replace(" ", "")]
+    print(nueva_line)
+
+    print(instruccion)
+    print(f"{valor}")
+    print(direccion)
+
     if parametro[0].startswith("["):
-        joined_string = ' '.join(parametro)
+        joined_string = " ".join(parametro)
         parametro = [joined_string]
-    
-    
 
     if len(parametro) == 1:
         if parametro[0] in registros16bits:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea  correcta")
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea  correcta"
+            )
             count += 2
             return True, count
         elif parametro[0] in registros8bits:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta")
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta"
+            )
             count += 2
             return True, count
         elif parametro[0] in tuplaNombreVariables8bits:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta")
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta"
+            )
             count += 3
             return True, count
         elif parametro[0] in tuplaNombreVariables16bits:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H- {line} Linea correcta")
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H- {line} Linea correcta"
+            )
             count += 4
             return True, count
         elif parametro[0] in corchetes:
             instruccion = componentes[0]
-            valor = instrucciones[instruccion]['valor']
-            direccion = instrucciones[instruccion]['direccion']
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta {valor} {direccion}") 
+            valor = instrucciones[instruccion]["valor"]
+            direccion = instrucciones[instruccion]["direccion"]
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta {valor} {direccion} queee"
+            )
 
             count += 1
             return True, count
-        
+
         else:
-                parametros = parametro[0].split()
-                if parametros[0].startswith("["):
-                    ultimoParametro = parametros[-1]
-                    ultimo_numero = ultimoParametro.replace("]", "").replace("[", "").replace("+", " ")
-                    numeros = [c for c in ultimo_numero if c.isdigit()]
-                    numeros = "".join(numeros)
-                    ultimo_numero =  convertir_a_decimal(numeros)
-                    ultimo_numero = str(ultimo_numero)
+            parametros = parametro[0].split()
+            if parametros[0].startswith("["):
+                ultimoParametro = parametros[-1]
+                ultimo_numero = (
+                    ultimoParametro.replace("]", "").replace("[", "").replace("+", " ")
+                )
+                numeros = [c for c in ultimo_numero if c.isdigit()]
+                numeros = "".join(numeros)
+                ultimo_numero = convertir_a_decimal(numeros)
+                ultimo_numero = str(ultimo_numero)
 
+                if ultimo_numero.isdigit() == True:
+                    numero = convertir_a_decimal(ultimo_numero)
+                    if -127 <= numero <= 128:
+                        print("aqui")
+                        new = valor.replace("w", "0")
+                        print(new)
+                        numero_decimal = int(new, 2)
+                        # convertir a hexa
+                        numero_hexadecimal = format(numero_decimal, "02X")
+                        print(numero_hexadecimal)
 
-                    if  ultimo_numero.isdigit() == True:
-                        numero =  convertir_a_decimal(ultimo_numero)
-                        if -127<= numero <= 128:
-
-                            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} correcto: 8 bits ")
-                            return True, count + 1
-                        elif -32767 <= numero <= 32768:
-                            print (f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} correcto: 16 bits")
-                            return True, count + 1
-                        else:
-                            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} incorrecto: ")
-                            return False, count 
-                    else:
-                        print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} incorrecto: ")
+                        print(
+                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} correcto: 8 bits - codificacion {numero_hexadecimal}"
+                        )
                         return True, count + 1
+                    elif -32767 <= numero <= 32768:
+                        print(
+                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} correcto: 16 bits"
+                        )
+                        return True, count + 1
+                    else:
+                        print(
+                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} incorrecto: "
+                        )
+                        return False, count
                 else:
-                    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} variable no encontrada")
-                    return False, count
+                    print(
+                        f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} incorrecto: "
+                    )
+                    return True, count + 1
+            else:
+                print(
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} variable no encontrada"
+                )
+                return False, count
     else:
         print(
             f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: Instruction solo debe llevar un operando"
         )
         return False, count
-
 
 
 def analyzeOperandsCodeSegments(
@@ -174,27 +200,44 @@ def analyzeOperandsCodeSegments(
     componentes = line.split()
     parametro = componentes[1:]
 
+    print(componentes)
+
+    instruccion = componentes[0]
+    print(instruccion)
+
     if len(parametro) == 2:
         param1 = parametro[0]
         param2 = parametro[1]
 
         if param1 in registros16bits and param2 in tuplaNombresVariables16bits:
-            print(f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta")
+            print(
+                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+            )
             return count + 4
         elif param1 in tuplaNombresVariables16bits and param2 in registros16bits:
-            print(f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta")
+            print(
+                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+            )
             return count + 4
         elif param1 in registros8bits and param2 in tuplaNombreVariables8bits:
-            print(f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta")
+            print(
+                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+            )
             return count + 3
         elif param1 in tuplaNombreVariables8bits and param2 in registros8bits:
-            print(f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta")
+            print(
+                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+            )
             return count + 3
         elif param1 in registros16bits and param2 in registros16bits:
-            print(f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta")
+            print(
+                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+            )
             return count + 2
         elif param1 in registros8bits and param2 in registros8bits:
-            print(f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta")
+            print(
+                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+            )
             return count + 2
         elif param1 in registros16bits and param2 in registros8bits:
             print(
@@ -227,7 +270,9 @@ def analyzeOperandsCodeSegments(
         elif param1 in registros8bits:
             inmediato = convertir_a_decimal(param2)
             if inmediato <= 255 and inmediato >= -128:
-                print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta")
+                print(
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+                )
                 return count + 3
             else:
                 print(
@@ -235,10 +280,14 @@ def analyzeOperandsCodeSegments(
                 )
         elif param1 in registros16bits:
             if inmediato > 255 and inmediato < -128:
-                print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta")
+                print(
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+                )
                 return count + 3
             elif inmediato <= 65535 and inmediato >= -32768:
-                print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta")
+                print(
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+                )
                 return count + 4
             else:
                 print(
@@ -248,7 +297,9 @@ def analyzeOperandsCodeSegments(
         elif param1 in tuplaNombreVariables8bits:
             inmediato = convertir_a_decimal(param2)
             if inmediato <= 255 and inmediato >= -128:
-                print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta")
+                print(
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+                )
                 return count + 1
             else:
                 print(
@@ -256,22 +307,29 @@ def analyzeOperandsCodeSegments(
                 )
         elif param1 in tuplaNombresVariables16bits:
             if inmediato > 255 and inmediato < -128:
-                print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta")
+                print(
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+                )
                 return count + 3
             elif inmediato <= 65535 and inmediato >= -32768:
-                print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta")
+                print(
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+                )
                 return count + 4
             else:
                 print(
                     f"{n} -  {format(count, 'x').zfill(4).upper()}H - {linea} Error: El parametro {param2} excede los 16 bits"
                 )
         else:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {linea} Error: No se reconoce los parametro")
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {linea} Error: No se reconoce los parametro"
+            )
 
     else:
-        print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {linea} {componentes} Error: Argumentos invalidos")
+        print(
+            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {linea} {componentes} Error: Argumentos invalidos"
+        )
     return count
-
 
 
 def analyzeTwoOperandsCodeSegments(
@@ -279,56 +337,66 @@ def analyzeTwoOperandsCodeSegments(
 ):
     # Esta funcion analiza las lineas que tienen dos operandos y solo puede ser
     #  REG, MEM
-    
+
     # LES
     # LDS
-    
+
     line = cleanLine(line)
     componentes = line.split()
-
-
-
     parametro = componentes[1:]
+
+    instruccion = componentes[0]
+    print(instruccion)
 
     if len(parametro) >= 2:
         if parametro[1].startswith("["):
-            joined_string = ' '.join(parametro)
+            joined_string = " ".join(parametro)
             parametro2 = [joined_string]
-            lista = (parametro2[0].split('['))
-            parametro[1] = ("["+ lista[1])
-            del parametro [2:]
-
-        
+            lista = parametro2[0].split("[")
+            parametro[1] = "[" + lista[1]
+            del parametro[2:]
 
     if len(parametro) == 2:
         if (
             parametro[0] in registros16bits
             and parametro[1] in tuplaNombresVariables16bits
         ):
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta")
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta"
+            )
             count = count + 4
             return True, count
         elif (
             parametro[0] in registros8bits and parametro[1] in tuplaNombreVariables8bits
         ):
             print(count)
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta")
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta"
+            )
             count = count + 3
             return True, count
-        elif (parametro[0] in registros8bits and parametro[1] in corchetes):
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta")
+        elif parametro[0] in registros8bits and parametro[1] in corchetes:
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta"
+            )
 
             return True, count
-        elif (parametro[0] in registros16bits and parametro[1] in corchetes):
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta")
+        elif parametro[0] in registros16bits and parametro[1] in corchetes:
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta"
+            )
 
             return True, count
-        elif (parametro[0] in tuplaNombresVariables16bits and parametro[1] in corchetes):
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta")
+        elif parametro[0] in tuplaNombresVariables16bits and parametro[1] in corchetes:
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta"
+            )
 
             return True, count
-        elif (parametro[0] in tuplaNombreVariables8bits and parametro[1] in corchetes):
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta")
+        elif parametro[0] in tuplaNombreVariables8bits and parametro[1] in corchetes:
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea correcta"
+            )
 
             return True, count
         elif (
@@ -356,21 +424,22 @@ def analyzeTwoOperandsCodeSegments(
             )
             return True, count
         else:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Incorrecto parametros invalidos")
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Incorrecto parametros invalidos"
+            )
             return True, count
     else:
-        print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: Debe tener dos argumentos")
+        print(
+            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: Debe tener dos argumentos"
+        )
         return False, count
-
-
-
 
 
 def analyceJumps(
     line, n, etiquetas, tuplaNombreVariables8bits, tuplaNombresVariables16bits, count
 ):
     # Esta funcion analiza los saltos
-    
+
     etiquetasmodificadas = []
     line = cleanLine(line)
 
@@ -382,7 +451,6 @@ def analyceJumps(
 
         etiquetasmodificadas.append(valor)
 
-
     componentes = line.split()
     parametro = componentes[1:]
 
@@ -391,22 +459,26 @@ def analyceJumps(
             print(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: No se puede saltar a una variable"
             )
-            return count 
+            return count
         elif parametro[0] in tuplaNombresVariables16bits:
             print(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: No se puede saltar a una variable"
             )
-            return count 
-    
+            return count
+
         elif parametro[0] in etiquetasmodificadas:
             if componentes[0] in saltos:
-                codigo = saltos[componentes[0]]['Codificacion']
+                codigo = saltos[componentes[0]]["Codificacion"]
                 for etiqueta in etiquetas:
                     if etiqueta[0] == parametro[0]:
-                        print (f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} {codigo} {etiqueta[1]}H")
+                        print(
+                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} {codigo} {etiqueta[1]}H"
+                        )
                         return count + 2
         else:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: Etiqueta no encontrada")
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: Etiqueta no encontrada"
+            )
             return count
     if len(parametro) > 1 or len(parametro) == 0:
         print(

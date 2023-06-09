@@ -179,60 +179,7 @@ OtrasInstrucciones = (
     "jnbe",
     "jp",
 )
-abecedario = (
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z",
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-    "Y",
-    "Z",
-)
+
 numbers = ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")
 
 
@@ -243,8 +190,7 @@ registros16bits = (
     "DS",
     "DX",
     "DI",
-    "di"
-    "ax",
+    "di" "ax",
     "bx",
     "cx",
     "dx",
@@ -350,10 +296,17 @@ dbs = ("db", "DB", "DW", "dw")
 equ = ("EQU", "equ")
 
 
-corchetes = ( "[BX + SI]", 
-        "[BX + DI]",
-        "[BP + SI]",
-        "[BP + DI]", 
-        "[SI]",
-        "[DI]",
-        "[BX]")
+corchetes = ("[BX + SI]", "[BX + DI]", "[BP + SI]", "[BP + DI]", "[SI]", "[DI]", "[BX]")
+
+tabla_d = {
+    "[BX + SI]": {"mod": "00", "r/m": "000", "reg": "000"},
+    "[BX + DI]": {"mod": "00", "r/m": "001"},
+    "[BP + SI]": {"mod": "00", "r/m": "010"},
+    "[BP + DI]": {"mod": "00", "r/m": "011"},
+    "[SI]": {"mod": "00", "r/m": "100"},
+    "[DI]": {"mod": "00", "r/m": "101"},
+    "[BX]": {"mod": "00", "r/m": "111"},
+}
+
+for i in tabla_d:
+    print(i)
