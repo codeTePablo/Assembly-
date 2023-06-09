@@ -62,7 +62,7 @@ def checkLinewithoutOperands(line, n, count):
 
 
 def analyzeOneOperandCodeSegments(
-    line, tuplaNombreVariables8bits, tuplaNombreVariables16bits, n, count
+    line, tuplaNombreVariables8bits, tuplaNombreVariables16bits,variables8bits, variables16bits, n, count
 ):
     # Esta funcion administra las instrucciones que solo tienen un operando
 
@@ -85,8 +85,8 @@ def analyzeOneOperandCodeSegments(
     valor = instrucciones[instruccion]["valor"]
     direccion = instrucciones[instruccion]["direccion"]
 
-    nueva_line = [" ".join(componentes[:2]), "".join(componentes[2:]).replace(" ", "")]
-    print(nueva_line)
+    # nueva_line = [" ".join(componentes[:2]), "".join(componentes[2:]).replace(" ", "")]
+    # print(nueva_line)
 
     print(instruccion)
     print(f"{valor}")
@@ -98,24 +98,103 @@ def analyzeOneOperandCodeSegments(
 
     if len(parametro) == 1:
         if parametro[0] in registros16bits:
+            print (parametro[0])
+            mod = w_es_1[parametro[0]]["mod"]
+            rm = w_es_1[parametro[0]]["r/m"]
+   
+            direccion = instrucciones[instruccion]["direccion"]
+
+            cambiodew = valor.replace("w", "1")
+            
+            direccion = direccion.replace("mod", mod)
+            direccion = direccion.replace("r/m", rm)
+
+            codificacion_binaria = cambiodew + direccion
+            codificacion_binaria = codificacion_binaria.replace(" ", "")
+
+
+            codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+            
             print(
-                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea  correcta"
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} -  {codificacionhex}H"
             )
             count += 2
             return True, count
         elif parametro[0] in registros8bits:
+            mod = w_es_1[parametro[0]]["mod"]
+            rm = w_es_1[parametro[0]]["r/m"]
+   
+            direccion = instrucciones[instruccion]["direccion"]
+
+            cambiodew = valor.replace("w", "0")
+            
+            direccion = direccion.replace("mod", mod)
+            direccion = direccion.replace("r/m", rm)
+
+            codificacion_binaria = cambiodew + direccion
+            codificacion_binaria = codificacion_binaria.replace(" ", "")
+
+
+            codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+            
             print(
-                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta"
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} -  {codificacionhex}H"
             )
             count += 2
             return True, count
         elif parametro[0] in tuplaNombreVariables8bits:
+
+            cambiodew = valor.replace("w", "0")
+            direccion = instrucciones[instruccion]["direccion"]
+
+            direccion = direccion.replace("mod", "00")
+            direccion = direccion.replace("r/m", "110")
+
+            for variables in variables8bits:
+                if variables[0].upper() == parametro[0]:
+                    print("cayo")
+                    desplazamiento = variables8bits[0][-1:]
+                    
+
+            codificacion_binaria = cambiodew + direccion 
+
+            codificacion_binaria = codificacion_binaria.replace(" ", "")
+
+            codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+            
+            codificacionhex = codificacionhex + desplazamiento[0].replace("H", "")
+
+
             print(
-                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta"
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} -  {codificacionhex}H"
             )
             count += 3
             return True, count
         elif parametro[0] in tuplaNombreVariables16bits:
+            cambiodew = valor.replace("w", "1")
+            direccion = instrucciones[instruccion]["direccion"]
+
+            direccion = direccion.replace("mod", "00")
+            direccion = direccion.replace("r/m", "110")
+
+            for variables in variables8bits:
+                if variables[0].upper() == parametro[0]:
+                    print("cayo")
+                    desplazamiento = variables8bits[0][-1:]
+                    
+
+            codificacion_binaria = cambiodew + direccion 
+
+            codificacion_binaria = codificacion_binaria.replace(" ", "")
+
+            codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+            
+            codificacionhex = codificacionhex + desplazamiento[0].replace("H", "")
+
+
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} -  {codificacionhex}H"
+            )
             print(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H- {line} Linea correcta"
             )
@@ -125,8 +204,22 @@ def analyzeOneOperandCodeSegments(
             instruccion = componentes[0]
             valor = instrucciones[instruccion]["valor"]
             direccion = instrucciones[instruccion]["direccion"]
+            mod = tabla_d[parametro[0]]["mod"]
+            rm = tabla_d[parametro[0]]["r/m"]
+
+            print(mod)
+            print(rm)
+            cambiodew = valor.replace("w", "0")
+            direccion = direccion.replace("mod", mod)
+            direccion = direccion.replace("r/m", rm)
+
+            codificacion_binaria = cambiodew + direccion
+            codificacion_binaria = codificacion_binaria.replace(" ", "")
+            
+            codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+
             print(
-                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta {valor} {direccion} queee"
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta {codificacionhex}H"
             )
 
             count += 1
@@ -147,17 +240,11 @@ def analyzeOneOperandCodeSegments(
                 if ultimo_numero.isdigit() == True:
                     numero = convertir_a_decimal(ultimo_numero)
                     if -127 <= numero <= 128:
-                        print("aqui")
-                        new = valor.replace("w", "0")
-                        print(new)
-                        numero_decimal = int(new, 2)
-                        # convertir a hexa
-                        numero_hexadecimal = format(numero_decimal, "02X")
-                        print(numero_hexadecimal)
-
+                        print (parametros[0].split())
                         print(
-                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} correcto: 8 bits - codificacion {numero_hexadecimal}"
+                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} correcto: 8 bits - codificacion"
                         )
+
                         return True, count + 1
                     elif -32767 <= numero <= 32768:
                         print(
@@ -187,7 +274,8 @@ def analyzeOneOperandCodeSegments(
 
 
 def analyzeOperandsCodeSegments(
-    linea, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
+     line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count, variables8bits, variables16bits
+            
 ):
     # Esta funcion analiza las lineas que tienen dos operandos del orden
     # REG, memory
@@ -196,7 +284,7 @@ def analyzeOperandsCodeSegments(
     # memory, immediate
     # REG, immediate
 
-    line = cleanLine(linea)
+    line = cleanLine(line)
     componentes = line.split()
     parametro = componentes[1:]
 
@@ -276,7 +364,7 @@ def analyzeOperandsCodeSegments(
                 return count + 3
             else:
                 print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {linea} Error: El parametro {param2} excede los 8 bits"
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: El parametro {param2} excede los 8 bits"
                 )
         elif param1 in registros16bits:
             if inmediato > 255 and inmediato < -128:
@@ -291,7 +379,7 @@ def analyzeOperandsCodeSegments(
                 return count + 4
             else:
                 print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H -{linea} Error: El parametro {param2} excede los 16 bits"
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H -{line} Error: El parametro {param2} excede los 16 bits"
                 )
 
         elif param1 in tuplaNombreVariables8bits:
@@ -303,7 +391,7 @@ def analyzeOperandsCodeSegments(
                 return count + 1
             else:
                 print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H  - {linea} Error: El parametro {param2} excede los 8 bits"
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H  - {line} Error: El parametro {param2} excede los 8 bits"
                 )
         elif param1 in tuplaNombresVariables16bits:
             if inmediato > 255 and inmediato < -128:
@@ -318,22 +406,22 @@ def analyzeOperandsCodeSegments(
                 return count + 4
             else:
                 print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {linea} Error: El parametro {param2} excede los 16 bits"
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: El parametro {param2} excede los 16 bits"
                 )
         else:
             print(
-                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {linea} Error: No se reconoce los parametro"
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: No se reconoce los parametro"
             )
 
     else:
         print(
-            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {linea} {componentes} Error: Argumentos invalidos"
+            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} {componentes} Error: Argumentos invalidos"
         )
     return count
 
 
 def analyzeTwoOperandsCodeSegments(
-    line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
+   line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, variables8bits, variables16bits,n, count
 ):
     # Esta funcion analiza las lineas que tienen dos operandos y solo puede ser
     #  REG, MEM

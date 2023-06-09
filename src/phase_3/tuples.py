@@ -190,7 +190,8 @@ registros16bits = (
     "DS",
     "DX",
     "DI",
-    "di" "ax",
+    "di" ,
+    "ax",
     "bx",
     "cx",
     "dx",
@@ -308,5 +309,34 @@ tabla_d = {
     "[BX]": {"mod": "00", "r/m": "111"},
 }
 
-for i in tabla_d:
-    print(i)
+w_es_1 = {
+    "AX": {"mod": "11", "r/m": "000"},
+    "CX": {"mod": "11", "r/m": "001"},
+    "DX": {"mod": "11", "r/m": "010"},
+    "BX": {"mod": "11", "r/m": "011"},
+    "SP": {"mod": "11", "r/m": "100"},
+    "BP": {"mod": "11", "r/m": "101"},
+    "SI": {"mod": "11", "r/m": "110"},
+    "DI": {"mod": "11", "r/m": "111"},
+    "AL": {"mod": "11", "r/m": "000"},
+    "CL": {"mod": "11", "r/m": "001"},
+    "DL": {"mod": "11", "r/m": "010"},
+    "BL": {"mod": "11", "r/m": "011"},
+    "AH": {"mod": "11", "r/m": "100"},
+    "CH": {"mod": "11", "r/m": "101"},
+    "DH": {"mod": "11", "r/m": "110"},
+    "BH": {"mod": "11", "r/m": "111"},
+}
+
+numbers = ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")
+
+# identificar si es un numero 
+def es_numero(lista):
+    for i in lista:
+        if i in numbers:
+            return True
+        else:
+            return False
+
+lista = ['POP', 29]
+print(es_numero(lista))

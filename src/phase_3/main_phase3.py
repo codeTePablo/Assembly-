@@ -35,8 +35,9 @@ while True:
         variables8bits, variables16bits
     )
 
+
     count = analizeCodeSegment(
-        code_section, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
+        code_section, tuplaNombreVariables8bits, tuplaNombresVariables16bits, variables8bits, variables16bits, n, count
     )
 
     tableVariables = variables8Bits + variables16Bits

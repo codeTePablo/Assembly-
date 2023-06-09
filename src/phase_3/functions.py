@@ -47,6 +47,29 @@ def CleanVariables(variables8bits, variables16bits):
 
     return tuplaNombreVariables8bits, tuplaNombresVariables16bits
 
+def getDirecciones(variables8bits, variables16bits):
+    
+   
+    
+    direccionVariables8bits = []
+    direccionVariables16bits = []
+
+    for variable in variables8bits:
+        print (variable)
+        direccionVariables8bits.append (variable[-1:])
+    for variable in variables16bits:
+        print (variable)
+        direccionVariables16bits.append (variable[-1:])
+
+    
+
+    print (direccionVariables8bits)
+    print (direccionVariables16bits)
+
+
+
+    return direccionVariables8bits, direccionVariables16bits
+
 
 def CreateTableVariables(tableVariables, labels):
     for sublista in tableVariables:

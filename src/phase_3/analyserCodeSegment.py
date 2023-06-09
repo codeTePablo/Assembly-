@@ -5,7 +5,7 @@ labels = []
 
 
 def analizeCodeSegment(
-    codeSegment, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
+    codeSegment, tuplaNombreVariables8bits, tuplaNombresVariables16bits, variables8bits, variables16bits ,n, count
 ):
     """
     Esta funcion analiza el segmento de codigo llamando a funciones 
@@ -20,16 +20,16 @@ def analizeCodeSegment(
             
         elif line.startswith(instrucciones_con_un_operando):
             bool, count = analyzeOneOperandCodeSegments(
-                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
+                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits,variables8bits, variables16bits, n, count
             )
 
         elif line.startswith(instruccionconDosOperandos):
             bool, count = analyzeTwoOperandsCodeSegments(
-                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
+                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, variables8bits, variables16bits,n, count
             )
         elif line.startswith(instrucciones_con_operandos):
             count = analyzeOperandsCodeSegments(
-                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count
+                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count, variables8bits, variables16bits
             )
         elif line.startswith(instrucciondeSaltos):
             count = analyceJumps(

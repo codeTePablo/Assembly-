@@ -90,9 +90,9 @@ saltos = {
 
 instrucciones = {
     "PUSH": {"valor": "FF", "direccion": "mod 110 r/m"},
-    "POP": {"valor": "8F", "direccion": "mod 000 r/m"},
-    "MUL": {"valor": "F6", "direccion": "mod 100 r/m"},
-    "IDIV": {"valor": "F7", "direccion": "mod 111 r/m"},
+    "POP": {"valor": "10001111", "direccion": "mod 000 r/m"},
+    "MUL": {"valor": "1111011w", "direccion": "mod 100 r/m"},
+    "IDIV": {"valor": "1111011w", "direccion": "mod 111 r/m"},
     "DEC": {"valor": "1111111w", "direccion": "mod 001 r/m"},
     "IMUL": {"valor": "1111011w", "direccion": "mod 101 r/m"},
 }
