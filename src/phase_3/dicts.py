@@ -123,28 +123,24 @@ print(instrucciones_dos_op_adc["ADC"]["mem_reg"]["direccion"])
 
 
 instrucciones_dos_op_cmp = {
-    "CMP_1": {"reg_reg": {"valor": "001110dw", "direccion": "mod reg r/m"}},
-    "CMP_2": {
+    "CMP_1": {
+        "reg_reg": {"valor": "001110dw", "direccion": "mod reg r/m"},
         "mem_reg": {
             "valor": "0011100w",
             "direccion": "mod reg r/m",
             "desplazamiento": "1 o 2",
-        }
-    },
-    "CMP_3": {
+        },
         "reg_mem": {
             "valor": "0011101w",
             "direccion": "mod reg r/m",
             "desplazamiento": "1 o 2",
-        }
-    },
-    "CMP_4": {
+        },
         "reg/mem_inm": {
             "valor": "100000sw",
             "direccion": " mod 111 r/m",
             "desplazamiento": "1 o 2",
             "inmediato": "1 0 2",
-        }
-    },
-    "CMP_5": {"acum_inm": {"valor": "0011110w", "inmediato": "1 0 2"}},
+        }, 
+        {"acum_inm": {"valor": "0011110w", "inmediato": "1 0 2"},
+    }
 }
