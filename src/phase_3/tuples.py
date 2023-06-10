@@ -300,13 +300,20 @@ equ = ("EQU", "equ")
 corchetes = ("[BX + SI]", "[BX + DI]", "[BP + SI]", "[BP + DI]", "[SI]", "[DI]", "[BX]")
 
 tabla_d = {
-    "[BX + SI]": {"mod": "00", "r/m": "000", "reg": "000"},
+    "[BX + SI]": {"mod": "00", "r/m": "000"},
     "[BX + DI]": {"mod": "00", "r/m": "001"},
     "[BP + SI]": {"mod": "00", "r/m": "010"},
     "[BP + DI]": {"mod": "00", "r/m": "011"},
     "[SI]": {"mod": "00", "r/m": "100"},
     "[DI]": {"mod": "00", "r/m": "101"},
     "[BX]": {"mod": "00", "r/m": "111"},
+    "BX+SI": {"mod": "00", "r/m": "000"},
+    "BX+DI": {"mod": "00", "r/m": "001"},
+    "BP+SI": {"mod": "00", "r/m": "010"},
+    "BP+DI": {"mod": "00", "r/m": "011"},
+    "SI": {"mod": "00", "r/m": "100"},
+    "DI": {"mod": "00", "r/m": "101"},
+    "BX": {"mod": "00", "r/m": "111"},
 }
 
 w_es_1 = {
@@ -327,16 +334,3 @@ w_es_1 = {
     "DH": {"mod": "11", "r/m": "110"},
     "BH": {"mod": "11", "r/m": "111"},
 }
-
-numbers = ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")
-
-# identificar si es un numero 
-def es_numero(lista):
-    for i in lista:
-        if i in numbers:
-            return True
-        else:
-            return False
-
-lista = ['POP', 29]
-print(es_numero(lista))

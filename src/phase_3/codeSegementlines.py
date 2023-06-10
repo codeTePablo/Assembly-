@@ -5,6 +5,7 @@ from tuples import (
 )
 from dicts import *
 from anlisisVariables import *
+from functions import *
 
 
 def convertir_a_decimalS(string):
@@ -78,19 +79,15 @@ def analyzeOneOperandCodeSegments(
 
     line = cleanLine(line)
     componentes = line.split()
-    print(componentes)
+
     parametro = componentes[1:]
 
     instruccion = componentes[0]
     valor = instrucciones[instruccion]["valor"]
     direccion = instrucciones[instruccion]["direccion"]
 
-    # nueva_line = [" ".join(componentes[:2]), "".join(componentes[2:]).replace(" ", "")]
-    # print(nueva_line)
 
-    print(instruccion)
-    print(f"{valor}")
-    print(direccion)
+  
 
     if parametro[0].startswith("["):
         joined_string = " ".join(parametro)
@@ -98,7 +95,6 @@ def analyzeOneOperandCodeSegments(
 
     if len(parametro) == 1:
         if parametro[0] in registros16bits:
-            print (parametro[0])
             mod = w_es_1[parametro[0]]["mod"]
             rm = w_es_1[parametro[0]]["r/m"]
    
@@ -152,7 +148,6 @@ def analyzeOneOperandCodeSegments(
 
             for variables in variables8bits:
                 if variables[0].upper() == parametro[0]:
-                    print("cayo")
                     desplazamiento = variables8bits[0][-1:]
                     
 
@@ -179,7 +174,6 @@ def analyzeOneOperandCodeSegments(
 
             for variables in variables8bits:
                 if variables[0].upper() == parametro[0]:
-                    print("cayo")
                     desplazamiento = variables8bits[0][-1:]
                     
 
@@ -207,8 +201,7 @@ def analyzeOneOperandCodeSegments(
             mod = tabla_d[parametro[0]]["mod"]
             rm = tabla_d[parametro[0]]["r/m"]
 
-            print(mod)
-            print(rm)
+
             cambiodew = valor.replace("w", "0")
             direccion = direccion.replace("mod", mod)
             direccion = direccion.replace("r/m", rm)
@@ -219,7 +212,7 @@ def analyzeOneOperandCodeSegments(
             codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
 
             print(
-                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Linea correcta {codificacionhex}H"
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}H"
             )
 
             count += 1
@@ -240,15 +233,48 @@ def analyzeOneOperandCodeSegments(
                 if ultimo_numero.isdigit() == True:
                     numero = convertir_a_decimal(ultimo_numero)
                     if -127 <= numero <= 128:
-                        print (parametros[0].split())
+                        rm = revisarCorchetes(parametros)
+                        mod= "01"
+                        direccion = instrucciones[instruccion]["direccion"]
+
+                        direccion = direccion.replace("mod", mod)
+                        direccion = direccion.replace("r/m", rm)
+                        cambiodew = valor.replace("w", "0")
+
+                        desplazamiento = convertir_a_hexa(str(numero))
+
+                        codificacion_binaria = cambiodew + direccion 
+                        codificacion_binaria = codificacion_binaria.replace(" ", "")
+
+                        codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+
+                        codificacionhex = codificacionhex + desplazamiento
+
                         print(
-                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} correcto: 8 bits - codificacion"
+                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} correcto: 8 bits - {codificacionhex}H"
                         )
 
                         return True, count + 1
                     elif -32767 <= numero <= 32768:
+                        rm = revisarCorchetes(parametros)
+                        mod= "10"
+                        direccion = instrucciones[instruccion]["direccion"]
+
+                        direccion = direccion.replace("mod", mod)
+                        direccion = direccion.replace("r/m", rm)
+                        cambiodew = valor.replace("w", "0")
+
+                        desplazamiento = convertir_a_hexa(str(numero))
+
+                        codificacion_binaria = cambiodew + direccion 
+                        codificacion_binaria = codificacion_binaria.replace(" ", "")
+
+                        codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+
+                        codificacionhex = codificacionhex + desplazamiento
+
                         print(
-                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} correcto: 16 bits"
+                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} {codificacionhex}H"
                         )
                         return True, count + 1
                     else:

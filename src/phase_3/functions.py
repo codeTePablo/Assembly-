@@ -5,7 +5,7 @@ from prettytable import PrettyTable
 from tkinter import filedialog
 from tkinter import messagebox
 import tkinter as tk
-
+from tuples import *
 tuplasEqu = ["equ", "EQU"]
 
 def CleanVariables(variables8bits, variables16bits):
@@ -210,3 +210,65 @@ def open_file():
         root = tk.Tk()
         root.withdraw()
         messagebox.showerror("Error", "Error al abrir el archivo: " + str(e))
+
+
+def revisarCorchetes(parametros):
+    """ 
+    saber lo que coincide con la tabla
+    [POP [DI+29]]
+    [DI+29]
+    [DI, 29]
+    """
+
+    parametros_separadaos = parametros[0].split("+")
+
+    # my_list = ['[BX', 'SI', '125]']
+    new_list = []
+
+    for item in parametros_separadaos:
+        # Elimina los corchetes
+        new_item = item.strip('[]')
+        new_list.append(new_item)
+
+    # my_list = ['BX', 'SI', '125']
+    new_list_1 = []
+
+    for item in new_list:
+        # Elimina los números
+        new_item = ''.join([char for char in item if char.isalpha()])
+        if new_item:
+            new_list_1.append(new_item)
+
+    # Agrega un espacio y un signo de "+" cada 2 lugares recorridos
+    result = '+'.join(new_list_1)
+   
+    rm = tabla_d[result]["r/m"]
+
+    # print (parametros_separadaos)
+    # parametros_separadaos = ''.join([i for i in parametros_separadaos[0] if not i.isdigit()]).replace("+", "")
+    # print (parametros_separadaos)
+
+    # parametros[0] = ''.join([i for i in parametros[0] if not i.isdigit()]).replace("+", "")
+    # print(parametros[0])
+
+    # if len(parametros_separadaos) == 2:
+    
+
+    return rm
+
+def convertir_a_hexa (numero):
+    if numero.endswith("B") or numero.endswith("b"):
+        binario = numero[:-1]
+        decimal = int(binario, 2)
+        hexadecimal = hex(decimal)[2:]
+        return hexadecimal.upper()
+    elif numero.endswith("H") or numero.endswith("h"):
+        hexadecimal = numero[:-1]
+        return hexadecimal.upper()
+    else:
+        try:
+            decimal = int(numero)
+            hexadecimal = hex(decimal)[2:]
+            return hexadecimal.upper()
+        except ValueError:
+            return "Error: el string contiene caracteres no numéricos"
