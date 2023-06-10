@@ -76,6 +76,9 @@ def analyzeOneOperandCodeSegments(
     # "idiv",
     # "imul",
     # "pop",
+    # "Push"
+
+
 
     line = cleanLine(line)
     componentes = line.split()
@@ -138,6 +141,23 @@ def analyzeOneOperandCodeSegments(
             )
             count += 2
             return True, count
+        
+        elif parametro[0] in registros_de_segmento:
+            valor = instruccionesPush[instruccion]["regs"]["valor"]
+            valueregs = regs[parametro[0]]["regs"]
+
+           
+
+            valor = valor.replace("regs", valueregs).replace(" ", "")
+            codificacionhex= hex(int(valor, 2) )[2:].upper()
+           
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} -  {codificacionhex}H"
+            )
+            count += 1
+            return True, count
+            
+     
         elif parametro[0] in tuplaNombreVariables8bits:
 
             cambiodew = valor.replace("w", "0")
@@ -148,18 +168,19 @@ def analyzeOneOperandCodeSegments(
 
             for variables in variables8bits:
                 if variables[0].upper() == parametro[0]:
-                    desplazamiento = variables8bits[0][-1:]
-                    
-
+                    desplazamiento =  variables[-1]
+            
+            
             codificacion_binaria = cambiodew + direccion 
 
             codificacion_binaria = codificacion_binaria.replace(" ", "")
             
             codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+           
 
-            codificacionhex = codificacionhex + desplazamiento[0].replace("H", "")
+            codificacionhex = codificacionhex + desplazamiento.replace("H", "")
 
-
+          
             print(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} -  {codificacionhex}H"
             )
@@ -174,7 +195,7 @@ def analyzeOneOperandCodeSegments(
 
             for variables in variables16bits:
                 if variables[0].upper() == parametro[0]:
-                    desplazamiento = variables16bits[0][-1:]
+                    desplazamiento =  variables[-1]
                     
 
             codificacion_binaria = cambiodew + direccion 
@@ -183,9 +204,9 @@ def analyzeOneOperandCodeSegments(
 
             codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
             
-            codificacionhex = codificacionhex + desplazamiento[0].replace("H", "")
+            codificacionhex = codificacionhex + desplazamiento.replace("H", "")
 
-
+            
             print(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} -  {codificacionhex}H"
             )
@@ -305,7 +326,7 @@ def analyzeOperandsCodeSegments(
 ):
     # Esta funcion analiza las lineas que tienen dos operandos del orden
     # REG, memory
-    # memory, REG
+    # memory, REG   
     # REG, REG
     # memory, immediate
     # REG, immediate
@@ -314,43 +335,212 @@ def analyzeOperandsCodeSegments(
     componentes = line.split()
     parametro = componentes[1:]
 
-    print(componentes)
 
     instruccion = componentes[0]
-    print(instruccion)
 
     if len(parametro) == 2:
         param1 = parametro[0]
         param2 = parametro[1]
 
         if param1 in registros16bits and param2 in tuplaNombresVariables16bits:
+
+            if instruccion == "CMP":
+                valor = instrucciones_dos_op_cmp[instruccion]["reg_mem"]["valor"]
+                direccion = instrucciones_dos_op_cmp[instruccion]["reg_mem"]["direccion"]
+            elif instruccion == "ADC":
+                valor = instrucciones_dos_op_adc[instruccion]["reg_mem"]["valor"]
+                direccion = instrucciones_dos_op_adc[instruccion]["reg_mem"]["direccion"]
+                
+
+            valor = valor.replace("w", "1")
+
+            reg = tabla_Reg [param1]
+            mod = "00"
+            rm = "110"
+
+            for variables in variables16bits:
+                if variables[0].upper() == parametro[1]:
+                    desplazamiento = variables[-1]
+
+            direccion = direccion.replace("mod", mod)
+            direccion = direccion.replace("r/m", rm)
+            direccion = direccion.replace("reg", reg)
+
+            codificacion_binaria = valor + direccion
+            codificacion_binaria = codificacion_binaria.replace(" ", "")
+
+            codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+        
+            codificacionhex = codificacionhex + desplazamiento
+
             print(
-                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}"
             )
+
+
             return count + 4
         elif param1 in tuplaNombresVariables16bits and param2 in registros16bits:
+            if instruccion == "CMP":
+                valor = instrucciones_dos_op_cmp[instruccion]["mem_reg"]["valor"]
+                direccion = instrucciones_dos_op_cmp[instruccion]["mem_reg"]["direccion"]
+            elif instruccion == "ADC":
+                valor = instrucciones_dos_op_adc[instruccion]["mem_reg"]["valor"]
+                direccion = instrucciones_dos_op_adc[instruccion]["mem_reg"]["direccion"]
+                
+
+            valor = valor.replace("w", "1")
+
+            reg = tabla_Reg [param2]
+            mod = "00"
+            rm = "110"
+
+            for variables in variables16bits:
+                if variables[0].upper() == parametro[0]:
+                    desplazamiento = variables[-1]
+
+            direccion = direccion.replace("mod", mod)
+            direccion = direccion.replace("r/m", rm)
+            direccion = direccion.replace("reg", reg)
+
+            codificacion_binaria = valor + direccion
+            codificacion_binaria = codificacion_binaria.replace(" ", "")
+
+            codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+        
+            codificacionhex = codificacionhex + desplazamiento
+
             print(
-                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}"
             )
+           
             return count + 4
         elif param1 in registros8bits and param2 in tuplaNombreVariables8bits:
+           
+            if instruccion == "CMP":
+                valor = instrucciones_dos_op_cmp[instruccion]["reg_mem"]["valor"]
+                direccion = instrucciones_dos_op_cmp[instruccion]["reg_mem"]["direccion"]
+            elif instruccion == "ADC":
+                valor = instrucciones_dos_op_adc[instruccion]["reg_mem"]["valor"]
+                direccion = instrucciones_dos_op_adc[instruccion]["reg_mem"]["direccion"]
+                
+
+            valor = valor.replace("w", "0")
+
+            reg = tabla_Reg [param1]
+            mod = "00"
+            rm = "110"
+
+            for variables in variables8bits:
+                if variables[0].upper() == parametro[1]:
+                    desplazamiento =  variables[-1]
+
+
+            direccion = direccion.replace("mod", mod)
+            direccion = direccion.replace("r/m", rm)
+            direccion = direccion.replace("reg", reg)
+
+            codificacion_binaria = valor + direccion
+            codificacion_binaria = codificacion_binaria.replace(" ", "")
+
+            codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+
+            codificacionhex = codificacionhex + desplazamiento
             print(
-                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}"
             )
             return count + 3
         elif param1 in tuplaNombreVariables8bits and param2 in registros8bits:
+            if instruccion == "CMP":
+                valor = instrucciones_dos_op_cmp[instruccion]["mem_reg"]["valor"]
+                direccion = instrucciones_dos_op_cmp[instruccion]["mem_reg"]["direccion"]
+            elif instruccion == "ADC":
+                valor = instrucciones_dos_op_adc[instruccion]["mem_reg"]["valor"]
+                direccion = instrucciones_dos_op_adc[instruccion]["mem_reg"]["direccion"]
+                
+
+            valor = valor.replace("w", "0")
+
+            reg = tabla_Reg [param2]
+            mod = "00"
+            rm = "110"
+
+            for variables in variables8bits:
+                if variables[0].upper() == parametro[0]:
+                    desplazamiento =  variables[-1]
+
+
+            direccion = direccion.replace("mod", mod)
+            direccion = direccion.replace("r/m", rm)
+            direccion = direccion.replace("reg", reg)
+
+            codificacion_binaria = valor + direccion
+            codificacion_binaria = codificacion_binaria.replace(" ", "")
+
+            codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+
+            codificacionhex = codificacionhex + desplazamiento
             print(
-                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}"
             )
             return count + 3
         elif param1 in registros16bits and param2 in registros16bits:
+
+            if instruccion == "CMP":
+                valor = instrucciones_dos_op_cmp[instruccion]["reg_reg"]["valor"]
+                direccion = instrucciones_dos_op_cmp[instruccion]["reg_reg"]["direccion"]
+            elif instruccion == "ADC":
+                valor = instrucciones_dos_op_adc[instruccion]["reg_reg"]["valor"]
+                direccion = instrucciones_dos_op_adc[instruccion]["reg_reg"]["direccion"]
+                
+            valor = valor.replace("w", "1")
+
+            reg = tabla_Reg [param1]
+            mod = w_es_1 [param2]["mod"]
+            rm = w_es_1 [param2]["r/m"]
+
+            direccion = direccion.replace("mod", mod)
+            direccion = direccion.replace("r/m", rm)
+            direccion = direccion.replace("reg", reg)
+
+            codificacion_binaria = valor + direccion
+            codificacion_binaria = codificacion_binaria.replace(" ", "")
+
+            codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+        
+        
+
             print(
-                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}H"
             )
             return count + 2
         elif param1 in registros8bits and param2 in registros8bits:
+            if instruccion == "CMP":
+                valor = instrucciones_dos_op_cmp[instruccion]["reg_reg"]["valor"]
+                direccion = instrucciones_dos_op_cmp[instruccion]["reg_reg"]["direccion"]
+            elif instruccion == "ADC":
+                valor = instrucciones_dos_op_adc[instruccion]["reg_reg"]["valor"]
+                direccion = instrucciones_dos_op_adc[instruccion]["reg_reg"]["direccion"]
+                
+
+            valor = valor.replace("w", "0")
+
+            reg = tabla_Reg [param1]
+            mod = w_es_1 [param2]["mod"]
+            rm = w_es_1 [param2]["r/m"]
+
+            direccion = direccion.replace("mod", mod)
+            direccion = direccion.replace("r/m", rm)
+            direccion = direccion.replace("reg", reg)
+
+            codificacion_binaria = valor + direccion
+            codificacion_binaria = codificacion_binaria.replace(" ", "")
+
+            codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
+        
+        
+
             print(
-                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
+                f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}H"
             )
             return count + 2
         elif param1 in registros16bits and param2 in registros8bits:
@@ -393,6 +583,7 @@ def analyzeOperandsCodeSegments(
                     f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: El parametro {param2} excede los 8 bits"
                 )
         elif param1 in registros16bits:
+            inmediato = convertir_a_decimal(param2)
             if inmediato > 255 and inmediato < -128:
                 print(
                     f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
@@ -489,12 +680,12 @@ def analyzeTwoOperandsCodeSegments(
             direccion = direccion.replace("reg", reg)
             for variables in variables16bits:
                 if variables[0].upper() == parametro[1]:
-                    desplazamiento = variables16bits[0][-1:]
-
+                    desplazamiento =  variables[-1]
+           
             codificacion_binaria = valor + direccion
             codificacion_binaria = codificacion_binaria.replace(" ", "")
             codificacionhex = hex(int(codificacion_binaria, 2) )[2:].upper()
-            codificacionhex = codificacionhex + desplazamiento[0].replace("H", "")
+            codificacionhex = codificacionhex + desplazamiento.replace("H", "")
 
 
             print(
@@ -519,12 +710,12 @@ def analyzeTwoOperandsCodeSegments(
             direccion = direccion.replace("reg", reg)
             for variables in variables8bits:
                 if variables[0].upper() == parametro[1]:
-                    desplazamiento = variables8bits[0][-1:]
+                    desplazamiento =  variables[-1]
 
             codificacion_binaria = valor + direccion
             codificacion_binaria = codificacion_binaria.replace(" ", "")
             codificacionhex = hex(int(codificacion_binaria, 2) )[2:].upper()
-            codificacionhex = codificacionhex + desplazamiento[0].replace("H", "")
+            codificacionhex = codificacionhex + desplazamiento.replace("H", "")
 
 
             print(
@@ -610,8 +801,10 @@ def analyzeTwoOperandsCodeSegments(
             corchete_a_revisar.append(parametro[1])
             
             rm = revisarCorchetes(corchete_a_revisar)
-            mod, number = extract_number(corchete_a_revisar)
-            
+            try:
+                mod, number = extract_number(corchete_a_revisar)
+            except:
+                print ("no fue posible extraer el numero de la linea: ", n)
 
             parametro[1] = parametro[1].replace("[", "").replace("]", "")
             parametro[1] = parametro[1].replace("'", "")
