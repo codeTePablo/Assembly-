@@ -97,6 +97,14 @@ instrucciones = {
     "IMUL": {"valor": "1111011w", "direccion": "mod 101 r/m"},
 }
 
+
+
+
+instrucciones_que_si_fucionan = {
+    "LES": {"valor": "11000100" , "direccion": "mod reg r/m"},
+    "LDS": {"valor": "11000101" , "direccion": "mod reg r/m"}
+}
+
 instrucciones_dos_op_adc = {
     "ADC": {
         "reg_reg": {"valor": "000100dw", "direccion": "mod reg r/m"},
@@ -123,7 +131,7 @@ print(instrucciones_dos_op_adc["ADC"]["mem_reg"]["direccion"])
 
 
 instrucciones_dos_op_cmp = {
-    "CMP_1": {
+    "CMP": {
         "reg_reg": {"valor": "001110dw", "direccion": "mod reg r/m"},
         "mem_reg": {
             "valor": "0011100w",
@@ -141,6 +149,26 @@ instrucciones_dos_op_cmp = {
             "desplazamiento": "1 o 2",
             "inmediato": "1 0 2",
         }, 
-        {"acum_inm": {"valor": "0011110w", "inmediato": "1 0 2"},
+        "acum_inm": {"valor": "0011110w", "inmediato": "1 0 2"},
     }
+}
+
+
+tabla_Reg = {
+    "AX": "000",
+    "CX": "001",
+    "DX": "010",
+    "BX": "011",
+    "SP": "100",
+    "BP": "101",
+    "SI": "110",
+    "DI": "111",
+    "AL": "000",
+    "CL": "001",
+    "DL": "010",
+    "BL": "011",
+    "AH": "100",
+    "CH": "101",
+    "DH": "110",
+    "BH": "111"
 }

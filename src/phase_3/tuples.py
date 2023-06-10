@@ -297,13 +297,17 @@ dbs = ("db", "DB", "DW", "dw")
 equ = ("EQU", "equ")
 
 
-corchetes = ("[BX + SI]", "[BX + DI]", "[BP + SI]", "[BP + DI]", "[SI]", "[DI]", "[BX]")
+corchetes = ("[BX + SI]", "[BX + DI]", "[BP + SI]", "[BP + DI]", "[SI]", "[DI]", "[BX]", "[BX+SI]", "[BX+DI]", "[BX+SI]", "[BP+DI]")
 
 tabla_d = {
     "[BX + SI]": {"mod": "00", "r/m": "000"},
     "[BX + DI]": {"mod": "00", "r/m": "001"},
     "[BP + SI]": {"mod": "00", "r/m": "010"},
     "[BP + DI]": {"mod": "00", "r/m": "011"},
+    "[BX+SI]": {"mod": "00", "r/m": "000"},
+    "[BX+DI]": {"mod": "00", "r/m": "001"},
+    "[BP+SI]": {"mod": "00", "r/m": "010"},
+    "[BP+DI]": {"mod": "00", "r/m": "011"},
     "[SI]": {"mod": "00", "r/m": "100"},
     "[DI]": {"mod": "00", "r/m": "101"},
     "[BX]": {"mod": "00", "r/m": "111"},

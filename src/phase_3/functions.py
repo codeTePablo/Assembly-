@@ -6,6 +6,7 @@ from tkinter import filedialog
 from tkinter import messagebox
 import tkinter as tk
 from tuples import *
+import re
 tuplasEqu = ["equ", "EQU"]
 
 def CleanVariables(variables8bits, variables16bits):
@@ -219,7 +220,6 @@ def revisarCorchetes(parametros):
     [DI+29]
     [DI, 29]
     """
-
     parametros_separadaos = parametros[0].split("+")
 
     # my_list = ['[BX', 'SI', '125]']
@@ -244,16 +244,6 @@ def revisarCorchetes(parametros):
    
     rm = tabla_d[result]["r/m"]
 
-    # print (parametros_separadaos)
-    # parametros_separadaos = ''.join([i for i in parametros_separadaos[0] if not i.isdigit()]).replace("+", "")
-    # print (parametros_separadaos)
-
-    # parametros[0] = ''.join([i for i in parametros[0] if not i.isdigit()]).replace("+", "")
-    # print(parametros[0])
-
-    # if len(parametros_separadaos) == 2:
-    
-
     return rm
 
 def convertir_a_hexa (numero):
@@ -272,3 +262,22 @@ def convertir_a_hexa (numero):
             return hexadecimal.upper()
         except ValueError:
             return "Error: el string contiene caracteres no numéricos"
+
+
+def extract_number(lst):
+    string = lst[0]  # Assuming the input list contains only one element
+    number = ''
+
+    for char in string:
+        if char.isdigit():
+            number += char
+
+    number = int(number)
+
+
+    if -128 <= number <= 255:
+                 mod = "01"
+                 return mod , number
+    elif 256 <= number <= 65535:
+                 mod = "10"
+                 return mod, number
