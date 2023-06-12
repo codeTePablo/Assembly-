@@ -14,32 +14,50 @@ def analizeCodeSegment(
     print(f"{n+1} -  {format(count, 'x').zfill(4).upper()}H - code segment :linea correcta")
     count = count - count
     for n, line in enumerate(codeSegment, start=n + 2):
+
         if line.startswith(instrucciones_sin_operando):
             line = cleanLine(line)
-            count = checkLinewithoutOperands(line, n, count)
+            try:
+                count = checkLinewithoutOperands(line, n, count)
+            except:
+                print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} ::no fue posible analizar la linea ")
+                
             
         elif line.startswith(instrucciones_con_un_operando):
-            bool, count = analyzeOneOperandCodeSegments(
-                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits,variables8bits, variables16bits, n, count
-            )
+            try:
+                bool, count = analyzeOneOperandCodeSegments(
+                    line, tuplaNombreVariables8bits, tuplaNombresVariables16bits,variables8bits, variables16bits, n, count
+                )
+            except:
+                print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :no fue posible analizar la linea")
 
         elif line.startswith(instruccionconDosOperandos):
-            bool, count = analyzeTwoOperandsCodeSegments(
-                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, variables8bits, variables16bits,n, count
-            )
+                try:
+                    bool, count = analyzeTwoOperandsCodeSegments(
+                        line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, variables8bits, variables16bits,n, count
+                    )
+                except:
+                    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :no fue posible analizar la linea")
+         
         elif line.startswith(instrucciones_con_operandos):
-            count = analyzeOperandsCodeSegments(
-                line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count, variables8bits, variables16bits
+            try:
+                count = analyzeOperandsCodeSegments(
+                    line, tuplaNombreVariables8bits, tuplaNombresVariables16bits, n, count, variables8bits, variables16bits
             )
+            except:
+                print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :no fue posible analizar la linea")
         elif line.startswith(instrucciondeSaltos):
-            count = analyceJumps(
+            try:
+                count = analyceJumps(
                 line,
                 n,
                 labels,
                 tuplaNombreVariables8bits,
                 tuplaNombresVariables16bits,
                 count,
-            )
+                )
+            except:
+                print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :no fue posible analizar la linea")
         elif line.endswith(":"):
             if (CheckingEtiqueta(line,count,  n, line)) == True:
                 line = line.replace(":", "")
@@ -54,6 +72,6 @@ def analizeCodeSegment(
         elif line.startswith(numbers):
             print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} error: simbolo no definido")
         else:
-            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} es un error")
+            print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} es un linea incorrecta")
     print(f"{n+1} -  {format(count, 'x').zfill(4).upper()}H - ends :linea correcta")
     return count

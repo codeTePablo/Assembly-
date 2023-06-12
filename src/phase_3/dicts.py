@@ -89,15 +89,18 @@ saltos = {
 }
 
 instrucciones = {
-    "PUSH": {"valor": "FF", "direccion": "mod 110 r/m"},
     "POP": {"valor": "10001111", "direccion": "mod 000 r/m"},
-    "MUL": {"valor": "1111011w", "direccion": "mod 100 r/m"},
     "IDIV": {"valor": "1111011w", "direccion": "mod 111 r/m"},
     "DEC": {"valor": "1111111w", "direccion": "mod 001 r/m"},
     "IMUL": {"valor": "1111011w", "direccion": "mod 101 r/m"},
 }
 
 
+instruccionesPush = {
+    "POP": {
+        "regs" : { "valor": "000 regs 111"}
+    }
+}
 
 
 instrucciones_que_si_fucionan = {
@@ -107,49 +110,39 @@ instrucciones_que_si_fucionan = {
 
 instrucciones_dos_op_adc = {
     "ADC": {
-        "reg_reg": {"valor": "000100dw", "direccion": "mod reg r/m"},
+        "reg_reg": {"valor": "0001001w", "direccion": "mod reg r/m"},
         "mem_reg": {
             "valor": "0001000w",
             "direccion": "mod reg r/m",
-            "desplazamiento": "1 o 2",
         },
         "reg_mem": {
-            "valor": "0001000w",
+            "valor": "0001001w",
             "direccion": "mod reg r/m",
-            "desplazamiento": "1 o 2",
         },
         "reg/mem_inm": {
             "valor": "100000sw",
             "direccion": "mod reg r/m",
-            "desplazamiento": "1 o 2",
-            "inmediato": "1 0 2",
         },
-        "acum_inm": {"valor": "0001010w", "inmediato": "1 0 2"},
+        "acum_inm": {"valor": "0001010w"},
     }
 }
-print(instrucciones_dos_op_adc["ADC"]["mem_reg"]["direccion"])
-
 
 instrucciones_dos_op_cmp = {
     "CMP": {
-        "reg_reg": {"valor": "001110dw", "direccion": "mod reg r/m"},
+        "reg_reg": {"valor": "0011101w", "direccion": "mod reg r/m"},
         "mem_reg": {
             "valor": "0011100w",
             "direccion": "mod reg r/m",
-            "desplazamiento": "1 o 2",
         },
         "reg_mem": {
             "valor": "0011101w",
             "direccion": "mod reg r/m",
-            "desplazamiento": "1 o 2",
         },
         "reg/mem_inm": {
             "valor": "100000sw",
-            "direccion": " mod 111 r/m",
-            "desplazamiento": "1 o 2",
-            "inmediato": "1 0 2",
+            "direccion": " mod 111 r/m"
         }, 
-        "acum_inm": {"valor": "0011110w", "inmediato": "1 0 2"},
+        "acum_inm": {"valor": "0011110w"},
     }
 }
 
