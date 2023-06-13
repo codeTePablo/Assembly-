@@ -10,6 +10,7 @@ def salto(etiqueta_decimal, instruccion_decimal):
     else:
         print("La dirección de etiqueta y la dirección de instrucción son iguales.")
 
+# create new function
 
 def codigo_convert(codigo):
     # Convertir el código de operación binario a hexadecimal
