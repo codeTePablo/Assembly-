@@ -190,6 +190,8 @@ registros16bits = (
     "DS",
     "DX",
     "DI",
+    "SI",
+    "si",
     "di" ,
     "ax",
     "bx",
@@ -215,6 +217,13 @@ registros8bits = (
     "ch",
     "dl",
     "dh",
+)
+
+registros_de_segmento = (
+    "ES",
+    "CS",
+    "SS",
+    "DS",
 )
 
 instrucciones_con_operandos = (
@@ -297,13 +306,14 @@ dbs = ("db", "DB", "DW", "dw")
 equ = ("EQU", "equ")
 
 
-corchetes = ("[BX + SI]", "[BX + DI]", "[BP + SI]", "[BP + DI]", "[SI]", "[DI]", "[BX]", "[BX+SI]", "[BX+DI]", "[BX+SI]", "[BP+DI]")
+corchetes = ("[BX + SI]", "[BX + DI]", "[BP + SI]", "[BP + DI]", "[SI]", "[DI]", "[BX]", "[BX+SI]", "[BX+DI]", "[BX+SI]", "[BP+DI]" , "[BP]")
 
 tabla_d = {
     "[BX + SI]": {"mod": "00", "r/m": "000"},
     "[BX + DI]": {"mod": "00", "r/m": "001"},
     "[BP + SI]": {"mod": "00", "r/m": "010"},
     "[BP + DI]": {"mod": "00", "r/m": "011"},
+    "[BP]" : {"mod": "01", "r/m": "110"},
     "[BX+SI]": {"mod": "00", "r/m": "000"},
     "[BX+DI]": {"mod": "00", "r/m": "001"},
     "[BP+SI]": {"mod": "00", "r/m": "010"},
@@ -318,6 +328,7 @@ tabla_d = {
     "SI": {"mod": "00", "r/m": "100"},
     "DI": {"mod": "00", "r/m": "101"},
     "BX": {"mod": "00", "r/m": "111"},
+    "BP": {"mod": "01", "r/m": "110"},
 }
 
 w_es_1 = {
@@ -337,4 +348,11 @@ w_es_1 = {
     "CH": {"mod": "11", "r/m": "101"},
     "DH": {"mod": "11", "r/m": "110"},
     "BH": {"mod": "11", "r/m": "111"},
+}
+
+regs = {
+    "ES": {"regs": "00"},
+    "CS": {"regs": "01"},
+    "SS": {"regs": "10"},
+    "DS": {"regs": "11"},
 }

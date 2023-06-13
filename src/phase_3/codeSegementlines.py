@@ -210,9 +210,7 @@ def analyzeOneOperandCodeSegments(
             print(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} -  {codificacionhex}H"
             )
-            print(
-                f"{n} -  {format(count, 'x').zfill(4).upper()}H- {line} Linea correcta"
-            )
+
             count += 4
             return True, count
         elif parametro[0] in corchetes:
@@ -254,7 +252,8 @@ def analyzeOneOperandCodeSegments(
                 if ultimo_numero.isdigit() == True:
                     numero = convertir_a_decimal(ultimo_numero)
                     if -127 <= numero <= 128:
-                        rm = revisarCorchetes(parametros)
+                        rm, numero= revisarCorchetes(parametros)
+                       
                         mod= "01"
                         direccion = instrucciones[instruccion]["direccion"]
 
@@ -293,9 +292,8 @@ def analyzeOneOperandCodeSegments(
                         codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
 
                         codificacionhex = codificacionhex + desplazamiento
-
                         print(
-                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} {codificacionhex}H"
+                            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} {codificacionhex} H"
                         )
                         return True, count + 1
                     else:
@@ -334,7 +332,6 @@ def analyzeOperandsCodeSegments(
     line = cleanLine(line)
     componentes = line.split()
     parametro = componentes[1:]
-
 
     instruccion = componentes[0]
 
@@ -543,6 +540,35 @@ def analyzeOperandsCodeSegments(
                 f"{n} -   {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}H"
             )
             return count + 2
+
+        elif parametro[0] in corchetes and parametro[1] in registros8bits:
+
+
+            mod = tabla_d[parametro[0]]["mod"]
+            rm = tabla_d[parametro[0]]["r/m"]
+            if instruccion == "CMP":
+                valor = instrucciones_dos_op_cmp[instruccion]["mem_reg"]["valor"]
+                direccion = instrucciones_dos_op_cmp[instruccion]["mem_reg"]["direccion"]
+            elif instruccion == "ADC":
+                valor = instrucciones_dos_op_adc[instruccion]["mem_reg"]["valor"]
+                direccion = instrucciones_dos_op_adc[instruccion]["mem_reg"]["direccion"]
+
+            valor = valor.replace("w", "0")
+
+            direccion = direccion.replace("mod", mod)
+            direccion = direccion.replace("r/m", rm)
+            reg = tabla_Reg[parametro[1]]
+            direccion = direccion.replace("reg", reg)
+
+            codificacion_binaria = valor + direccion
+            codificacion_binaria = codificacion_binaria.replace(" ", "")
+            codificacionhex = hex(int(codificacion_binaria, 2) )[2:].upper()
+
+
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}H "
+            )
+            return count + 2
         elif param1 in registros16bits and param2 in registros8bits:
             print(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: No se puede operar un registro de 16 bits con uno de 8 bits"
@@ -582,6 +608,7 @@ def analyzeOperandsCodeSegments(
                 print(
                     f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: El parametro {param2} excede los 8 bits"
                 )
+                return count
         elif param1 in registros16bits:
             inmediato = convertir_a_decimal(param2)
             if inmediato > 255 and inmediato < -128:
@@ -598,6 +625,7 @@ def analyzeOperandsCodeSegments(
                 print(
                     f"{n} -  {format(count, 'x').zfill(4).upper()}H -{line} Error: El parametro {param2} excede los 16 bits"
                 )
+                return count
 
         elif param1 in tuplaNombreVariables8bits:
             inmediato = convertir_a_decimal(param2)
@@ -629,7 +657,7 @@ def analyzeOperandsCodeSegments(
             print(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: No se reconoce los parametro"
             )
-
+            return count
     else:
         print(
             f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} {componentes} Error: Argumentos invalidos"
@@ -723,7 +751,7 @@ def analyzeTwoOperandsCodeSegments(
             )
             count = count + 3
             return True, count
-        elif parametro[0] in registros16bits and parametro[1] in corchetes:
+        elif parametro[0] in registros8bits and parametro[1] in corchetes:
 
             mod = tabla_d[parametro[1]]["mod"]
             rm = tabla_d[parametro[1]]["r/m"]
@@ -799,12 +827,7 @@ def analyzeTwoOperandsCodeSegments(
         else:
             corchete_a_revisar =[]
             corchete_a_revisar.append(parametro[1])
-            
-            rm = revisarCorchetes(corchete_a_revisar)
-            try:
-                mod, number = extract_number(corchete_a_revisar)
-            except:
-                print ("no fue posible extraer el numero de la linea: ", n)
+            rm, numero= revisarCorchetes(corchete_a_revisar)
 
             parametro[1] = parametro[1].replace("[", "").replace("]", "")
             parametro[1] = parametro[1].replace("'", "")
@@ -814,14 +837,38 @@ def analyzeTwoOperandsCodeSegments(
 
             direccion = instrucciones_que_si_fucionan[instruccion]["direccion"]
 
-            direccion = direccion.replace("mod", mod)
             direccion = direccion.replace("r/m", rm)
-            
-            if -128 <= int(number) <= 255:
-                desplazamiento = hex(int(number))[2:].upper().zfill(2)
-            elif 256 <= int(number) <= 65535:
-                desplazamiento = hex(int(number))[2:].upper().zfill(4) 
 
+            if numero.endswith("H"):
+                numero = numero.replace("H", "")
+                numero = int(numero,16)
+                numeroaevauluar = numero
+                if -128 <= int(numeroaevauluar) <= 255:
+                    desplazamiento = hex(int(numeroaevauluar))[2:].upper().zfill(2)
+                    mod= "01"
+                elif 256 <= int(numeroaevauluar) <= 65535:
+                    desplazamiento = hex(int(numeroaevauluar))[2:].upper().zfill(4) 
+                    mod= "10"
+            elif numero.endswith("B"):
+                numero = numero.replace("B", "")
+                numero = int(numero,2)
+                numeroaevauluar = numero
+                if -128 <= int(numeroaevauluar) <= 255:
+                    desplazamiento = hex(int(numeroaevauluar))[2:].upper().zfill(2)
+                    mod= "01"
+                elif 256 <= int(numeroaevauluar) <= 65535:
+                    desplazamiento = hex(int(numeroaevauluar))[2:].upper().zfill(4) 
+                    mod= "10"
+            else:
+                if -128 <= int(numero) <= 255:
+                    desplazamiento = hex(int(numero))[2:].upper().zfill(2)
+                    mod= "01"
+                elif 256 <= int(numero) <= 65535:
+                    desplazamiento = hex(int(numero))[2:].upper().zfill(4)
+                    mod= "10"
+            
+            direccion = direccion.replace("mod", mod)
+                  
             reg = tabla_Reg[parametro[0]]
             direccion = direccion.replace("reg", reg)
 

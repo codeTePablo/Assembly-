@@ -224,27 +224,32 @@ def revisarCorchetes(parametros):
 
     # my_list = ['[BX', 'SI', '125]']
     new_list = []
+    new_list_2 = []
 
     for item in parametros_separadaos:
         # Elimina los corchetes
         new_item = item.strip('[]')
         new_list.append(new_item)
+        new_list_2.append(new_item)
 
     # my_list = ['BX', 'SI', '125']
     new_list_1 = []
 
-    for item in new_list:
-        # Elimina los números
-        new_item = ''.join([char for char in item if char.isalpha()])
-        if new_item:
-            new_list_1.append(new_item)
+    memoria = new_list[:-1]
+    memoria = '+'.join(memoria)
 
-    # Agrega un espacio y un signo de "+" cada 2 lugares recorridos
-    result = '+'.join(new_list_1)
-   
-    rm = tabla_d[result]["r/m"]
 
-    return rm
+    numero = new_list[-1]
+
+
+
+
+    rm = tabla_d[memoria]["r/m"]
+
+    return rm, numero
+
+
+
 
 def convertir_a_hexa (numero):
     if numero.endswith("B") or numero.endswith("b"):
@@ -267,11 +272,9 @@ def convertir_a_hexa (numero):
 def extract_number(lst):
     string = lst[0]  # Assuming the input list contains only one element
     number = ''
-
     for char in string:
         if char.isdigit():
             number += char
-
     number = int(number)
 
 

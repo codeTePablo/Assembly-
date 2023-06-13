@@ -47,6 +47,8 @@ def convertir_a_decimalS(string):
 def cleanLine(line):
     line = line.replace(",", " ").rstrip().lstrip()
     line = line.replace("dup (", "dup(")
+    line = line.replace("dup(' ')" , "dup('')")
+
     line = line.split(" ")
     result = []
     inside_quotes = False
@@ -125,9 +127,14 @@ def checkType(lineClean, n, count):
 
                     lineClean.append(format(count, 'x').zfill(4).upper() + "H")
                     return lineClean, count + len(lineClean[2]) - 2
+                elif lineClean[2].startswith("'") and lineClean[2].endswith("'"):
+                    print(f"{n} -  {format(count, 'x').zfill(4).upper()}H - {' '.join(lineClean)} : linea correcta")
+
+                    lineClean.append(format(count, 'x').zfill(4).upper() + "H")
+                    return lineClean, count + len(lineClean[2]) - 2
                 else:
                     print(
-                        f"{n} -  {format(count, 'x').zfill(4).upper()}H - {' '.join(lineClean)} : linea Incorrecta, el valor no es un caracter"
+                        f"{n} -  {format(count, 'x').zfill(4).upper()}H - {' '.join(lineClean)} : linea Incorrecta, el valor no es un caracter a"
                     )
                     return "", count
 
@@ -329,6 +336,7 @@ def AnalyzerDataSegment(dataSegment):
             else:
                 try:
                     line816, count = checkType(lineClean, n, count)
+
 
                     if line816 == "":
                         pass
