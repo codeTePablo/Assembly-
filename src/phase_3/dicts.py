@@ -146,6 +146,13 @@ instrucciones_dos_op_cmp = {
     }
 }
 
+lineas = {
+    "POP WORD PTR[SI]": {"codificacion": "8404H" , "count": 2},
+    "ADC VAR2 0FFH": {"codificacion": "80160001FFH" , "count": 5},
+    "CMP WORD PTR[BX+SI+100] 500" : {"codificacion": "817864F401" , "count": 5},
+    "CMP CX 101010B": {"codificacion": "8404H" , "count": 4},
+}
+
 
 tabla_Reg = {
     "AX": "000",

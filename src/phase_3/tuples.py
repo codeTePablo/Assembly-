@@ -219,6 +219,8 @@ registros8bits = (
     "dh",
 )
 
+
+
 registros_de_segmento = (
     "ES",
     "CS",

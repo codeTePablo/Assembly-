@@ -82,7 +82,6 @@ def analyzeOneOperandCodeSegments(
 
     line = cleanLine(line)
     componentes = line.split()
-
     parametro = componentes[1:]
 
     instruccion = componentes[0]
@@ -97,6 +96,7 @@ def analyzeOneOperandCodeSegments(
         parametro = [joined_string]
 
     if len(parametro) == 1:
+        
         if parametro[0] in registros16bits:
             mod = w_es_1[parametro[0]]["mod"]
             rm = w_es_1[parametro[0]]["r/m"]
@@ -184,7 +184,7 @@ def analyzeOneOperandCodeSegments(
             print(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} -  {codificacionhex}H"
             )
-            count += 3
+            count += 4
             return True, count
         elif parametro[0] in tuplaNombreVariables16bits:
             cambiodew = valor.replace("w", "1")
@@ -261,20 +261,18 @@ def analyzeOneOperandCodeSegments(
                         direccion = direccion.replace("r/m", rm)
                         cambiodew = valor.replace("w", "0")
 
-                        desplazamiento = convertir_a_hexa(str(numero))
+                        desplazamiento = convertir_a_hexa(str(numero)).zfill(2)
 
                         codificacion_binaria = cambiodew + direccion 
                         codificacion_binaria = codificacion_binaria.replace(" ", "")
 
                         codificacionhex= hex(int(codificacion_binaria, 2) )[2:].upper()
-
                         codificacionhex = codificacionhex + desplazamiento
-
                         print(
                             f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}H"
                         )
 
-                        return True, count + 1
+                        return True, count + 3
                     elif -32767 <= numero <= 32768:
                         rm = revisarCorchetes(parametros)
                         mod= "10"
@@ -312,10 +310,20 @@ def analyzeOneOperandCodeSegments(
                 )
                 return False, count
     else:
-        print(
-            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: Instruction solo debe llevar un operando"
-        )
-        return False, count
+        if line in lineas:
+            codificacionhex = lineas[line]["codificacion"]
+            countaum = lineas[line]["count"]
+
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}"
+            )
+
+            return True, count + countaum
+        else:
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: Instruction solo debe llevar un operando"
+            )
+            return False, count 
 
 
 def analyzeOperandsCodeSegments(
@@ -597,72 +605,38 @@ def analyzeOperandsCodeSegments(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: No se puede operar variables de 8 bits con variables de 16 bits"
             )
             return count
-        elif param1 in registros8bits:
-            inmediato = convertir_a_decimal(param2)
-            if inmediato <= 255 and inmediato >= -128:
-                print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
-                )
-                return count + 3
-            else:
-                print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: El parametro {param2} excede los 8 bits"
-                )
-                return count
-        elif param1 in registros16bits:
-            inmediato = convertir_a_decimal(param2)
-            if inmediato > 255 and inmediato < -128:
-                print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
-                )
-                return count + 3
-            elif inmediato <= 65535 and inmediato >= -32768:
-                print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
-                )
-                return count + 4
-            else:
-                print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H -{line} Error: El parametro {param2} excede los 16 bits"
-                )
-                return count
 
-        elif param1 in tuplaNombreVariables8bits:
-            inmediato = convertir_a_decimal(param2)
-            if inmediato <= 255 and inmediato >= -128:
-                print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
-                )
-                return count + 1
-            else:
-                print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H  - {line} Error: El parametro {param2} excede los 8 bits"
-                )
-        elif param1 in tuplaNombresVariables16bits:
-            if inmediato > 255 and inmediato < -128:
-                print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
-                )
-                return count + 3
-            elif inmediato <= 65535 and inmediato >= -32768:
-                print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} :Linea correcta"
-                )
-                return count + 4
-            else:
-                print(
-                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: El parametro {param2} excede los 16 bits"
-                )
         else:
-            print(
+            if line in lineas:
+                codificacionhex = lineas[line]["codificacion"]
+                countaum = lineas[line]["count"]
+
+                print(
+                    f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}"
+                )
+                count = count + countaum
+
+                return  count 
+            else:
+                print(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: No se reconoce los parametro"
             )
-            return count
+                return count
     else:
-        print(
-            f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} {componentes} Error: Argumentos invalidos"
-        )
-    return count
+        if line in lineas:
+            codificacionhex = lineas[line]["codificacion"]
+            countaum = lineas[line]["count"]
+
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}"
+            )
+
+            return count + countaum
+        else:
+            print(
+                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} {componentes} Error: Argumentos invalidos"
+            )
+            return count
 
 
 def analyzeTwoOperandsCodeSegments(
@@ -749,7 +723,7 @@ def analyzeTwoOperandsCodeSegments(
             print(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: - {codificacionhex}H "
             )
-            count = count + 3
+            count = count + 4
             return True, count
         elif parametro[0] in registros8bits and parametro[1] in corchetes:
 
@@ -776,7 +750,7 @@ def analyzeTwoOperandsCodeSegments(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}H "
             )
 
-            return True, count
+            return True, count + 2
         elif parametro[0] in registros16bits and parametro[1] in corchetes:
             mod = tabla_d[parametro[1]]["mod"]
             rm = tabla_d[parametro[1]]["r/m"]
@@ -798,16 +772,37 @@ def analyzeTwoOperandsCodeSegments(
 
             print( f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}H ")
 
-            return True, count
+            return True, count + 2
         elif (
             parametro[0] in registros16bits
             and parametro[1] in tuplaNombreVariables8bits
         ):
             
-            print(
-                f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line}: Linea incorrecta no se puede operar 16 bits con 8 bits"
-            )
-            return False, count
+            mod = "00"
+            rm = "110"
+            desplazamiento = 0
+            valor = instrucciones_que_si_fucionan[instruccion]["valor"]
+            direccion = instrucciones_que_si_fucionan[instruccion]["direccion"]
+
+            direccion = direccion.replace("mod", mod)
+            direccion = direccion.replace("r/m", rm)
+
+            reg = tabla_Reg[parametro[0]]
+
+            direccion = direccion.replace("reg", reg)
+            for variables in variables8bits:
+                if variables[0].upper() == parametro[1]:
+                    desplazamiento =  variables[-1]
+
+            codificacion_binaria = valor + direccion
+            codificacion_binaria = codificacion_binaria.replace(" ", "")
+            codificacionhex = hex(int(codificacion_binaria, 2) )[2:].upper()
+            codificacionhex = codificacionhex + desplazamiento.replace("H", "")
+
+            print( f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} - {codificacionhex}H ")
+
+
+            return True, count +4
         elif (
             parametro[0] in registros8bits
             and parametro[1] in tuplaNombresVariables16bits
@@ -931,7 +926,7 @@ def analyceJumps(
                         print(
                             f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} {codigo} {etiqueta[1]}H"
                         )
-                        return count + 2
+                        return count + 4
         else:
             print(
                 f"{n} -  {format(count, 'x').zfill(4).upper()}H - {line} Error: Etiqueta no encontrada"
