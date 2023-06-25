@@ -96,6 +96,7 @@ def analyzeStackSegment(stackSegment, n):
                 resultado = re.search(patron, line[2])
                 if resultado:
                     numero = convertir_a_decimal(resultado.group(1))
+                    print (numero)
                     if numero <= 65535 and numero >= -32768:
                         print(f"{n} - {' '.join(line)} - linea correcta")
                     else:

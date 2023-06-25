@@ -194,6 +194,7 @@ def checkType(lineClean, n):
 
 def AnalyzerDataSegment(dataSegment):
     count = 0
+    n=0
     print(f"1 - {hex(count)}- data segment : correcto")
     for n, line in enumerate(dataSegment, start=2):
         lineClean = cleanLine(line)

@@ -180,6 +180,7 @@ def getSections(clean_file):
     stack_section = []
     code_section = []
     section_actual = None
+    print (clean_file)
     try:
         for linea in clean_file:
             if "data segment" in linea:

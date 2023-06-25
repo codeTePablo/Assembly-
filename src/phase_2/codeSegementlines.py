@@ -68,6 +68,7 @@ def analyzeOperandsCodeSegments(
             else:
                 print(f"{n} - {linea} Error: El parametro {param2} excede los 8 bits")
         elif param1 in registros16bits:
+            inmediato = convertir_a_decimal(param2)
             if inmediato <= 65535 and inmediato >= -32768:
                 return True
             else:
@@ -80,6 +81,7 @@ def analyzeOperandsCodeSegments(
             else:
                 print(f"{n} - {linea} Error: El parametro {param2} excede los 8 bits")
         elif param1 in tuplaNombresVariables16bits:
+            inmediato = convertir_a_decimal(param2)
             if inmediato <= 65535 and inmediato >= -32768:
                 return True
             else:
